@@ -1,0 +1,48 @@
+
+.header {
+    padding: 25px 0;
+    background-color: var(--cor-background-qpreto);
+    color: #fff;
+}
+
+#header .interface {
+    display: flex;
+    justify-content: space-between;
+}
+
+.logo {
+    display: flex;
+    align-items: center;
+}
+
+.logo img {
+    width: 150px;
+}
+
+.container-usuario {
+    display: flex;
+}
+
+.card-usuario {
+    display: flex;
+}
+
+.img-usuario {
+    display: flex;
+    align-items: center;
+}
+
+.img-usuario img {
+    max-width: 60px;
+    border-radius: 50%;
+    margin-right: 10px;
+}
+
+.header .txt-usuario p,
+.header .txt-usuario h3 {
+    margin-bottom: -7px;
+}
+
+.txt-usuario a {
+    font-size: 14px;
+}
