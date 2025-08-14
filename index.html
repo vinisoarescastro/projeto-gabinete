@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Carregando...</title>
+    <style>
+        /* Reset básico e configuração do body */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            background: linear-gradient(135deg, #EC3839 0%, #45469A 100%);
+            font-family: Arial, sans-serif;
+        }
+
+        .logo-img img {
+            width: 140px;
+            margin-bottom: 15px;
+        }
+
+        /* Container principal */
+        .loading-container {
+            text-align: center;
+            color: white;
+        }
+
+        /* Spinner redondo */
+        .spinner {
+            width: 60px;
+            height: 60px;
+            border: 6px solid rgba(255, 255, 255, 0.3);
+            border-top: 6px solid white;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 20px;
+        }
+
+        /* Animação de rotação */
+        @keyframes spin {
+            0% { 
+                transform: rotate(0deg); 
+            }
+            100% { 
+                transform: rotate(360deg); 
+            }
+        }
+
+        /* Texto de carregamento */
+        .loading-text {
+            font-size: 18px;
+            font-weight: 300;
+            opacity: 0.9;
+        }
+
+        /* Pontos animados */
+        .dots {
+            display: inline-block;
+            width: 20px;
+        }
+
+        .dots::after {
+            content: '';
+            animation: dots 1.5s infinite;
+        }
+
+        @keyframes dots {
+            0% { content: ''; }
+            25% { content: '.'; }
+            50% { content: '..'; }
+            75% { content: '...'; }
+            100% { content: ''; }
+        }
+    </style>
+</head>
+<body>
+    <div class="loading-container">
+        <!-- Spinner redondo -->
+        <div class="spinner"></div>
+
+        <div class="logo-img">
+            <img src="/frontend/img/logo/logo-branco-300px.png" alt="#">
+        </div>
+        
+        <!-- Texto de carregamento -->
+        <div class="loading-text">
+            Carregando<span class="dots"></span>
+        </div>
+    </div>
+
+    <script>
+        // Função para redirecionar após 3 segundos
+        setTimeout(function() {
+            window.location.href = 'frontend/html/login.html';
+        }, 2500); // 3000 milissegundos = 3 segundos
+    </script>
+</body>
+</html>
