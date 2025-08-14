@@ -1,3 +1,7 @@
+/**********/
+/* HEADER */
+/**********/
+
 
 .header {
     padding: 25px 0;
@@ -33,16 +37,41 @@
 }
 
 .img-usuario img {
-    max-width: 60px;
+    max-width: 50px;
     border-radius: 50%;
     margin-right: 10px;
 }
 
+.header .txt-usuario {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
 .header .txt-usuario p,
 .header .txt-usuario h3 {
+    font-size: 14px;
     margin-bottom: -7px;
 }
 
 .txt-usuario a {
     font-size: 14px;
 }
+
+/*******/
+/* NAV */
+/*******/
+
+.nav {
+    display: flex;
+    background-color: #1be480;
+}
+
+.nav .lista-nav {
+    display: flex;
+    gap: 50px;
+    
+    
+    list-style: none;
+}
+

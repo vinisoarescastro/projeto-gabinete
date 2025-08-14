@@ -5,10 +5,10 @@ document.getElementById('loginForm').addEventListener('submit', function(e) {
     const email = document.getElementById('email').value;
     const password = document.getElementById('password').value;
             
-    if (email && password) {
-        alert('Login realizado com sucesso!\n\nEste é apenas um exemplo visual.');
+    if (email == 'teste@teste.com' && password == '123456') {
+        window.location.href = '../html/principal.html'
     } else {
-        alert('Por favor, preencha todos os campos.');
+        alert('Informações de login incorreta, por favor, tente novamente!');
     }
 });
 
