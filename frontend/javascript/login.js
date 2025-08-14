@@ -6,7 +6,7 @@ document.getElementById('loginForm').addEventListener('submit', function(e) {
     const password = document.getElementById('password').value;
             
     if (email == 'teste@teste.com' && password == '123456') {
-        window.location.href = '../html/principal.html'
+        window.location.href = '/frontend/html/principal.html'
     } else {
         alert('Informações de login incorreta, por favor, tente novamente!');
     }
