@@ -64,14 +64,17 @@
 
 .nav {
     display: flex;
-    background-color: #1be480;
+    background-color: #bd0909;
 }
 
 .nav .lista-nav {
     display: flex;
     gap: 50px;
-    
-    
+    color: #fff;
+
     list-style: none;
 }
 
+.nav li {
+    padding: 10px 0;
+}
