@@ -2,11 +2,14 @@
 /* HEADER */
 /**********/
 
+body {
+    background-color: #f0f0f0;
+}
 
 .header {
     padding: 25px 0;
-    background-color: var(--cor-background-qpreto);
-    color: #fff;
+    background-color: var(--cor-background-qbranco);
+    color: #000;
 }
 
 #header .interface {
@@ -64,7 +67,7 @@
 
 .nav {
     display: flex;
-    background-color: #bd0909;
+    background: var(--degrade-vermelho);
 }
 
 .nav .lista-nav {
@@ -77,4 +80,42 @@
 
 .nav li {
     padding: 10px 0;
+}
+
+/*************************/
+/* PAGE CONSTRUÇÃO  */
+/*************************/
+
+.container-construcao {
+    margin: 15px 0;
+    padding: 10px;
+    
+    background-color: #fbff00;
+    border-radius: 20px;
+}
+
+.container-construcao h4 {
+    color: #000;
+    text-align: center;
+}
+
+
+/*************************/
+/* CONTAINER INFOS DASH  */
+/*************************/
+
+.container-dash .card-dash {
+    margin: 15px 0;
+    
+    padding: 15px;
+    background-color: #fff;
+    max-width: 300px;
+    border-radius: 10px;
+}
+
+.container-dash .card-dash .titulo {
+    margin-bottom: 5px;
+    
+    font-weight: 500;
+    color: #747474;
 }
