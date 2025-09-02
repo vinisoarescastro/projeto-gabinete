@@ -1,6 +1,7 @@
-/**********/
-/* HEADER */
-/**********/
+/**************************************************************/
+/*                          HEADER                            */
+/**************************************************************/
+
 
 body {
     background-color: #f0f0f0;
@@ -61,9 +62,11 @@ body {
     font-size: 14px;
 }
 
-/*******/
-/* NAV */
-/*******/
+
+
+/**************************************************************/
+/*                             NAV                            */
+/**************************************************************/
 
 .nav {
     display: flex;
@@ -82,14 +85,16 @@ body {
     padding: 10px 0;
 }
 
-/*************************/
-/* PAGE CONSTRUÇÃO  */
-/*************************/
+
+
+/**************************************************************/
+/*                        PAGE CONSTRUÇÃO                     */
+/**************************************************************/
 
 .container-construcao {
     margin: 15px 0;
     padding: 10px;
-    
+
     background-color: #fbff00;
     border-radius: 20px;
 }
@@ -100,17 +105,48 @@ body {
 }
 
 
-/*************************/
-/* CONTAINER INFOS DASH  */
-/*************************/
+
+/**************************************************************/
+/*                   INFORMAÇÕES DASHBOARD                    */
+/**************************************************************/
+
+.container-dash .interface {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1em;
+    justify-content: space-between;
+}
 
 .container-dash .card-dash {
-    margin: 15px 0;
-    
+    flex: 1 1 calc(25% - 1rem);
+
+    min-width: 250px;
+
+    margin: 10px 0;
     padding: 15px;
+
     background-color: #fff;
-    max-width: 300px;
-    border-radius: 10px;
+    border-radius: 12px;
+    transition: box-shadow 0.3s ease, transform 0.2s ease;
+}
+
+.container-dash .card-dash:hover {
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15); /* pequena sombra ao passar o mouse */
+  transform: translateY(-1px);             /* leve “flutuar” */
+}
+
+/* quando a tela for até 500px → 2 por linha */
+@media (max-width: 500px) {
+    .container-dash .card-dash {
+        flex: 1 1 calc(50% - 1rem);
+    }
+}
+
+/* quando a tela for até 300px → 1 por linha */
+@media (max-width: 300px) {
+    .container-dash .card-dash {
+        flex: 1 1 100%;
+    }
 }
 
 .container-dash .card-dash .titulo {
@@ -118,4 +154,89 @@ body {
     
     font-weight: 500;
     color: #747474;
+}
+
+
+
+/**************************************************************/
+/*                        AÇÕES RÁPIDAS                       */
+/**************************************************************/
+
+.acoes-rapidas {
+    padding: 15px;
+    border-radius: 12px;
+    background-color: #fff;
+}
+
+.acoes-rapidas:hover {
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15); /* pequena sombra ao passar o mouse */
+  transform: translateY(-1px);             /* leve “flutuar” */
+}
+
+.btn-acoes {
+    display: flex;
+    flex-wrap: wrap;   /* deixa quebrar linha */
+    gap: 1rem;         /* espaço entre botões */
+    margin-top: 10px;
+}
+
+.btn-acoes .btn {
+    flex: 1 1 calc(33.333% - 1rem); /* padrão: 3 por linha */
+    min-width: 200px;               /* evita que fique muito pequeno */
+    padding: 10px;
+    border-radius: 8px;
+    border: none;
+    background: #0059ff;
+    color: #fff;
+    cursor: pointer;
+    transition: 0.2s ease;
+}
+
+/* hover */
+.btn-acoes .btn:hover {
+    background: #003391;
+    transform: translateY(-1px);
+}
+
+/* até 600px → 2 botões por linha */
+@media (max-width: 600px) {
+    .btn-acoes .btn {
+        flex: 1 1 calc(50% - 1rem);
+    }
+}
+
+/* até 300px → 1 botão por linha */
+@media (max-width: 300px) {
+    .btn-acoes .btn {
+        flex: 1 1 100%;
+    }
+}
+
+
+
+/**************************************************************/
+/*                        SUAS DEMANDAS                       */
+/**************************************************************/
+
+.suas-demandas {
+    margin: 10px 0;
+    padding: 15px;
+    border-radius: 12px;
+    background-color: #fff;
+}
+
+.suas-demandas:hover {
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15); 
+    /* pequena sombra ao passar o mouse */
+    transform: translateY(-1px); 
+    /* leve “flutuar” */
+}
+
+.suas-demandas .info-demandas {
+    padding: 10px 0;
+}
+
+.suas-demandas .info-demandas .info {
+    display: flex;
+    justify-content: space-between;  
 }
