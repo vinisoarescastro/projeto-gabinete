@@ -10,9 +10,18 @@
 
   --cor-preto: #111;
   --cor-branco: #fcfcfc;
+  --cor-vermelho: #EC3839;
+
+  --degrade-vermelho: linear-gradient(-90deg, #EC3839, #961313);
 
   --cor-background-qbranco: #f5f5f5;
+  --cor-background-qbranco1: #dbdbdb;
   --cor-background-qpreto: #333;
+}
+
+.p1 {
+  font-size: 14px;
+  color: #858585;
 }
 
 .interface {
