@@ -42,16 +42,16 @@ Na **primeira fase**, o foco será a implementação de um **Kanban** para acomp
 
 ## 🗂 Estrutura Inicial do Banco de Dados
 ### Tabela: `usuarios`
-| Campo           | Tipo                         | Descrição                                                                 |
-|-----------------|------------------------------|---------------------------------------------------------------------------|
-| id              | bigint                       | Identificador único do usuário (PRIMARY KEY, auto incrementado).          |
-| created_at      | timestamp with time zone     | Data e hora de criação do registro (preenchido automaticamente).          |
-| ativo           | boolean                      | Indica se o usuário está ativo (`true` por padrão).                       |
-| nome            | text                         | Primeiro nome do usuário.                                                 |
-| sobrenome       | text                         | Sobrenome do usuário.                                                     |
-| email           | character varying            | E-mail do usuário (valor único e obrigatório).                            |
-| senha           | character varying            | Senha do usuário (armazenada de forma segura).                            |
-| nivel_permissao | bigint                       | Nível de permissão do usuário (padrão: 10).                               |
+| Campo           | Tipo                     | Descrição                                                        |
+|-----------------|--------------------------|------------------------------------------------------------------|
+| id              | int (PK)                 | Identificador único do usuário (PRIMARY KEY, auto incrementado). |
+| created_at      | timestamp with time zone | Data e hora de criação do registro (preenchido automaticamente). |
+| ativo           | boolean                  | Indica se o usuário está ativo (`true` por padrão).              |
+| nome            | text                     | Primeiro nome do usuário.                                        |
+| sobrenome       | text                     | Sobrenome do usuário.                                            |
+| email           | character varying        | E-mail do usuário (valor único e obrigatório).                   |
+| senha           | character varying        | Senha do usuário (armazenada de forma segura).                   |
+| nivel_permissao | int                      | Nível de permissão do usuário (padrão: 10).                      |
 
 
 ### Tabela: `solicitacoes`
