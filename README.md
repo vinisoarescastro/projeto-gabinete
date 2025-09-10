@@ -75,9 +75,9 @@ Na **primeira fase**, o foco será a implementação de um **Kanban** para acomp
 ---
 
 ## 🚀 Tecnologias Sugeridas
-- **Frontend**: React / Vue.js
-- **Backend**: Node.js (Express) / Python (Django/FastAPI)
-- **Banco de Dados**: MySQL / PostgreSQL
+- **Frontend**: CSS
+- **Backend**: Node.js (Express) 
+- **Banco de Dados**: PostgreSQL / Supabase
 - **Autenticação**: JWT (JSON Web Token)
 - **Kanban**: Biblioteca Drag-and-Drop (React Beautiful DnD, Vue Draggable, etc.)
 
