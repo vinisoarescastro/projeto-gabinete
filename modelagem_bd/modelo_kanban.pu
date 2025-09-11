@@ -1,0 +1,76 @@
+@startuml
+!theme plain
+
+entity "USUARIO" as usuarios {
+  *id : INT <<PK>>
+  --
+  nome_completo : VARCHAR(255)
+  email : VARCHAR(255) <<UNIQUE>>
+  senha_hash : VARCHAR(255)
+  nivel_permissao : ENUM('administrador','chefe_gabinete','assessor_interno','assessor_externo','supervisor')
+  ativo : BOOLEAN [default: true]
+  criado_em : TIMESTAMP [default: now()]
+}
+
+entity "CIDADAO" as cidadaos {
+  *id : INT <<PK>>
+  --
+  nome_completo : VARCHAR(255)
+  telefone : VARCHAR(20)
+  data_nascimento : DATE
+  bairro : VARCHAR(100)
+  cidade : VARCHAR(100)
+  estado : VARCHAR(2)
+  email : VARCHAR(255)
+}
+
+entity "STATUS" as status {
+  *id : INT <<PK>>
+  --
+  nome : VARCHAR(100)
+  ordem : INT
+  ativo : BOOLEAN [default: true]
+}
+
+entity "DEMANDA" as demandas {
+  *id : INT <<PK>>
+  --
+  titulo : VARCHAR(255)
+  descricao : TEXT
+  prioridade : ENUM('baixa','media','alta','urgente')
+  cidadao_id : INT <<FK>>
+  usuario_responsavel_id : INT <<FK>>
+  usuario_origem_id : INT <<FK>>
+  status_id : INT <<FK>>
+  criado_em : TIMESTAMP [default: now()]
+}
+
+entity "ARQUIVOS" as arquivos {
+  *id : INT <<PK>>
+  --
+  demanda_id : INT <<FK>>
+  nome_arquivo : VARCHAR(255)
+  tipo_arquivo : VARCHAR(50)
+  caminho_arquivo : VARCHAR(500)
+  criado_em : TIMESTAMP [default: now()]
+}
+
+entity "COMENTARIOS" as comentarios {
+  *id : INT <<PK>>
+  --
+  demanda_id : INT <<FK>>
+  usuario_id : INT <<FK>>
+  comentario : TEXT
+  criado_em : TIMESTAMP [default: now()]
+}
+
+' --- Relacionamentos ---
+cidadaos ||--o{ demandas : "possui"
+usuarios ||--o{ demandas : "responsável"
+usuarios ||--o{ demandas : "origem"
+status ||--o{ demandas : "define"
+demandas ||--o{ arquivos : "anexa"
+demandas ||--o{ comentarios : "contém"
+usuarios ||--o{ comentarios : "escreve"
+
+@enduml
