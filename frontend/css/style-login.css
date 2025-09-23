@@ -1,6 +1,10 @@
+.ocultar {
+    display: none;
+}
+
 body {
     font-family: "Poppins", Helvetica, sans-serif;
-    background: linear-gradient(135deg, #EC3839 0%, #45469A 100%);
+    background: linear-gradient(135deg, #ffffff 0%, #dbdbdb 100%);
     min-height: 100vh;
     display: flex;
     justify-content: center;
@@ -16,21 +20,25 @@ body {
     width: 100%;
     max-width: 400px;
     text-align: center;
+    justify-content: center;
 }
 
 .logo {
     justify-items: center;
+    align-items: center;
+    justify-content: center;
 }
 
 .img-logo {
     max-width: 200px;
-    margin-bottom: 20px;
+    margin-bottom: 15px;
+    align-items: center;
 }
 
 h1 {
-    color: #333;
+    color: #4b4b4b;
     padding: 0;
-    font-size: 26px;
+    font-size: 20px;
     font-weight: 800;
 }
 
@@ -67,7 +75,7 @@ input[type="password"] {
 input[type="email"]:focus,
 input[type="password"]:focus {
     outline: none;
-    border-color: #45469A;
+    border-color: #1d48a6;
     background-color: white;
     transform: translateY(-2px);
     box-shadow: 0 5px 15px rgba(102, 126, 234, 0.2);
@@ -105,7 +113,7 @@ input[type="checkbox"] {
 .login-btn {
     width: 100%;
     padding: 15px;
-    background: linear-gradient(135deg, #EC3839 0%, #45469A 100%);
+    background: linear-gradient(135deg, #f1433b 0%, #1d48a6 100%);
     color: white;
     border: none;
     border-radius: 10px;
@@ -131,31 +139,13 @@ input[type="checkbox"] {
 }
 
 .signup-link a {
-    color: #667eea;
+    color: #1d48a6;
     text-decoration: none;
     font-weight: 600;
 }
 
 .signup-link a:hover {
     text-decoration: underline;
-}
-
-/* Responsividade para mobile */
-@media (max-width: 480px) {
-    .login-container {
-        padding: 30px 20px;
-        margin: 10px;
-    }
-    
-    h1 {
-        font-size: 24px;
-    }
-    
-    .logo {
-        width: 60px;
-        height: 60px;
-        font-size: 20px;
-    }
 }
 
 /* Animação de entrada */
