@@ -111,18 +111,26 @@ body {
 /*                        PAGE CONSTRUÇÃO                     */
 /**************************************************************/
 
-.container-construcao {
-    margin: 15px 0;
-    padding: 10px;
+  .container-construcao {
+    background: linear-gradient(90deg, #fff3cd, #ffeeba); /* amarelo de atenção */
+    border: 2px solid #b1933b;
+    padding: 20px 90px;
+    border-radius: 8px;
+    margin: 0px auto; /* centraliza */
+    margin-top: 15px;
+    font-family: Arial, sans-serif;
+  }
 
-    background-color: #fbff00;
-    border-radius: 20px;
-}
+  .container-construcao h4 {
+    margin: 0 0 10px 0;
+    color: #856404;
+  }
 
-.container-construcao h4 {
-    color: #000;
-    text-align: center;
-}
+  .container-construcao p {
+    margin: 0;
+    margin-bottom: 10px;
+    color: #5a4d1c;
+  }
 
 
 
