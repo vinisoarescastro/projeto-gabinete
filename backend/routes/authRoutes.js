@@ -1,7 +1,7 @@
 import express from 'express';
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
-import { supabase } from '../config/supabase';
+import { supabase } from '../config/supabase.js';
 
 const router = express.Router();
 
@@ -122,7 +122,7 @@ router.post('/login', async (req, res) => {
                 nivel_permissao: usuario.nivel_permissao 
             },
             process.env.JWT_SECRET,
-            { expiresIn: '24h' } // Em quantas horas o token vai expirar.
+            { expiresIn: '8h' } // Em quantas horas o token vai expirar.
         );
 
         res.json({

@@ -3,6 +3,7 @@ import cors from 'cors';
 import dotenv from 'dotenv';
 import { testarConexao } from './config/supabase.js';
 import demandasRoutes from './routes/demandasRoutes.js';
+import authRoutes from './routes/authRoutes.js';
 
 dotenv.config();
 
@@ -22,6 +23,7 @@ app.get('/', (req, res) => {
 }); 
 
 // Rotas da API
+app.use('/api/auth', authRoutes);
 app.use('/api/demandas', demandasRoutes);
 
 app.listen(PORT, () => {

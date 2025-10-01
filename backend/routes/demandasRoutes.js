@@ -1,10 +1,11 @@
 import express from 'express';
 import { supabase } from '../config/supabase.js';
+import { verificarToken } from '../middlewares/authMiddleware.js';
 
 const router = express.Router();
 
 // Rota GET - Listar todas as demandas
-router.get('/', async (req, res) => {
+router.get('/', verificarToken, async (req, res) => {
     try {
         const { data, error } = await supabase
             .from('demandas')
@@ -30,7 +31,7 @@ router.get('/', async (req, res) => {
 export default router;
 
 // Rota POST - Criar nova demanda
-router.post('/', async (req, res) => {
+router.post('/', verificarToken, async (req, res) => {
     try {
         const { 
             titulo, 
