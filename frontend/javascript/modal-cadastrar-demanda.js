@@ -1,3 +1,16 @@
+// Função para aplicar máscara de telefone
+function aplicarMascaraTelefone(valor) {
+    valor = valor.replace(/\D/g, '');
+    
+    if (valor.length <= 10) {
+        valor = valor.replace(/^(\d{2})(\d{4})(\d{0,4}).*/, '($1) $2-$3');
+    } else {
+        valor = valor.replace(/^(\d{2})(\d{5})(\d{0,4}).*/, '($1) $2-$3');
+    }
+    
+    return valor;
+}
+
 // Funções do Modal de Cadastro de Demanda
 function abrirModalDemanda() {
     const modal = document.getElementById('modalDemanda');
@@ -142,7 +155,7 @@ async function enviarDemanda(e) {
         if (!cidadaoId) {
             const cidadaoData = {
                 nome_completo: document.getElementById('nome_cidadao').value,
-                telefone: document.getElementById('telefone_cidadao').value,
+                telefone: document.getElementById('telefone_cidadao').value.replace(/\D/g, ''),
                 data_nascimento: document.getElementById('data_nascimento_cidadao').value,
                 bairro: document.getElementById('bairro_cidadao').value,
                 cidade: document.getElementById('cidade_cidadao').value,
@@ -233,13 +246,17 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
 
-    // Campo telefone - buscar cidadão
+    // Campo telefone - aplicar máscara e buscar cidadão
     const telefoneCidadao = document.getElementById('telefone_cidadao');
     if (telefoneCidadao) {
-        telefoneCidadao.addEventListener('blur', function() {
-            buscarCidadaoPorTelefone(this.value);
-        });
-    }
+        telefoneCidadao.addEventListener('input', function(e) {
+            e.target.value = aplicarMascaraTelefone(e.target.value);
+    });
+    
+    telefoneCidadao.addEventListener('blur', function() {
+        buscarCidadaoPorTelefone(this.value);
+    });
+}
 
     // Submit do formulário
     const formDemanda = document.getElementById('formDemanda');

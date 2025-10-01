@@ -40,7 +40,7 @@ function logout(){
     localStorage.removeItem('usuario');
 
     // Redireciona para o login
-    window.location.href = 'frontend/html/login.html'
+    window.location.href = '../html/login.html'
 }
 
 // Função para buscar estatísticas das demandas
