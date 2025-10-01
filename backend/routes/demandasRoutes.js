@@ -28,7 +28,6 @@ router.get('/', verificarToken, async (req, res) => {
     }
 });
 
-export default router;
 
 // Rota POST - Criar nova demanda
 router.post('/', verificarToken, async (req, res) => {
@@ -79,3 +78,89 @@ router.post('/', verificarToken, async (req, res) => {
         });
     }
 });
+
+// Rota PATCH - Atualizar status da demanda
+router.patch('/:id/status', verificarToken, async (req, res) => {
+    try {
+        const { id } = req.params;
+        const { status_id } = req.body;
+
+        if (!status_id) {
+            return res.status(400).json({
+                sucesso: false,
+                mensagem: 'status_id é obrigatório'
+            });
+        }
+
+        const { data, error } = await supabase
+            .from('demandas')
+            .update({ status_id })
+            .eq('id', id)
+            .select();
+        
+        if (error) throw error;
+
+        if (data.length === 0) {
+            return res.status(400).json({
+                sucesso: false,
+                mensagem: 'Demanda não encontrada'
+            });
+        }
+
+        res.json({
+            sucesso: true,
+            mensagem: 'Status atualizado com sucesso!',
+            demanda: data[0]
+        });
+
+    } catch (error) {
+        res.status(500).json({
+            sucesso: false,
+            mensagem: 'Erro ao atualizar status',
+            erro: error.message 
+        });
+    }
+});
+
+
+// Rota GET - Buscar uma demanda específica por ID
+router.get('/:id', verificarToken, async (req, res) => {
+    try {
+        const { id } = req.params;
+
+        const { data, error } = await supabase
+            .from('demandas')
+            .select(`
+                *,
+                cidadaos (id, nome_completo, telefone, email),
+                usuario_responsavel:usuarios!usuario_responsavel_id (id, nome_completo, email),
+                usuario_origem:usuarios!usuario_origem_id (id, nome_completo, email),
+                status (id, nome, ordem)
+            `)
+            .eq('id', id)
+            .single();
+
+        if (error) {
+            if (error.code === 'PGRST116') {
+                return res.status(404).json({
+                    sucesso: false,
+                    mensagem: 'Demanda não encontrada'
+                });
+            }
+            throw error;
+        }
+
+        res.json({
+            sucesso: true,
+            demanda: data
+        });
+    } catch (error) {
+        res.status(500).json({
+            sucesso: false,
+            mensagem: 'Erro ao buscar demanda',
+            erro: error.message
+        });
+    }
+});
+
+export default router;

@@ -15,6 +15,7 @@
 
     <!-- ARQUIVOS JS -->
     <script src="../javascript/principal.js" defer></script>
+    <script src="../javascript/modal-cadastrar-demanda.js" defer></script>
 </head>
 <body>
     <header id="header" class="header">
@@ -40,7 +41,7 @@
 
                 </div>
 
-                <div class="btn-sair" style="cursor: pointer;">
+                <div class="btn-sair">
                     <p>Sair</p>
                 </div>
             </section>
@@ -54,7 +55,7 @@
         <div class="interface">
 
             <ul class="lista-nav">
-                <li>Cadastrar Cidadão</li>
+                <li>Inicio</li>
                 <li>Consultar Cidadão</li>
                 <li>Cadastrar Solicitação</li>
                 <li>Consultar Solicitação</li>
@@ -109,11 +110,11 @@
 
             <div class="card-dash atrasadas">
                 <div class="titulo">
-                    <p>Atrasadas</p>
+                    <p>Arquivadas</p>
                 </div>
                 <div class="info-txt">
                     <h2>12</h2>
-                    <p class="p1">Precisam de atenção</p>
+                    <p class="p1">Sem tratativas</p>
                 </div>
             </div>
 
@@ -130,15 +131,19 @@
                 </div>
 
                 <div class="btn-acoes">
-                    <button class="btn">
+                    <button class="btn acessar-kanban">
                         <p>Acessar KanBan</p>
                     </button>
 
-                    <button class="btn">
+                    <button class="btn nova-demanda">
                         <p>Nova Demanda</p>
                     </button>
 
-                    <button class="btn">
+                    <button class="btn listar-demandas">
+                        <p>Listar demandas</p>
+                    </button>
+
+                    <button class="btn gerenciar-usuarios">
                         <p>Gerenciar Usuários</p>
                     </button>
                 </div>
@@ -169,5 +174,108 @@
             </section>
         </div>
     </section>
+
+    <!-- Modal de Cadastro de Demanda -->
+    <div id="modalDemanda" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Cadastrar Nova Demanda</h2>
+                <span class="close">&times;</span>
+            </div>
+            
+            <form id="formDemanda">
+                <div class="form-group">
+                    <label for="titulo">Título da Demanda *</label>
+                    <input type="text" id="titulo" name="titulo" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="descricao">Descrição</label>
+                    <textarea id="descricao" name="descricao" rows="4"></textarea>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="prioridade">Prioridade *</label>
+                        <select id="prioridade" name="prioridade" required>
+                            <option value="">Selecione...</option>
+                            <option value="baixa">Baixa</option>
+                            <option value="media">Média</option>
+                            <option value="alta">Alta</option>
+                            <option value="urgente">Urgente</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="status_id">Status Inicial *</label>
+                        <select id="status_id" name="status_id" required>
+                            <option value="">Carregando...</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Seção de Cidadão -->
+                <fieldset style="border: 1px solid #ddd; padding: 15px; margin: 20px 0; border-radius: 4px;">
+                    <legend style="padding: 0 10px; font-weight: 600;">Dados do Cidadão Solicitante</legend>
+                    
+                    <div class="form-group">
+                        <label for="telefone_cidadao">Telefone do Cidadão *</label>
+                        <input type="tel" id="telefone_cidadao" name="telefone_cidadao" placeholder="(00) 00000-0000" required>
+                        <small id="status_busca" style="display: block; margin-top: 5px;"></small>
+                    </div>
+
+                    <input type="hidden" id="cidadao_id" name="cidadao_id">
+
+                    <div class="form-group">
+                        <label for="nome_cidadao">Nome Completo *</label>
+                        <input type="text" id="nome_cidadao" name="nome_cidadao" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="data_nascimento_cidadao">Data de Nascimento *</label>
+                        <input type="date" id="data_nascimento_cidadao" name="data_nascimento_cidadao" required>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="bairro_cidadao">Bairro *</label>
+                            <input type="text" id="bairro_cidadao" name="bairro_cidadao" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="cidade_cidadao">Cidade *</label>
+                            <input type="text" id="cidade_cidadao" name="cidade_cidadao" required>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="estado_cidadao">Estado *</label>
+                            <input type="text" id="estado_cidadao" name="estado_cidadao" maxlength="2" placeholder="Ex: SP" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="email_cidadao">E-mail (Opcional)</label>
+                            <input type="email" id="email_cidadao" name="email_cidadao">
+                        </div>
+                    </div>
+                </fieldset>
+
+                <div class="form-group">
+                    <label for="usuario_responsavel_id">Usuário Responsável *</label>
+                    <select id="usuario_responsavel_id" name="usuario_responsavel_id" required>
+                        <option value="">Carregando...</option>
+                    </select>
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn-cancelar">Cancelar</button>
+                    <button type="submit" class="btn-salvar">Cadastrar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+
 </body>
 </html>

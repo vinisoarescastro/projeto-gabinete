@@ -43,14 +43,76 @@ function logout(){
     window.location.href = 'frontend/html/login.html'
 }
 
+// Função para buscar estatísticas das demandas
+async function buscarEstatisticas() {
+    try {
+        const token = localStorage.getItem('token');
+        
+        const response = await fetch(`${API_URL}/api/demandas`, {
+            method: 'GET',
+            headers: {
+                'Authorization': `Bearer ${token}`,
+                'Content-Type': 'application/json'
+            }
+        });
+
+        if (!response.ok) {
+            throw new Error('Erro ao buscar demandas');
+        }
+
+        const data = await response.json();
+        
+        if (data.sucesso) {
+            atualizarDashboard(data.demandas);
+        }
+    } catch (error) {
+        console.error('Erro ao buscar estatísticas:', error);
+    }
+}
+
+// Função para atualizar os cards do dashboard
+function atualizarDashboard(demandas) {
+    const usuario = JSON.parse(localStorage.getItem('usuario'));
+    
+    // Total de demandas
+    const totalDemandas = demandas.length;
+    
+    // Pendentes (status 1, 2, 3 - não concluídas nem arquivadas)
+    const pendentes = demandas.filter(d => d.status_id <= 3).length;
+    
+    // Concluídas (status 4)
+    const concluidas = demandas.filter(d => d.status_id === 4).length;
+    
+    // Arquivadas (status 5)
+    const arquivadas = demandas.filter(d => d.status_id === 5).length;
+    
+    // Suas demandas (do usuário logado)
+    const suasDemandas = demandas.filter(d => d.usuario_responsavel_id === usuario.id);
+    const suasAFazer = suasDemandas.filter(d => d.status_id === 1).length;
+    const suasEmProgresso = suasDemandas.filter(d => d.status_id === 2 || d.status_id === 3).length;
+    const suasConcluidas = suasDemandas.filter(d => d.status_id === 4).length;
+    
+    // Atualizar HTML dos cards
+    document.querySelector('.total-demandas h2').textContent = totalDemandas;
+    document.querySelector('.pendentes h2').textContent = pendentes;
+    document.querySelector('.concluidas h2').textContent = concluidas;
+    document.querySelector('.atrasadas h2').textContent = arquivadas;
+    
+    // Atualizar suas demandas
+    document.querySelector('.info.a-fazer p:last-child').textContent = suasAFazer;
+    document.querySelector('.info.em-progresso p:last-child').textContent = suasEmProgresso;
+    document.querySelector('.info.concluida p:last-child').textContent = suasConcluidas;
+}
+
 
 // Executar quando a página carregar
 document.addEventListener('DOMContentLoaded', function() {
     exibirDadosUsuario();
-
-    // Adicionar evento ao botão sair.
+    buscarEstatisticas(); 
+    
+    // Adicionar evento ao botão sair
     const btnSair = document.querySelector('.btn-sair');
-    if (btnSair){
-        btnSair.addEventListener('click', logout)
+    if (btnSair) {
+        btnSair.addEventListener('click', logout);
     }
-})
+});
