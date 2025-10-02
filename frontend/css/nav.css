@@ -1,0 +1,16 @@
+.nav {
+    display: flex;
+    background: #bd2820;
+}
+
+.nav .lista-nav {
+    display: flex;
+    gap: 50px;
+    color: #fff;
+
+    list-style: none;
+}
+
+.nav li {
+    padding: 10px 0;
+}
