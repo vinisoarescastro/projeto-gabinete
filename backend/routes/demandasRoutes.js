@@ -29,6 +29,47 @@ router.get('/', verificarToken, async (req, res) => {
 });
 
 
+// Rota GET - Buscar uma demanda específica por ID
+router.get('/:id', verificarToken, async (req, res) => {
+    try {
+        const { id } = req.params;
+
+        const { data, error } = await supabase
+            .from('demandas')
+            .select(`
+                *,
+                cidadaos (id, nome_completo, telefone, email, cidade, estado, bairro, data_nascimento),
+                usuario_responsavel:usuarios!usuario_responsavel_id (id, nome_completo, email),
+                usuario_origem:usuarios!usuario_origem_id (id, nome_completo, email),
+                status (id, nome, ordem)
+            `)
+            .eq('id', id)
+            .single();
+
+        if (error) {
+            if (error.code === 'PGRST116') {
+                return res.status(404).json({
+                    sucesso: false,
+                    mensagem: 'Demanda não encontrada'
+                });
+            }
+            throw error;
+        }
+
+        res.json({
+            sucesso: true,
+            demanda: data
+        });
+    } catch (error) {
+        res.status(500).json({
+            sucesso: false,
+            mensagem: 'Erro ao buscar demanda',
+            erro: error.message
+        });
+    }
+});
+
+
 // Rota POST - Criar nova demanda
 router.post('/', verificarToken, async (req, res) => {
     try {
@@ -123,41 +164,41 @@ router.patch('/:id/status', verificarToken, async (req, res) => {
 });
 
 
-// Rota GET - Buscar uma demanda específica por ID
-router.get('/:id', verificarToken, async (req, res) => {
+// Rota DELETE - Excluir demanda
+router.delete('/:id', verificarToken, async (req, res) => {
     try {
         const { id } = req.params;
 
-        const { data, error } = await supabase
+        // Verificar se a demanda existe
+        const { data: demandaExiste, error: erroVerificacao } = await supabase
             .from('demandas')
-            .select(`
-                *,
-                cidadaos (id, nome_completo, telefone, email),
-                usuario_responsavel:usuarios!usuario_responsavel_id (id, nome_completo, email),
-                usuario_origem:usuarios!usuario_origem_id (id, nome_completo, email),
-                status (id, nome, ordem)
-            `)
+            .select('id, titulo')
             .eq('id', id)
             .single();
 
-        if (error) {
-            if (error.code === 'PGRST116') {
-                return res.status(404).json({
-                    sucesso: false,
-                    mensagem: 'Demanda não encontrada'
-                });
-            }
-            throw error;
+        if (erroVerificacao || !demandaExiste) {
+            return res.status(404).json({
+                sucesso: false,
+                mensagem: 'Demanda não encontrada'
+            });
         }
+
+        // Excluir a demanda
+        const { error } = await supabase
+            .from('demandas')
+            .delete()
+            .eq('id', id);
+
+        if (error) throw error;
 
         res.json({
             sucesso: true,
-            demanda: data
+            mensagem: 'Demanda excluída com sucesso'
         });
     } catch (error) {
         res.status(500).json({
             sucesso: false,
-            mensagem: 'Erro ao buscar demanda',
+            mensagem: 'Erro ao excluir demanda',
             erro: error.message
         });
     }
