@@ -120,7 +120,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const btnKanban = document.querySelector('.btn.acessar-kanban');
     if (btnKanban) {
         btnKanban.addEventListener('click', () => {
-            alert('Funcionalidade a ser implementada em breve!');
+            window.location.href='../html/kanban.html';
         });
     }
 });
