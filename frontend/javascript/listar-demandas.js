@@ -234,7 +234,7 @@ function preencherModalDetalhes(demanda) {
     // Cidadão
     document.getElementById('detCidadaoNome').textContent = demanda.cidadaos?.nome_completo || 'N/A';
     document.getElementById('detCidadaoTelefone').textContent = demanda.cidadaos?.telefone || 'N/A';
-    document.getElementById('detCidadaoCidade').textContent = `${demanda.cidadaos?.cidade || 'N/A'}/${demanda.cidadaos?.estado || 'N/A'}`;
+    document.getElementById('detCidadaoCidade').textContent = `${demanda.cidadaos?.bairro || 'N/A'}, ${demanda.cidadaos?.cidade || 'N/A'}/${demanda.cidadaos?.estado || 'N/A'}`;
     document.getElementById('detCidadaoEmail').textContent = demanda.cidadaos?.email || 'Não informado';
     
     // Responsáveis

@@ -9,7 +9,13 @@ router.get('/', verificarToken, async (req, res) => {
     try {
         const { data, error } = await supabase
             .from('demandas')
-            .select('*')
+            .select(`
+                *,
+                cidadaos (id, nome_completo, telefone, cidade, estado, bairro, email),
+                usuario_responsavel:usuarios!usuario_responsavel_id (id, nome_completo),
+                usuario_origem:usuarios!usuario_origem_id (id, nome_completo),
+                status (id, nome)
+            `)
             .order('criado_em', { ascending: false });
 
         if (error) throw error;
