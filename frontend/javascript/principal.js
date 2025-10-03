@@ -115,4 +115,12 @@ document.addEventListener('DOMContentLoaded', function() {
     if (btnSair) {
         btnSair.addEventListener('click', logout);
     }
+
+    // Botão acessar kanban
+    const btnKanban = document.querySelector('.btn.acessar-kanban');
+    if (btnKanban) {
+        btnKanban.addEventListener('click', () => {
+            alert('Funcionalidade a ser implementada em breve!');
+        });
+    }
 });

@@ -41,6 +41,12 @@ function getNomeSobrenome(nomeCompleto) {
     return `${partes[0]} ${partes[partes.length - 1]}`;
 }
 
+// Converter quebras de linha em <br>
+function formatarTextoComQuebras(texto) {
+    if (!texto) return 'Sem descrição';
+    return texto.replace(/\n/g, '<br>');
+}
+
 // Buscar todas as demandas
 async function buscarDemandas() {
     const token = localStorage.getItem('token');
@@ -67,16 +73,148 @@ async function buscarDemandas() {
     }
 }
 
+// Abrir modal de edição
+async function abrirModalEdicao(id) {
+    const token = localStorage.getItem('token');
+    
+    try {
+        // Buscar dados da demanda
+        const response = await fetch(`${API_URL}/api/demandas/${id}`, {
+            headers: { 'Authorization': `Bearer ${token}` }
+        });
+        
+        const data = await response.json();
+        
+        if (data.sucesso) {
+            const demanda = data.demanda;
+            
+            // Preencher formulário
+            document.getElementById('edit_demanda_id').value = demanda.id;
+            document.getElementById('edit_titulo').value = demanda.titulo;
+            document.getElementById('edit_descricao').value = demanda.descricao || '';
+            document.getElementById('edit_prioridade').value = demanda.prioridade;
+            document.getElementById('edit_status_id').value = demanda.status_id;
+            document.getElementById('edit_usuario_responsavel_id').value = demanda.usuario_responsavel_id;
+            
+            // Carregar selects
+            await carregarSelectsEdicao();
+            
+            // Reselecionar valores após carregar
+            document.getElementById('edit_status_id').value = demanda.status_id;
+            document.getElementById('edit_usuario_responsavel_id').value = demanda.usuario_responsavel_id;
+            
+            // Abrir modal
+            document.getElementById('modalEditar').style.display = 'block';
+        }
+    } catch (error) {
+        console.error('Erro:', error);
+        alert('Erro ao carregar dados da demanda');
+    }
+}
+
+// Carregar selects do modal de edição
+async function carregarSelectsEdicao() {
+    const token = localStorage.getItem('token');
+    
+    try {
+        // Buscar status
+        const statusRes = await fetch(`${API_URL}/api/status`, {
+            headers: { 'Authorization': `Bearer ${token}` }
+        });
+        const statusData = await statusRes.json();
+        
+        const selectStatus = document.getElementById('edit_status_id');
+        selectStatus.innerHTML = statusData.status.map(s => 
+            `<option value="${s.id}">${s.nome}</option>`
+        ).join('');
+
+        // Buscar usuários
+        const usuariosRes = await fetch(`${API_URL}/api/usuarios`, {
+            headers: { 'Authorization': `Bearer ${token}` }
+        });
+        const usuariosData = await usuariosRes.json();
+        
+        const selectUsuarios = document.getElementById('edit_usuario_responsavel_id');
+        selectUsuarios.innerHTML = usuariosData.usuarios.map(u => 
+            `<option value="${u.id}">${u.nome_completo}</option>`
+        ).join('');
+    } catch (error) {
+        console.error('Erro ao carregar selects:', error);
+    }
+}
+
+// Fechar modal de edição
+function fecharModalEdicao() {
+    document.getElementById('modalEditar').style.display = 'none';
+    document.getElementById('formEditar').reset();
+}
+
+// Salvar edição
+async function salvarEdicao(e) {
+    e.preventDefault();
+    
+    const token = localStorage.getItem('token');
+    const id = document.getElementById('edit_demanda_id').value;
+    const btnSalvar = document.querySelector('#formEditar .btn-salvar');
+    
+    btnSalvar.disabled = true;
+    btnSalvar.textContent = 'Salvando...';
+    
+    try {
+        const dadosAtualizados = {
+            titulo: document.getElementById('edit_titulo').value,
+            descricao: document.getElementById('edit_descricao').value,
+            prioridade: document.getElementById('edit_prioridade').value,
+            usuario_responsavel_id: parseInt(document.getElementById('edit_usuario_responsavel_id').value),
+            status_id: parseInt(document.getElementById('edit_status_id').value)
+        };
+        
+        const response = await fetch(`${API_URL}/api/demandas/${id}`, {
+            method: 'PUT',
+            headers: {
+                'Authorization': `Bearer ${token}`,
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(dadosAtualizados)
+        });
+        
+        const data = await response.json();
+        
+        if (data.sucesso) {
+            alert('Demanda atualizada com sucesso!');
+            fecharModalEdicao();
+            buscarDemandas(); // Recarregar lista
+        } else {
+            alert('Erro: ' + data.mensagem);
+        }
+    } catch (error) {
+        console.error('Erro:', error);
+        alert('Erro ao atualizar demanda');
+    } finally {
+        btnSalvar.disabled = false;
+        btnSalvar.textContent = 'Salvar Alterações';
+    }
+}
+
 // Renderizar tabela
 function renderizarTabela(demandas) {
     const corpoTabela = document.getElementById('corpoTabela');
+    const usuario = JSON.parse(localStorage.getItem('usuario'));
     
     if (demandas.length === 0) {
         corpoTabela.innerHTML = '<tr><td colspan="8" class="vazio">Nenhuma demanda encontrada</td></tr>';
         return;
     }
     
-    corpoTabela.innerHTML = demandas.map(d => `
+    corpoTabela.innerHTML = demandas.map(d => {
+        // Verificar se usuário pode editar
+        const podeEditar =
+            usuario.nivel_permissao === 'administrador' ||
+            usuario.nivel_permissao === 'chefe_gabinete' ||
+            usuario.nivel_permissao === 'supervisor' ||
+            d.usuario_responsavel_id === usuario.id;
+
+        return `
         <tr>
             <td>${d.titulo}</td>
             <td><span class="badge prioridade-${d.prioridade}">${d.prioridade}</span></td>
@@ -87,10 +225,12 @@ function renderizarTabela(demandas) {
             <td>${formatarData(d.atualizado_em)}</td>
             <td class="acoes">
                 <button class="btn-visualizar" onclick="visualizarDemanda(${d.id})" title="Ver detalhes">👁️</button>
+                ${podeEditar ? `<button class="btn-editar" onclick="abrirModalEdicao(${d.id})" title="Editar">✏️</button>` : ''}
                 <button class="btn-excluir-demanda" onclick="confirmarExclusao(${d.id}, '${d.titulo.replace(/'/g, "\\'")}')">🗑️</button>
             </td>
         </tr>
-    `).join('');
+        `;
+    }).join('');
 }
 
 // Formatar data (apenas data, sem hora)
@@ -229,7 +369,7 @@ function preencherModalDetalhes(demanda) {
     document.getElementById('detTitulo').textContent = demanda.titulo;
     document.getElementById('detPrioridade').innerHTML = `<span class="badge prioridade-${demanda.prioridade}">${demanda.prioridade}</span>`;
     document.getElementById('detStatus').innerHTML = `<span class="badge status-${demanda.status_id}">${demanda.status?.nome || 'N/A'}</span>`;
-    document.getElementById('detDescricao').textContent = demanda.descricao || 'Sem descrição';
+    document.getElementById('detDescricao').innerHTML = formatarTextoComQuebras(demanda.descricao);
     
     // Cidadão
     document.getElementById('detCidadaoNome').textContent = demanda.cidadaos?.nome_completo || 'N/A';
@@ -264,6 +404,7 @@ function formatarDataHora(dataISO) {
 // Carregar comentários
 async function carregarComentarios(demandaId) {
     const token = localStorage.getItem('token');
+    const usuario = JSON.parse(localStorage.getItem('usuario'));
     const listaComentarios = document.getElementById('listaComentarios');
     
     try {
@@ -277,20 +418,59 @@ async function carregarComentarios(demandaId) {
             if (data.comentarios.length === 0) {
                 listaComentarios.innerHTML = '<p class="sem-comentarios">Nenhum comentário ainda</p>';
             } else {
-                listaComentarios.innerHTML = data.comentarios.map(c => `
-                    <div class="comentario-item">
-                        <div class="comentario-header">
-                            <span class="comentario-autor">${c.usuarios?.nome_completo || 'Usuário'}</span>
-                            <span class="comentario-data">${formatarDataHora(c.criado_em)}</span>
+                listaComentarios.innerHTML = data.comentarios.map(c => {
+                    // Verificar se pode excluir
+                    const podeExcluir = 
+                        usuario.nivel_permissao === 'administrador' ||
+                        usuario.nivel_permissao === 'chefe_gabinete' ||
+                        c.usuario_id === usuario.id;
+
+                    return `
+                        <div class="comentario-item">
+                            <div class="comentario-header">
+                                <span class="comentario-autor">${c.usuarios?.nome_completo || 'Usuário'}</span>
+                                <div>
+                                    <span class="comentario-data">${formatarDataHora(c.criado_em)}</span>
+                                    ${podeExcluir ? `<button class="btn-excluir-comentario" onclick="excluirComentario(${c.id})" title="Excluir comentário">🗑️</button>` : ''}
+                                </div>
+                            </div>
+                            <div class="comentario-texto">${c.comentario}</div>
                         </div>
-                        <div class="comentario-texto">${c.comentario}</div>
-                    </div>
-                `).join('');
+                    `;
+                }).join('');
             }
         }
     } catch (error) {
         console.error('Erro:', error);
         listaComentarios.innerHTML = '<p class="erro">Erro ao carregar comentários</p>';
+    }
+}
+
+// Excluir comentário
+async function excluirComentario(id) {
+    if (!confirm('Tem certeza que deseja excluir este comentário?')) {
+        return;
+    }
+
+    const token = localStorage.getItem('token');
+    
+    try {
+        const response = await fetch(`${API_URL}/api/comentarios/${id}`, {
+            method: 'DELETE',
+            headers: { 'Authorization': `Bearer ${token}` }
+        });
+        
+        const data = await response.json();
+        
+        if (data.sucesso) {
+            // Recarregar comentários
+            carregarComentarios(demandaAtualId);
+        } else {
+            alert('Erro: ' + data.mensagem);
+        }
+    } catch (error) {
+        console.error('Erro:', error);
+        alert('Erro ao excluir comentário');
     }
 }
 
@@ -377,4 +557,11 @@ document.addEventListener('DOMContentLoaded', function() {
     });
     
     btnConfirmarExclusao?.addEventListener('click', excluirDemanda);
+
+    // Modal de edição
+    const closeEditar = document.querySelector('.close-editar');
+    closeEditar?.addEventListener('click', fecharModalEdicao);
+
+    const formEditar = document.getElementById('formEditar');
+    formEditar?.addEventListener('submit', salvarEdicao);
 });

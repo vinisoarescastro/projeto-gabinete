@@ -210,4 +210,69 @@ router.delete('/:id', verificarToken, async (req, res) => {
     }
 });
 
+
+// Rota PUT - Atualizar demanda completa
+router.put('/:id', verificarToken, async (req, res) => {
+    try {
+        const { id } = req.params;
+        const { titulo, descricao, prioridade, usuario_responsavel_id, status_id } = req.body;
+        const usuarioLogado = req.usuario; // Dados do token JWT
+
+        // Buscar a demanda para verificar permissões
+        const { data: demandaExistente, error: erroVerificacao } = await supabase
+            .from('demandas')
+            .select('usuario_responsavel_id')
+            .eq('id', id)
+            .single();
+
+        if (erroVerificacao || !demandaExistente) {
+            return res.status(404).json({
+                sucesso: false,
+                mensagem: 'Demanda não encontrada'
+            });
+        }
+
+        // Verificar permissões
+        const podeEditar = 
+            usuarioLogado.nivel_permissao === 'administrador' ||
+            usuarioLogado.nivel_permissao === 'chefe_gabinete' ||
+            usuarioLogado.nivel_permissao === 'supervisor' ||
+            demandaExistente.usuario_responsavel_id === usuarioLogado.id;
+
+        if (!podeEditar) {
+            return res.status(403).json({
+                sucesso: false,
+                mensagem: 'Você não tem permissão para editar esta demanda'
+            });
+        }
+
+        // Atualizar a demanda
+        const { data, error } = await supabase
+            .from('demandas')
+            .update({
+                titulo,
+                descricao,
+                prioridade,
+                usuario_responsavel_id,
+                status_id
+            })
+            .eq('id', id)
+            .select();
+
+        if (error) throw error;
+
+        res.json({
+            sucesso: true,
+            mensagem: 'Demanda atualizada com sucesso!',
+            demanda: data[0]
+        });
+    } catch (error) {
+        res.status(500).json({
+            sucesso: false,
+            mensagem: 'Erro ao atualizar demanda',
+            erro: error.message
+        });
+    }
+});
+
 export default router;

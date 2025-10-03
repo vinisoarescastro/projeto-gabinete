@@ -91,4 +91,59 @@ router.get('/demanda/:demanda_id', verificarToken, async (req, res) => {
     }
 });
 
+
+// Rota DELETE - Excluir comentário
+router.delete('/:id', verificarToken, async (req, res) => {
+    try {
+        const { id } = req.params;
+        const usuarioLogado = req.usuario;
+
+        // Buscar o comentário
+        const { data: comentario, error: erroVerificacao } = await supabase
+            .from('comentarios')
+            .select('usuario_id')
+            .eq('id', id)
+            .single();
+
+        if (erroVerificacao || !comentario) {
+            return res.status(404).json({
+                sucesso: false,
+                mensagem: 'Comentário não encontrado'
+            });
+        }
+
+        // Verificar permissões
+        const podeExcluir = 
+            usuarioLogado.nivel_permissao === 'administrador' ||
+            usuarioLogado.nivel_permissao === 'chefe_gabinete' ||
+            comentario.usuario_id === usuarioLogado.id;
+
+        if (!podeExcluir) {
+            return res.status(403).json({
+                sucesso: false,
+                mensagem: 'Você não tem permissão para excluir este comentário'
+            });
+        }
+
+        // Excluir comentário
+        const { error } = await supabase
+            .from('comentarios')
+            .delete()
+            .eq('id', id);
+
+        if (error) throw error;
+
+        res.json({
+            sucesso: true,
+            mensagem: 'Comentário excluído com sucesso'
+        });
+    } catch (error) {
+        res.status(500).json({
+            sucesso: false,
+            mensagem: 'Erro ao excluir comentário',
+            erro: error.message
+        });
+    }
+});
+
 export default router;

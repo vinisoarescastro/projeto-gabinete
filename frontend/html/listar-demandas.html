@@ -12,6 +12,7 @@
     <link rel="stylesheet" href="../css/container-construcao.css">
     <link rel="stylesheet" href="../css/listar-demandas.css">
     <link rel="stylesheet" href="../css/modal-cadastro-de-demandas.css">
+    <link rel="stylesheet" href="../css/modal-editar-demandas.css">
 
     <!-- FONTES -->
     <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900&display=swap" rel="stylesheet">
@@ -372,6 +373,63 @@
         </div>
     </div>
 
+
+    
+    
+    <!-- Modal de Edição de Demanda -->
+    <div id="modalEditar" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Editar Demanda</h2>
+                <span class="close-editar">&times;</span>
+            </div>
+            
+            <form id="formEditar">
+                <input type="hidden" id="edit_demanda_id">
+                
+                <div class="form-group">
+                    <label for="edit_titulo">Título da Demanda *</label>
+                    <input type="text" id="edit_titulo" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="edit_descricao">Descrição</label>
+                    <textarea id="edit_descricao" rows="4"></textarea>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="edit_prioridade">Prioridade *</label>
+                        <select id="edit_prioridade" required>
+                            <option value="baixa">Baixa</option>
+                            <option value="media">Média</option>
+                            <option value="alta">Alta</option>
+                            <option value="urgente">Urgente</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="edit_status_id">Status *</label>
+                        <select id="edit_status_id" required>
+                            <option value="">Carregando...</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="edit_usuario_responsavel_id">Usuário Responsável *</label>
+                    <select id="edit_usuario_responsavel_id" required>
+                        <option value="">Carregando...</option>
+                    </select>
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn-cancelar" onclick="fecharModalEdicao()">Cancelar</button>
+                    <button type="submit" class="btn-salvar">Salvar Alterações</button>
+                </div>
+            </form>
+        </div>
+    </div>
     
 </body>
 </html>

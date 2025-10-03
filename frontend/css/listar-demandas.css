@@ -412,6 +412,9 @@
     transition: background-color 0.3s;
 }
 
+
+/* BOTÃO DE AÇÕES TABELA */
+
 .btn-cancelar:hover {
     background-color: #5a6268;
 }
@@ -420,7 +423,7 @@
     background-color: #28a745;
     color: white;
     border: none;
-    padding: 10px 20px;
+    padding: 2px 4px;
     border-radius: 4px;
     font-size: 14px;
     cursor: pointer;
@@ -431,11 +434,26 @@
     background-color: #218838;
 }
 
+.btn-editar {
+    background-color: #9aceff;
+    color: white;
+    border: none;
+    padding: 2px 4px;
+    border-radius: 4px;
+    font-size: 14px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.btn-editar:hover {
+    background-color: #3363ff;
+}
+
 .btn-excluir {
     background-color: #dc3545;
     color: white;
     border: none;
-    padding: 10px 20px;
+    padding: 2px 4px;
     border-radius: 4px;
     font-size: 14px;
     cursor: pointer;
@@ -445,8 +463,6 @@
 .btn-excluir:hover {
     background-color: #c82333;
 }
-
-
 
 
 
@@ -573,6 +589,33 @@
 
 .badge {
   text-transform: capitalize;
+}
+
+.comentario-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 8px;
+}
+
+.comentario-header > div {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.btn-excluir-comentario {
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 14px;
+    padding: 2px 5px;
+    opacity: 0.6;
+    transition: opacity 0.3s;
+}
+
+.btn-excluir-comentario:hover {
+    opacity: 1;
 }
 
 /* ===== RESPONSIVIDADE ===== */
