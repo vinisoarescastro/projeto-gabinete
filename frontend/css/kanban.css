@@ -32,11 +32,30 @@
 
 /* Board do Kanban */
 .kanban-board {
-    display: grid;
-    grid-template-columns: repeat(5, 1fr);
-    gap: 20px;
+    display: flex;
+    gap: 15px;
     overflow-x: auto;
     padding-bottom: 20px;
+    min-height: 600px;
+}
+
+/* Scrollbar personalizada para o board */
+.kanban-board::-webkit-scrollbar {
+    height: 10px;
+}
+
+.kanban-board::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 5px;
+}
+
+.kanban-board::-webkit-scrollbar-thumb {
+    background: #888;
+    border-radius: 5px;
+}
+
+.kanban-board::-webkit-scrollbar-thumb:hover {
+    background: #555;
 }
 
 /* Colunas */
@@ -46,6 +65,9 @@
     min-height: 600px;
     display: flex;
     flex-direction: column;
+    min-width: 300px;
+    max-width: 300px;
+    flex-shrink: 0;
 }
 
 .coluna-header {
@@ -82,13 +104,13 @@
     min-height: 100px;
 }
 
-/* Cards */
+/* Cards - CARDS MENORES AGORA! */
 .kanban-card {
     background-color: white;
     border-radius: 6px;
     padding: 12px;
     box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-    cursor: grab;
+    cursor: pointer;
     transition: all 0.3s;
     border-left: 4px solid #3498db;
 }
@@ -125,12 +147,19 @@
     background-color: #fff5f5;
 }
 
+/* NOVO: Header do card com ID e Prioridade lado a lado */
+.card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 8px;
+}
+
 /* Conteúdo do Card */
 .card-id {
     font-size: 0.75rem;
     color: #95a5a6;
     font-weight: 600;
-    margin-bottom: 5px;
 }
 
 .card-titulo {
@@ -140,7 +169,7 @@
     margin-bottom: 8px;
     line-height: 1.3;
     display: -webkit-box;
-    -webkit-line-clamp: 2; /* stylelint-disable-line property-no-vendor-prefix */
+    -webkit-line-clamp: 2;
     -webkit-box-orient: vertical;
     overflow: hidden;
 }
@@ -151,7 +180,6 @@
     border-radius: 3px;
     font-size: 0.7rem;
     font-weight: 600;
-    margin-bottom: 8px;
     text-transform: uppercase;
 }
 
@@ -185,16 +213,7 @@
     color: #495057;
 }
 
-.card-descricao {
-    font-size: 0.8rem;
-    color: #6c757d;
-    margin-bottom: 8px;
-    line-height: 1.4;
-    display: -webkit-box;
-    -webkit-line-clamp: 2; /* stylelint-disable-line property-no-vendor-prefix */ 
-    -webkit-box-orient: vertical;
-    overflow: hidden;
-}
+/* REMOVIDO: .card-descricao - não usamos mais */
 
 .card-responsavel {
     font-size: 0.75rem;
@@ -210,6 +229,37 @@
     content: "👤";
 }
 
+/* Botão Carregar Mais */
+.btn-carregar-mais-container {
+    display: flex;
+    justify-content: center;
+    padding: 10px;
+}
+
+.btn-carregar-mais {
+    background-color: #6c757d;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 6px;
+    font-size: 0.85rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s;
+    width: 100%;
+    font-family: 'Poppins', sans-serif;
+}
+
+.btn-carregar-mais:hover {
+    background-color: #5a6268;
+    transform: translateY(-1px);
+    box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+}
+
+.btn-carregar-mais:active {
+    transform: translateY(0);
+}
+
 /* Drag over state */
 .coluna-cards.drag-over {
     background-color: #e3f2fd;
@@ -218,20 +268,29 @@
 }
 
 /* Responsivo */
-@media (max-width: 1400px) {
-    .kanban-board {
-        grid-template-columns: repeat(3, 1fr);
-    }
-}
-
-@media (max-width: 992px) {
-    .kanban-board {
-        grid-template-columns: repeat(2, 1fr);
-    }
-}
-
 @media (max-width: 768px) {
-    .kanban-board {
-        grid-template-columns: 1fr;
+    .kanban-coluna {
+        min-width: 280px;
+        max-width: 280px;
+    }
+    
+    .container-kanban {
+        padding: 15px 0;
+    }
+    
+    .kanban-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 15px;
+    }
+    
+    .kanban-acoes {
+        width: 100%;
+        flex-direction: column;
+    }
+    
+    .filtro-select,
+    .btn {
+        width: 100%;
     }
 }

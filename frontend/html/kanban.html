@@ -13,6 +13,8 @@
     <link rel="stylesheet" href="../css/kanban.css">
     <link rel="stylesheet" href="../css/modal-cadastro-de-demandas.css">
     <link rel="stylesheet" href="../css/modal-editar-demandas.css">
+    <link rel="stylesheet" href="../css/modal-detalhes.css">
+    <link rel="stylesheet" href="../css/modal-gerenciar-status.css">
 
     <!-- FONTES -->
     <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900&display=swap" rel="stylesheet">
@@ -20,6 +22,7 @@
     <!-- ARQUIVOS JS -->
      <script src="../javascript/kanban.js" defer></script>
     <script src="../javascript/modal-cadastrar-demanda.js" defer></script>
+    <script src="../javascript/gerenciar-status.js" defer></script>
 </head>
 <body>
     <header id="header" class="header">
@@ -78,6 +81,7 @@
                 <h1>Quadro Kanban</h1>
                 <div class="kanban-acoes">
                     <button class="btn nova-demanda" id="btnNovaDemanda">Nova Demanda</button>
+                    <button class="btn gerenciar-status" onclick="abrirModalStatus()">⚙️ Gerenciar Colunas</button>
                     <select id="filtroVisualizacao" class="filtro-select">
                         <option value="todas">Todas as Demandas</option>
                         <option value="minhas">Minhas Demandas</option>
@@ -87,45 +91,7 @@
 
             <!-- Board do Kanban -->
             <div class="kanban-board" id="kanbanBoard">
-                <div class="kanban-coluna" data-status="1">
-                    <div class="coluna-header">
-                        <h3>Caixa de Entrada</h3>
-                        <span class="coluna-count" id="count-1">0</span>
-                    </div>
-                    <div class="coluna-cards" id="coluna-1"></div>
-                </div>
-
-                <div class="kanban-coluna" data-status="2">
-                    <div class="coluna-header">
-                        <h3>Triagem</h3>
-                        <span class="coluna-count" id="count-2">0</span>
-                    </div>
-                    <div class="coluna-cards" id="coluna-2"></div>
-                </div>
-
-                <div class="kanban-coluna" data-status="3">
-                    <div class="coluna-header">
-                        <h3>Em Andamento</h3>
-                        <span class="coluna-count" id="count-3">0</span>
-                    </div>
-                    <div class="coluna-cards" id="coluna-3"></div>
-                </div>
-
-                <div class="kanban-coluna" data-status="4">
-                    <div class="coluna-header">
-                        <h3>Concluído</h3>
-                        <span class="coluna-count" id="count-4">0</span>
-                    </div>
-                    <div class="coluna-cards" id="coluna-4"></div>
-                </div>
-
-                <div class="kanban-coluna" data-status="5">
-                    <div class="coluna-header">
-                        <h3>Arquivado</h3>
-                        <span class="coluna-count" id="count-5">0</span>
-                    </div>
-                    <div class="coluna-cards" id="coluna-5"></div>
-                </div>
+                <!-- As colunas serão renderizadas dinamicamente pelo JavaScript -->
             </div>
 
         </div>
@@ -309,6 +275,142 @@
                     <button type="submit" class="btn-salvar">Salvar Alterações</button>
                 </div>
             </form>
+        </div>
+    </div>
+
+
+    <!-- Modal de Detalhes da Demanda -->
+    <div id="modalDetalhes" class="modal">
+        <div class="modal-content modal-detalhes">
+            <div class="modal-header">
+                <div class="modal-header-left">
+                    <h2>Detalhes da Demanda</h2>
+                    <button id="btnEditarDetalhes" class="btn-editar-detalhes" style="display: none;">
+                        ✏️ Editar
+                    </button>
+                </div>
+                <span class="close-detalhes">&times;</span>
+            </div>
+            
+            <div class="modal-body-detalhes">
+                <!-- Informações principais -->
+                <div class="secao-detalhes">
+                    <h3>Informações Gerais</h3>
+                    <div class="info-grid">
+                        <div class="info-item">
+                            <label>Título:</label>
+                            <p id="detTitulo"></p>
+                        </div>
+                        <div class="info-item">
+                            <label>Prioridade:</label>
+                            <p id="detPrioridade"></p>
+                        </div>
+                        <div class="info-item">
+                            <label>Status:</label>
+                            <p id="detStatus"></p>
+                        </div>
+                        <div class="info-item full-width">
+                            <label>Descrição:</label>
+                            <p id="detDescricao"></p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Informações do cidadão -->
+                <div class="secao-detalhes">
+                    <h3>Cidadão Solicitante</h3>
+                    <div class="info-grid">
+                        <div class="info-item">
+                            <label>Nome:</label>
+                            <p id="detCidadaoNome"></p>
+                        </div>
+                        <div class="info-item">
+                            <label>Telefone:</label>
+                            <p id="detCidadaoTelefone"></p>
+                        </div>
+                        <div class="info-item">
+                            <label>Bairro/Cidade/Estado:</label>
+                            <p id="detCidadaoCidade"></p>
+                        </div>
+                        <div class="info-item">
+                            <label>E-mail:</label>
+                            <p id="detCidadaoEmail"></p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Informações de responsabilidade -->
+                <div class="secao-detalhes">
+                    <h3>Responsáveis</h3>
+                    <div class="info-grid">
+                        <div class="info-item">
+                            <label>Responsável:</label>
+                            <p id="detResponsavel"></p>
+                        </div>
+                        <div class="info-item">
+                            <label>Criado por:</label>
+                            <p id="detOrigem"></p>
+                        </div>
+                        <div class="info-item">
+                            <label>Data de criação:</label>
+                            <p id="detDataCriacao"></p>
+                        </div>
+                        <div class="info-item">
+                            <label>Última atualização:</label>
+                            <p id="detDataAtualizacao"></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- Modal de Gerenciar Status -->
+    <div id="modalStatus" class="modal">
+        <div class="modal-content modal-status">
+            <div class="modal-header">
+                <h2>Gerenciar Colunas (Status)</h2>
+                <span class="close" onclick="fecharModalStatus()">&times;</span>
+            </div>
+            
+            <div class="modal-body">
+                <div class="aviso-status">
+                    ⚠️ <strong>Atenção:</strong> As colunas "Caixa de Entrada" e "Arquivado" são protegidas e não podem ser removidas. Você só pode excluir colunas que estejam vazias (sem demandas).
+                </div>
+                
+                <div class="status-lista" id="listaStatus">
+                    <p style="text-align: center; color: #6c757d;">Carregando...</p>
+                </div>
+                
+                <button class="btn-adicionar-status" onclick="mostrarFormAdicionar()">
+                    ➕ Adicionar Nova Coluna
+                </button>
+                
+                <!-- Formulário de Adicionar/Editar -->
+                <form id="formStatus" class="form-status" onsubmit="salvarStatus(event)">
+                    <h3 id="tituloFormStatus">Adicionar Novo Status</h3>
+                    
+                    <div class="form-group">
+                        <label for="nomeStatus">Nome da Coluna *</label>
+                        <input type="text" id="nomeStatus" required placeholder="Ex: Em Revisão">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="ordemStatus">Ordem (Opcional)</label>
+                        <input type="number" id="ordemStatus" min="1" placeholder="Deixe vazio para adicionar no final">
+                    </div>
+                    
+                    <div class="form-status-acoes">
+                        <button type="button" class="btn-cancelar-status" onclick="cancelarFormStatus()">
+                            Cancelar
+                        </button>
+                        <button type="submit" class="btn-salvar-status">
+                            Salvar
+                        </button>
+                    </div>
+                </form>
+            </div>
         </div>
     </div>
     

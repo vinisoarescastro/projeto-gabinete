@@ -1,7 +1,7 @@
   .container-construcao {
     background: linear-gradient(90deg, #fff3cd, #ffeeba); /* amarelo de atenção */
     border: 2px solid #b1933b;
-    padding: 20px 90px;
+    padding: 20px 20px;
     border-radius: 8px;
     margin: 0px auto; /* centraliza */
     margin-top: 15px;

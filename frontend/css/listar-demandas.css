@@ -246,6 +246,13 @@
 }
 
 /* ===== BOTÕES DE AÇÃO ===== */
+.acoes {
+    display: flex;
+    align-items: center;
+    gap: 2px; /* espaço entre botões */
+    white-space: nowrap;
+}
+
 .acoes-container {
     display: flex;
     gap: 8px;

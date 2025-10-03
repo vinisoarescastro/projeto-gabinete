@@ -1,0 +1,186 @@
+/* Modal de Gerenciar Status */
+.modal-status {
+    max-width: 700px;
+}
+
+.status-lista {
+    margin: 20px 0;
+}
+
+.status-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px;
+    background-color: #f8f9fa;
+    border-radius: 6px;
+    margin-bottom: 10px;
+    border-left: 4px solid #007bff;
+}
+
+.status-item.protegido {
+    border-left-color: #6c757d;
+    background-color: #e9ecef;
+}
+
+.status-info {
+    flex: 1;
+}
+
+.status-nome {
+    font-weight: 600;
+    color: #2c3e50;
+    font-size: 1rem;
+    margin-bottom: 3px;
+}
+
+.status-ordem {
+    font-size: 0.85rem;
+    color: #6c757d;
+}
+
+.status-acoes {
+    display: flex;
+    gap: 8px;
+}
+
+.btn-status {
+    padding: 6px 12px;
+    border: none;
+    border-radius: 4px;
+    font-size: 13px;
+    cursor: pointer;
+    transition: all 0.3s;
+    font-weight: 500;
+}
+
+.btn-editar-status {
+    background-color: #007bff;
+    color: white;
+}
+
+.btn-editar-status:hover {
+    background-color: #0056b3;
+}
+
+.btn-excluir-status {
+    background-color: #dc3545;
+    color: white;
+}
+
+.btn-excluir-status:hover {
+    background-color: #c82333;
+}
+
+.btn-excluir-status:disabled {
+    background-color: #6c757d;
+    cursor: not-allowed;
+    opacity: 0.5;
+}
+
+.btn-adicionar-status {
+    background-color: #28a745;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 4px;
+    font-size: 14px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    width: 100%;
+    margin-top: 15px;
+    font-weight: 500;
+}
+
+.btn-adicionar-status:hover {
+    background-color: #218838;
+}
+
+/* Formulário de Adicionar/Editar Status */
+.form-status {
+    display: none;
+    padding: 20px;
+    background-color: #f8f9fa;
+    border-radius: 6px;
+    margin-top: 15px;
+}
+
+.form-status.ativo {
+    display: block;
+}
+
+.form-status .form-group {
+    margin-bottom: 15px;
+}
+
+.form-status label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: 500;
+    color: #495057;
+    font-size: 14px;
+}
+
+.form-status input {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ced4da;
+    border-radius: 4px;
+    font-size: 14px;
+    font-family: 'Poppins', sans-serif;
+}
+
+.form-status-acoes {
+    display: flex;
+    gap: 10px;
+    margin-top: 15px;
+}
+
+.btn-cancelar-status {
+    background-color: #6c757d;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 4px;
+    font-size: 14px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    flex: 1;
+}
+
+.btn-cancelar-status:hover {
+    background-color: #5a6268;
+}
+
+.btn-salvar-status {
+    background-color: #007bff;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 4px;
+    font-size: 14px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    flex: 1;
+}
+
+.btn-salvar-status:hover {
+    background-color: #0056b3;
+}
+
+.aviso-status {
+    background-color: #fff3cd;
+    border: 1px solid #ffc107;
+    color: #856404;
+    padding: 12px;
+    border-radius: 4px;
+    margin-bottom: 15px;
+    font-size: 0.9rem;
+}
+
+.sem-status {
+    text-align: center;
+    color: #6c757d;
+    padding: 30px;
+    font-style: italic;
+}
