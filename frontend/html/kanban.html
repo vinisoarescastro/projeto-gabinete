@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gabinete Digital - Listar Demandas</title>
+
+    <!-- STYLOS -->
+    <link rel="stylesheet" href="../css/global.css">
+    <link rel="stylesheet" href="../css/header.css">
+    <link rel="stylesheet" href="../css/nav.css">
+    <link rel="stylesheet" href="../css/container-construcao.css">
+    <link rel="stylesheet" href="../css/kanban.css">
+    <link rel="stylesheet" href="../css/modal-cadastro-de-demandas.css">
+    <link rel="stylesheet" href="../css/modal-editar-demandas.css">
+
+    <!-- FONTES -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900&display=swap" rel="stylesheet">
+
+    <!-- ARQUIVOS JS -->
+     <script src="../javascript/kanban.js" defer></script>
+    <script src="../javascript/modal-cadastrar-demanda.js" defer></script>
+</head>
+<body>
+    <header id="header" class="header">
+        <div class="interface">
+            <section class="logo">
+                <img src="../img/gabinete-digital/logo-gabinete-digital.png" alt="logo-edward">
+            </section>
+
+            <section class="container-usuario">
+                <div class="card-usuario">
+                    <div class="img-usuario">
+                        <img src="../img/usuario/perfil-img-usuario.jpg" alt="img-usuario">
+                    </div>
+                    <div class="txt-usuario">
+                        <p>Seja bem-vindo,</p>
+                        <h3>Nome Completo</h3>
+                        <p>Função do Usuario</p>
+                    </div>
+                </div>
+                <div class="btn-sair">
+                    <p>Sair</p>
+                </div>
+            </section>
+        </div>
+    </header>
+
+    <section class="nav">
+        <div class="interface">
+            <ul class="lista-nav">
+                <li><a href="/frontend/html/principal.html">Inicio</a></li>
+                <li><a href="/frontend/html/listar-demandas.html">Painel de Demandas</a></li>
+                <li><a href="#">Painel de Cidadãos</a></li>
+            </ul>
+        </div>
+    </section>
+
+    <section class="page-contrucao">
+        <div class="interface">
+
+            <div class="container-construcao">
+                <h4>Atenção: Sistema Web em Construção.</h4>
+                <p>Esta aplicação está em fase de desenvolvimento e, por essa razão, algumas seções, funcionalidades e conteúdos podem não estar disponíveis neste momento. Estou conduzindo as melhorias necessárias para que, em breve, todas as informações estejam acessíveis de maneira adequada.</p>
+                <p>Grato,<br>Vinicius Soares.</p>
+            </div>
+
+        </div>
+    </section>
+
+
+
+    <section class="container-kanban">
+        <div class="interface">
+            
+            <!-- Cabeçalho -->
+            <div class="kanban-header">
+                <h1>Quadro Kanban</h1>
+                <div class="kanban-acoes">
+                    <button class="btn nova-demanda" id="btnNovaDemanda">Nova Demanda</button>
+                    <select id="filtroVisualizacao" class="filtro-select">
+                        <option value="todas">Todas as Demandas</option>
+                        <option value="minhas">Minhas Demandas</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- Board do Kanban -->
+            <div class="kanban-board" id="kanbanBoard">
+                <div class="kanban-coluna" data-status="1">
+                    <div class="coluna-header">
+                        <h3>Caixa de Entrada</h3>
+                        <span class="coluna-count" id="count-1">0</span>
+                    </div>
+                    <div class="coluna-cards" id="coluna-1"></div>
+                </div>
+
+                <div class="kanban-coluna" data-status="2">
+                    <div class="coluna-header">
+                        <h3>Triagem</h3>
+                        <span class="coluna-count" id="count-2">0</span>
+                    </div>
+                    <div class="coluna-cards" id="coluna-2"></div>
+                </div>
+
+                <div class="kanban-coluna" data-status="3">
+                    <div class="coluna-header">
+                        <h3>Em Andamento</h3>
+                        <span class="coluna-count" id="count-3">0</span>
+                    </div>
+                    <div class="coluna-cards" id="coluna-3"></div>
+                </div>
+
+                <div class="kanban-coluna" data-status="4">
+                    <div class="coluna-header">
+                        <h3>Concluído</h3>
+                        <span class="coluna-count" id="count-4">0</span>
+                    </div>
+                    <div class="coluna-cards" id="coluna-4"></div>
+                </div>
+
+                <div class="kanban-coluna" data-status="5">
+                    <div class="coluna-header">
+                        <h3>Arquivado</h3>
+                        <span class="coluna-count" id="count-5">0</span>
+                    </div>
+                    <div class="coluna-cards" id="coluna-5"></div>
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+
+
+
+    <!-- Modal de Confirmação de Exclusão -->
+    <div id="modalExcluir" class="modal">
+        <div class="modal-content modal-pequeno">
+            <div class="modal-header">
+                <h2>Confirmar Exclusão</h2>
+                <span class="close-excluir">&times;</span>
+            </div>
+            <div class="modal-body">
+                <p>Tem certeza que deseja excluir esta demanda?</p>
+                <p><strong id="tituloDemandaExcluir"></strong></p>
+                <p class="aviso-excluir">Esta ação não pode ser desfeita.</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn-cancelar" id="btnCancelarExclusao">Cancelar</button>
+                <button type="button" class="btn-excluir" id="btnConfirmarExclusao">Excluir</button>
+            </div>
+        </div>
+    </div>
+
+    
+    
+    <!-- Modal de Cadastro de Demanda -->
+    <div id="modalDemanda" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Cadastrar Nova Demanda</h2>
+                <span class="close">&times;</span>
+            </div>
+            
+            <form id="formDemanda">
+                <div class="form-group">
+                    <label for="titulo">Título da Demanda *</label>
+                    <input type="text" id="titulo" name="titulo" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="descricao">Descrição</label>
+                    <textarea id="descricao" name="descricao" rows="4"></textarea>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="prioridade">Prioridade *</label>
+                        <select id="prioridade" name="prioridade" required>
+                            <option value="">Selecione...</option>
+                            <option value="baixa">Baixa</option>
+                            <option value="media">Média</option>
+                            <option value="alta">Alta</option>
+                            <option value="urgente">Urgente</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="status_id">Status Inicial *</label>
+                        <select id="status_id" name="status_id" required>
+                            <option value="">Carregando...</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Seção de Cidadão -->
+                <fieldset style="border: 1px solid #ddd; padding: 15px; margin: 20px 0; border-radius: 4px;">
+                    <legend style="padding: 0 10px; font-weight: 600;">Dados do Cidadão Solicitante</legend>
+                    
+                    <div class="form-group">
+                        <label for="telefone_cidadao">Telefone do Cidadão *</label>
+                        <input type="tel" id="telefone_cidadao" name="telefone_cidadao" placeholder="(00) 00000-0000" required>
+                        <small id="status_busca" style="display: block; margin-top: 5px;"></small>
+                    </div>
+
+                    <input type="hidden" id="cidadao_id" name="cidadao_id">
+
+                    <div class="form-group">
+                        <label for="nome_cidadao">Nome Completo *</label>
+                        <input type="text" id="nome_cidadao" name="nome_cidadao" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="data_nascimento_cidadao">Data de Nascimento *</label>
+                        <input type="date" id="data_nascimento_cidadao" name="data_nascimento_cidadao" required>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="bairro_cidadao">Bairro *</label>
+                            <input type="text" id="bairro_cidadao" name="bairro_cidadao" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="cidade_cidadao">Cidade *</label>
+                            <input type="text" id="cidade_cidadao" name="cidade_cidadao" required>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="estado_cidadao">Estado *</label>
+                            <input type="text" id="estado_cidadao" name="estado_cidadao" maxlength="2" placeholder="Ex: SP" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="email_cidadao">E-mail (Opcional)</label>
+                            <input type="email" id="email_cidadao" name="email_cidadao">
+                        </div>
+                    </div>
+                </fieldset>
+
+                <div class="form-group">
+                    <label for="usuario_responsavel_id">Usuário Responsável *</label>
+                    <select id="usuario_responsavel_id" name="usuario_responsavel_id" required>
+                        <option value="">Carregando...</option>
+                    </select>
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn-cancelar">Cancelar</button>
+                    <button type="submit" class="btn-salvar">Cadastrar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+  
+    
+    <!-- Modal de Edição de Demanda -->
+    <div id="modalEditar" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Editar Demanda</h2>
+                <span class="close-editar">&times;</span>
+            </div>
+            
+            <form id="formEditar">
+                <input type="hidden" id="edit_demanda_id">
+                
+                <div class="form-group">
+                    <label for="edit_titulo">Título da Demanda *</label>
+                    <input type="text" id="edit_titulo" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="edit_descricao">Descrição</label>
+                    <textarea id="edit_descricao" rows="4"></textarea>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="edit_prioridade">Prioridade *</label>
+                        <select id="edit_prioridade" required>
+                            <option value="baixa">Baixa</option>
+                            <option value="media">Média</option>
+                            <option value="alta">Alta</option>
+                            <option value="urgente">Urgente</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="edit_status_id">Status *</label>
+                        <select id="edit_status_id" required>
+                            <option value="">Carregando...</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="edit_usuario_responsavel_id">Usuário Responsável *</label>
+                    <select id="edit_usuario_responsavel_id" required>
+                        <option value="">Carregando...</option>
+                    </select>
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn-cancelar" onclick="fecharModalEdicao()">Cancelar</button>
+                    <button type="submit" class="btn-salvar">Salvar Alterações</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    
+</body>
+</html>

@@ -1,0 +1,237 @@
+/* Container Kanban */
+.container-kanban {
+    padding: 30px 0;
+    min-height: calc(100vh - 200px);
+}
+
+.kanban-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 30px;
+}
+
+.kanban-header h1 {
+    color: #2c3e50;
+    font-size: 1.8rem;
+}
+
+.kanban-acoes {
+    display: flex;
+    gap: 15px;
+    align-items: center;
+}
+
+.filtro-select {
+    padding: 10px 15px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-family: 'Poppins', sans-serif;
+    cursor: pointer;
+}
+
+/* Board do Kanban */
+.kanban-board {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 20px;
+    overflow-x: auto;
+    padding-bottom: 20px;
+}
+
+/* Colunas */
+.kanban-coluna {
+    background-color: #f8f9fa;
+    border-radius: 8px;
+    min-height: 600px;
+    display: flex;
+    flex-direction: column;
+}
+
+.coluna-header {
+    padding: 15px;
+    background-color: #e9ecef;
+    border-radius: 8px 8px 0 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 2px solid #dee2e6;
+}
+
+.coluna-header h3 {
+    font-size: 1rem;
+    color: #2c3e50;
+    margin: 0;
+}
+
+.coluna-count {
+    background-color: #6c757d;
+    color: white;
+    padding: 4px 10px;
+    border-radius: 12px;
+    font-size: 0.85rem;
+    font-weight: 600;
+}
+
+.coluna-cards {
+    padding: 15px;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    min-height: 100px;
+}
+
+/* Cards */
+.kanban-card {
+    background-color: white;
+    border-radius: 6px;
+    padding: 12px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    cursor: grab;
+    transition: all 0.3s;
+    border-left: 4px solid #3498db;
+}
+
+.kanban-card:active {
+    cursor: grabbing;
+}
+
+.kanban-card:hover {
+    box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+    transform: translateY(-2px);
+}
+
+.kanban-card.dragging {
+    opacity: 0.5;
+    cursor: grabbing;
+}
+
+/* Prioridades */
+.kanban-card.prioridade-baixa {
+    border-left-color: #95a5a6;
+}
+
+.kanban-card.prioridade-media {
+    border-left-color: #f39c12;
+}
+
+.kanban-card.prioridade-alta {
+    border-left-color: #e74c3c;
+}
+
+.kanban-card.prioridade-urgente {
+    border-left-color: #c0392b;
+    background-color: #fff5f5;
+}
+
+/* Conteúdo do Card */
+.card-id {
+    font-size: 0.75rem;
+    color: #95a5a6;
+    font-weight: 600;
+    margin-bottom: 5px;
+}
+
+.card-titulo {
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: #2c3e50;
+    margin-bottom: 8px;
+    line-height: 1.3;
+    display: -webkit-box;
+    -webkit-line-clamp: 2; /* stylelint-disable-line property-no-vendor-prefix */
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+.card-prioridade {
+    display: inline-block;
+    padding: 3px 8px;
+    border-radius: 3px;
+    font-size: 0.7rem;
+    font-weight: 600;
+    margin-bottom: 8px;
+    text-transform: uppercase;
+}
+
+.card-prioridade.baixa {
+    background-color: #ecf0f1;
+    color: #7f8c8d;
+}
+
+.card-prioridade.media {
+    background-color: #fff3cd;
+    color: #856404;
+}
+
+.card-prioridade.alta {
+    background-color: #f8d7da;
+    color: #721c24;
+}
+
+.card-prioridade.urgente {
+    background-color: #f5c6cb;
+    color: #491217;
+}
+
+.card-cidadao {
+    font-size: 0.8rem;
+    color: #6c757d;
+    margin-bottom: 6px;
+}
+
+.card-cidadao strong {
+    color: #495057;
+}
+
+.card-descricao {
+    font-size: 0.8rem;
+    color: #6c757d;
+    margin-bottom: 8px;
+    line-height: 1.4;
+    display: -webkit-box;
+    -webkit-line-clamp: 2; /* stylelint-disable-line property-no-vendor-prefix */ 
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+.card-responsavel {
+    font-size: 0.75rem;
+    color: #868e96;
+    padding-top: 8px;
+    border-top: 1px solid #e9ecef;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.card-responsavel::before {
+    content: "👤";
+}
+
+/* Drag over state */
+.coluna-cards.drag-over {
+    background-color: #e3f2fd;
+    border: 2px dashed #3498db;
+    border-radius: 6px;
+}
+
+/* Responsivo */
+@media (max-width: 1400px) {
+    .kanban-board {
+        grid-template-columns: repeat(3, 1fr);
+    }
+}
+
+@media (max-width: 992px) {
+    .kanban-board {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 768px) {
+    .kanban-board {
+        grid-template-columns: 1fr;
+    }
+}
