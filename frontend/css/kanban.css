@@ -22,6 +22,31 @@
     align-items: center;
 }
 
+.kanban-acoes .btn {
+    color: #fff;
+    padding: 10px 15px;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    font-family: 'Poppins', sans-serif;
+    cursor: pointer;
+}
+
+.kanban-acoes .btn.nova-demanda {
+    background-color: #0059ff;
+}
+
+.kanban-acoes .btn.nova-demanda:hover {
+    background-color: #003391;
+}
+
+.kanban-acoes .btn.gerenciar-status {
+    background-color: #0059ff;
+}
+
+.kanban-acoes .btn.gerenciar-status:hover {
+    background-color: #003391;
+}
+
 .filtro-select {
     padding: 10px 15px;
     border: 1px solid #ddd;
