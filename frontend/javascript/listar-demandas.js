@@ -3,33 +3,62 @@ let todasDemandas = [];
 let demandaIdParaExcluir = null;
 
 
-// Verificar autenticação ao carregar
-function verificarAutenticacao() {
+// Função pra verificar se o usuário está logado
+function verificarAutenticacao(){
+
     const token = localStorage.getItem('token');
     const usuario = localStorage.getItem('usuario');
-    
+
+    // Se não tem token ou usuario, redireciona para o login
     if (!token || !usuario) {
-        window.location.href = 'login.html';
+        window.location.href = '/frontend/html/login.html';
         return null;
     }
-    
-    return JSON.parse(usuario);
+
+    return JSON.parse(usuario)
 }
 
-// Função pra exibir os dados do usuário 
-function exibirDadosUsuario(){
-
+// Exibir dados do usuário
+function exibirDadosUsuario() {
     const usuario = verificarAutenticacao();
-
+    
     if (usuario) {
-        // capitalizar (primeira letra maiuscula)
         function capitalizar(palavra) {
             return palavra.charAt(0).toUpperCase() + palavra.slice(1).toLowerCase();
         }
-
-        // Atualiza o nome do usuário
-        document.querySelector('.txt-usuario h3').textContent = usuario.nome_completo
-        document.querySelector('.txt-usuario p:last-child').textContent = capitalizar(usuario.nivel_permissao)
+        
+        // Função para pegar apenas primeiro e último nome
+        function getNomeSobrenome(nomeCompleto) {
+            if (!nomeCompleto) return 'Usuário';
+            const partes = nomeCompleto.trim().split(' ');
+            if (partes.length === 1) return partes[0];
+            return `${partes[0]} ${partes[partes.length - 1]}`;
+        }
+        
+        // Função para pegar as iniciais
+        function obterIniciais(nomeCompleto) {
+            const nomes = nomeCompleto.trim().split(' ');
+            
+            if (nomes.length === 1) {
+                return nomes[0].substring(0, 2).toUpperCase();
+            } else {
+                const primeiroNome = nomes[0];
+                const ultimoNome = nomes[nomes.length - 1];
+                return (primeiroNome.charAt(0) + ultimoNome.charAt(0)).toUpperCase();
+            }
+        }
+        
+        document.querySelector('.txt-usuario h3').textContent = getNomeSobrenome(usuario.nome_completo);
+        document.querySelector('.txt-usuario p:last-child').textContent = capitalizar(usuario.nivel_permissao);
+        
+        const avatarElement = document.getElementById('avatarUsuario');
+        if (avatarElement) {
+            const iniciais = obterIniciais(usuario.nome_completo);
+            avatarElement.textContent = iniciais;
+            
+            const corIndex = (usuario.id % 5) + 1;
+            avatarElement.classList.add(`cor-${corIndex}`);
+        }
     }
 }
 

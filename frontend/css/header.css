@@ -3,14 +3,18 @@ body {
 }
 
 .header {
-    padding: 25px 0;
+    padding: 20px 0;
     background-color: var(--cor-background-qbranco);
     color: #000;
+    border-bottom: 1px solid #e5e5e5;
 }
 
 #header .interface {
     display: flex;
     justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 20px;
 }
 
 .logo {
@@ -20,26 +24,54 @@ body {
 
 .logo img {
     width: 150px;
+    max-width: 100%;
+    height: auto;
 }
 
 .container-usuario {
     display: flex;
+    align-items: center;
+    gap: 12px;
 }
 
 .card-usuario {
     display: flex;
+    align-items: center;
+    gap: 12px;
+    padding-right: 12px;
+    border-right: 1px solid #e0e0e0;
 }
 
 .img-usuario {
     display: flex;
     align-items: center;
+    flex-shrink: 0;
 }
 
-.img-usuario img {
-    max-width: 50px;
+/* Avatar com iniciais */
+.avatar-iniciais {
+    width: 45px;
+    height: 45px;
     border-radius: 50%;
-    margin-right: 10px;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+    font-weight: 600;
+    color: white;
+    text-transform: uppercase;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    cursor: default;
+    flex-shrink: 0;
 }
+
+/* Variações de cores */
+.avatar-iniciais.cor-1 { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); }
+.avatar-iniciais.cor-2 { background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); }
+.avatar-iniciais.cor-3 { background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%); }
+.avatar-iniciais.cor-4 { background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%); }
+.avatar-iniciais.cor-5 { background: linear-gradient(135deg, #fa709a 0%, #fee140 100%); }
 
 .header .txt-usuario {
     display: flex;
@@ -47,32 +79,204 @@ body {
     justify-content: center;
 }
 
-.header .txt-usuario p,
+.header .txt-usuario p {
+    font-size: 12px;
+    color: #4a4e52;
+    margin: 0;
+}
+
 .header .txt-usuario h3 {
     font-size: 14px;
-    margin-bottom: -7px;
+    font-weight: 700;
+    color: #0b0e11;
+    margin: 0;
+    white-space: nowrap;
 }
 
-.txt-usuario a {
-    font-size: 14px;
+.header .txt-usuario p:last-child {
+    font-size: 12px;
+    color: #5d6164;
+    text-transform: capitalize;
+    margin: 0;
+    margin-top: -5px;
 }
+
+/* ============================================ */
+/* BOTÃO SAIR - VERMELHO PEQUENO               */
+/* ============================================ */
 
 .btn-sair {
-    display: flex;
+    display: inline-flex;
     align-items: center;
-
-    background-color: #bd2820;
-    color: #fff;
+    justify-content: center;
+    
+    background-color: #dc3545;
+    color: #ffffff;
+    
+    padding: 6px 12px;
+    border: none;
+    border-radius: 4px;
+    
+    font-family: 'Poppins', sans-serif;
+    font-size: 12px;
+    font-weight: 500;
+    
     cursor: pointer;
+    white-space: nowrap;
+    
+    transition: background-color 0.2s ease;
+}
 
-    padding: 10px 10px;
-    margin: 10px 0;
-    margin-left: 30px;
-    border-radius: 8px;
-
-    font-weight: 400;
+.btn-sair p {
+    font-size: 14px;
+    margin: 0;
+    padding: 0;
 }
 
 .btn-sair:hover {
-    background-color: #6e100b;
+    background-color: #c82333;
+}
+
+.btn-sair:active {
+    background-color: #bd2130;
+}
+
+/* ========================================== */
+/* RESPONSIVIDADE - MEDIA QUERIES            */
+/* ========================================== */
+
+/* Tablets e telas médias (até 768px) */
+@media (max-width: 768px) {
+    .header {
+        padding: 15px 0;
+    }
+    
+    #header .interface {
+        gap: 15px;
+    }
+    
+    .logo img {
+        width: 120px;
+    }
+    
+    .card-usuario {
+        gap: 10px;
+        padding-right: 10px;
+    }
+    
+    .header .txt-usuario p {
+        font-size: 10px;
+    }
+    
+    .header .txt-usuario h3 {
+        font-size: 13px;
+    }
+    
+    .header .txt-usuario p:last-child {
+        font-size: 11px;
+    }
+    
+    .btn-sair {
+        padding: 5px 10px;
+        font-size: 11px;
+    }
+    
+    .avatar-iniciais {
+        width: 38px;
+        height: 38px;
+        font-size: 15px;
+    }
+}
+
+/* Celulares (até 480px) */
+@media (max-width: 480px) {
+    .header {
+        padding: 12px 0;
+    }
+    
+    #header .interface {
+        flex-direction: column;
+        align-items: center;
+        gap: 15px;
+    }
+    
+    .logo {
+        display: none;
+        width: 100%;
+        justify-content: center;
+    }
+    
+    .logo img {
+        width: 100px;
+    }
+    
+    .container-usuario {
+        width: 100%;
+        justify-content: center;
+        flex-direction: row;
+        gap: 15px;
+    }
+    
+    .card-usuario {
+        border-right: none;
+        padding-right: 0;
+    }
+    
+    .btn-sair {
+        padding: 8px 16px;
+        font-size: 12px;
+    }
+}
+
+/* Celulares muito pequenos (até 360px) */
+@media (max-width: 360px) {
+    .logo img {
+        width: 85px;
+    }
+    
+    .container-usuario {
+        flex-direction: column;
+        gap: 10px;
+    }
+    
+    .header .txt-usuario p {
+        font-size: 10px;
+    }
+    
+    .header .txt-usuario h3 {
+        font-size: 12px;
+    }
+    
+    .header .txt-usuario p:last-child {
+        font-size: 11px;
+    }
+    
+    .avatar-iniciais {
+        width: 36px;
+        height: 36px;
+        font-size: 14px;
+    }
+    
+    .btn-sair {
+        padding: 7px 14px;
+        font-size: 11px;
+    }
+}
+
+/* Acessibilidade */
+.btn-sair:focus {
+    outline: 2px solid #dc3545;
+    outline-offset: 2px;
+}
+
+.btn-sair:focus:not(:focus-visible) {
+    outline: none;
+}
+
+/* Respeita preferência de movimento reduzido */
+@media (prefers-reduced-motion: reduce) {
+    .btn-sair,
+    .avatar-iniciais {
+        transition: none;
+    }
 }
