@@ -5,36 +5,34 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Gabinete Digital - Listar Demandas</title>
 
-    <!-- STYLOS -->
-    <link rel="stylesheet" href="../css/global.css">
-    <link rel="stylesheet" href="../css/header.css">
-    <link rel="stylesheet" href="../css/nav.css">
-    <link rel="stylesheet" href="../css/container-construcao.css">
-    <link rel="stylesheet" href="../css/listar-demandas.css">
-    <link rel="stylesheet" href="../css/modal-cadastro-de-demandas.css">
-    <link rel="stylesheet" href="../css/modal-editar-demandas.css">
+    <!-- ESTILOS -->
+    <link rel="stylesheet" href="/frontend/css/global.css">
+    <link rel="stylesheet" href="/frontend/css/header.css">
+    <link rel="stylesheet" href="/frontend/css/nav.css">
+    <link rel="stylesheet" href="/frontend/css/container-construcao.css">
+    <link rel="stylesheet" href="/frontend/css/listar-demandas.css">
+    <link rel="stylesheet" href="/frontend/css/modal-cadastro-de-demandas.css">
+    <link rel="stylesheet" href="/frontend/css/modal-editar-demandas.css">
+    <link rel="stylesheet" href="/frontend/css/modal-detalhes.css">
 
     <!-- FONTES -->
     <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900&display=swap" rel="stylesheet">
 
-    <!-- ARQUIVOS JS -->
-    <script src="../javascript/listar-demandas.js" defer></script>
-    <script src="../javascript/modal-cadastrar-demanda.js" defer></script>
+    <!-- JAVASCRIPT COMO MÓDULO -->
+    <script type="module" src="/frontend/javascript/pages/listar-demandas.js"></script>
 </head>
 <body>
+    <!-- HEADER -->
     <header id="header" class="header">
         <div class="interface">
             <section class="logo">
-                <img src="../img/gabinete-digital/logo-gabinete-digital.png" alt="logo-edward">
+                <img src="/frontend/img/gabinete-digital/logo-gabinete-digital.png" alt="Logo Gabinete Digital">
             </section>
 
             <section class="container-usuario">
                 <div class="card-usuario">
-
                     <div class="img-usuario">
-                        <div class="avatar-iniciais" id="avatarUsuario">
-                            <!-- As iniciais serão inseridas via JavaScript -->
-                        </div>
+                        <div class="avatar-iniciais" id="avatarUsuario"></div>
                     </div>
 
                     <div class="txt-usuario">
@@ -43,6 +41,7 @@
                         <p>Função do Usuario</p>
                     </div>
                 </div>
+                
                 <div class="btn-sair">
                     <p>Sair</p>
                 </div>
@@ -50,28 +49,29 @@
         </div>
     </header>
 
+    <!-- NAVEGAÇÃO -->
     <section class="nav">
         <div class="interface">
             <ul class="lista-nav">
                 <li><a href="/frontend/html/principal.html">Inicio</a></li>
-                <li><a href="#">Painel de Demandas</a></li>
+                <li><a href="/frontend/html/listar-demandas.html">Painel de Demandas</a></li>
                 <li><a href="#">Painel de Cidadãos</a></li>
             </ul>
         </div>
     </section>
 
+    <!-- AVISO DE CONSTRUÇÃO -->
     <section class="page-contrucao">
         <div class="interface">
-
             <div class="container-construcao">
                 <h4>Atenção: Sistema Web em Construção.</h4>
                 <p>Esta aplicação está em fase de desenvolvimento e, por essa razão, algumas seções, funcionalidades e conteúdos podem não estar disponíveis neste momento. Estou conduzindo as melhorias necessárias para que, em breve, todas as informações estejam acessíveis de maneira adequada.</p>
                 <p>Grato,<br>Vinicius Soares.</p>
             </div>
-
         </div>
     </section>
 
+    <!-- CONTEÚDO PRINCIPAL -->
     <section class="container-listar">
         <div class="interface">
             
@@ -108,7 +108,12 @@
 
                 <div class="filtro-grupo">
                     <label for="filtroBusca">Buscar:</label>
-                    <input type="text" id="filtroBusca" class="filtro-input" placeholder="Título ou nome do cidadão...">
+                    <input 
+                        type="text" 
+                        id="filtroBusca" 
+                        class="filtro-input" 
+                        placeholder="Título ou nome do cidadão..."
+                    >
                 </div>
 
                 <div class="filtro-grupo">
@@ -140,7 +145,6 @@
                         </tr>
                     </thead>
                     <tbody id="corpoTabela">
-                        <!-- As linhas serão inseridas aqui via JavaScript -->
                         <tr>
                             <td colspan="8" class="carregando">Carregando demandas...</td>
                         </tr>
@@ -151,14 +155,7 @@
         </div>
     </section>
 
-    
-
-
-
-
-
-
-    <!-- Modal de Confirmação de Exclusão -->
+    <!-- MODAL DE CONFIRMAÇÃO DE EXCLUSÃO -->
     <div id="modalExcluir" class="modal">
         <div class="modal-content modal-pequeno">
             <div class="modal-header">
@@ -177,9 +174,164 @@
         </div>
     </div>
 
-    
-    
-    <!-- Modal de Cadastro de Demanda -->
+    <!-- MODAL DE DETALHES DA DEMANDA -->
+    <div id="modalDetalhes" class="modal">
+        <div class="modal-content modal-detalhes">
+            <div class="modal-header">
+                <h2>Detalhes da Demanda</h2>
+                <span class="close-detalhes">&times;</span>
+            </div>
+            
+            <div class="modal-body-detalhes">
+                <!-- Informações principais -->
+                <div class="secao-detalhes">
+                    <h3>Informações Gerais</h3>
+                    <div class="info-grid">
+                        <div class="info-item">
+                            <label>Título:</label>
+                            <p id="detTitulo"></p>
+                        </div>
+                        <div class="info-item">
+                            <label>Prioridade:</label>
+                            <p id="detPrioridade"></p>
+                        </div>
+                        <div class="info-item">
+                            <label>Status:</label>
+                            <p id="detStatus"></p>
+                        </div>
+                        <div class="info-item full-width">
+                            <label>Descrição:</label>
+                            <p id="detDescricao"></p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Informações do cidadão -->
+                <div class="secao-detalhes">
+                    <h3>Cidadão Solicitante</h3>
+                    <div class="info-grid">
+                        <div class="info-item">
+                            <label>Nome:</label>
+                            <p id="detCidadaoNome"></p>
+                        </div>
+                        <div class="info-item">
+                            <label>Telefone:</label>
+                            <p id="detCidadaoTelefone"></p>
+                        </div>
+                        <div class="info-item">
+                            <label>Bairro/Cidade/Estado:</label>
+                            <p id="detCidadaoCidade"></p>
+                        </div>
+                        <div class="info-item">
+                            <label>E-mail:</label>
+                            <p id="detCidadaoEmail"></p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Informações de responsabilidade -->
+                <div class="secao-detalhes">
+                    <h3>Responsáveis</h3>
+                    <div class="info-grid">
+                        <div class="info-item">
+                            <label>Responsável:</label>
+                            <p id="detResponsavel"></p>
+                        </div>
+                        <div class="info-item">
+                            <label>Criado por:</label>
+                            <p id="detOrigem"></p>
+                        </div>
+                        <div class="info-item">
+                            <label>Data de criação:</label>
+                            <p id="detDataCriacao"></p>
+                        </div>
+                        <div class="info-item">
+                            <label>Última atualização:</label>
+                            <p id="detDataAtualizacao"></p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Comentários -->
+                <div class="secao-detalhes">
+                    <h3>Comentários</h3>
+                    <div id="listaComentarios">
+                        <p class="carregando">Carregando comentários...</p>
+                    </div>
+                    
+                    <!-- Adicionar novo comentário -->
+                    <div class="adicionar-comentario">
+                        <textarea 
+                            id="novoComentario" 
+                            placeholder="Escreva um comentário..." 
+                            rows="3"
+                        ></textarea>
+                        <button class="btn-adicionar-comentario" onclick="window.adicionarComentario()">
+                            Adicionar Comentário
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- MODAL DE EDIÇÃO DE DEMANDA -->
+    <div id="modalEditar" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Editar Demanda</h2>
+                <span class="close-editar">&times;</span>
+            </div>
+            
+            <form id="formEditar">
+                <input type="hidden" id="edit_demanda_id">
+                
+                <div class="form-group">
+                    <label for="edit_titulo">Título da Demanda *</label>
+                    <input type="text" id="edit_titulo" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="edit_descricao">Descrição</label>
+                    <textarea id="edit_descricao" rows="4"></textarea>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="edit_prioridade">Prioridade *</label>
+                        <select id="edit_prioridade" required>
+                            <option value="baixa">Baixa</option>
+                            <option value="media">Média</option>
+                            <option value="alta">Alta</option>
+                            <option value="urgente">Urgente</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="edit_status_id">Status *</label>
+                        <select id="edit_status_id" required>
+                            <option value="">Carregando...</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="edit_usuario_responsavel_id">Usuário Responsável *</label>
+                    <select id="edit_usuario_responsavel_id" required>
+                        <option value="">Carregando...</option>
+                    </select>
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn-cancelar" onclick="fecharModalEdicao()">Cancelar</button>
+                    <button type="submit" class="btn-salvar">Salvar Alterações</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- MODAL DE CADASTRO DE DEMANDA -->
     <div id="modalDemanda" class="modal">
         <div class="modal-content">
             <div class="modal-header">
@@ -280,160 +432,5 @@
         </div>
     </div>
 
-
-
-    <!-- Modal de Detalhes da Demanda -->
-    <div id="modalDetalhes" class="modal">
-        <div class="modal-content modal-detalhes">
-            <div class="modal-header">
-                <h2>Detalhes da Demanda</h2>
-                <span class="close-detalhes">&times;</span>
-            </div>
-            
-            <div class="modal-body-detalhes">
-                <!-- Informações principais -->
-                <div class="secao-detalhes">
-                    <h3>Informações Gerais</h3>
-                    <div class="info-grid">
-                        <div class="info-item">
-                            <label>Título:</label>
-                            <p id="detTitulo"></p>
-                        </div>
-                        <div class="info-item">
-                            <label>Prioridade:</label>
-                            <p id="detPrioridade"></p>
-                        </div>
-                        <div class="info-item">
-                            <label>Status:</label>
-                            <p id="detStatus"></p>
-                        </div>
-                        <div class="info-item full-width">
-                            <label>Descrição:</label>
-                            <p id="detDescricao"></p>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Informações do cidadão -->
-                <div class="secao-detalhes">
-                    <h3>Cidadão Solicitante</h3>
-                    <div class="info-grid">
-                        <div class="info-item">
-                            <label>Nome:</label>
-                            <p id="detCidadaoNome"></p>
-                        </div>
-                        <div class="info-item">
-                            <label>Telefone:</label>
-                            <p id="detCidadaoTelefone"></p>
-                        </div>
-                        <div class="info-item">
-                            <label>Bairro/Cidade/Estado:</label>
-                            <p id="detCidadaoCidade"></p>
-                        </div>
-                        <div class="info-item">
-                            <label>E-mail:</label>
-                            <p id="detCidadaoEmail"></p>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Informações de responsabilidade -->
-                <div class="secao-detalhes">
-                    <h3>Responsáveis</h3>
-                    <div class="info-grid">
-                        <div class="info-item">
-                            <label>Responsável:</label>
-                            <p id="detResponsavel"></p>
-                        </div>
-                        <div class="info-item">
-                            <label>Criado por:</label>
-                            <p id="detOrigem"></p>
-                        </div>
-                        <div class="info-item">
-                            <label>Data de criação:</label>
-                            <p id="detDataCriacao"></p>
-                        </div>
-                        <div class="info-item">
-                            <label>Última atualização:</label>
-                            <p id="detDataAtualizacao"></p>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Comentários -->
-                <div class="secao-detalhes">
-                    <h3>Comentários</h3>
-                    <div id="listaComentarios">
-                        <p class="carregando">Carregando comentários...</p>
-                    </div>
-                    
-                    <!-- Adicionar novo comentário -->
-                    <div class="adicionar-comentario">
-                        <textarea id="novoComentario" placeholder="Escreva um comentário..." rows="3"></textarea>
-                        <button class="btn-adicionar-comentario" onclick="adicionarComentario()">Adicionar Comentário</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-
-    
-    
-    <!-- Modal de Edição de Demanda -->
-    <div id="modalEditar" class="modal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h2>Editar Demanda</h2>
-                <span class="close-editar">&times;</span>
-            </div>
-            
-            <form id="formEditar">
-                <input type="hidden" id="edit_demanda_id">
-                
-                <div class="form-group">
-                    <label for="edit_titulo">Título da Demanda *</label>
-                    <input type="text" id="edit_titulo" required>
-                </div>
-
-                <div class="form-group">
-                    <label for="edit_descricao">Descrição</label>
-                    <textarea id="edit_descricao" rows="4"></textarea>
-                </div>
-
-                <div class="form-row">
-                    <div class="form-group">
-                        <label for="edit_prioridade">Prioridade *</label>
-                        <select id="edit_prioridade" required>
-                            <option value="baixa">Baixa</option>
-                            <option value="media">Média</option>
-                            <option value="alta">Alta</option>
-                            <option value="urgente">Urgente</option>
-                        </select>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="edit_status_id">Status *</label>
-                        <select id="edit_status_id" required>
-                            <option value="">Carregando...</option>
-                        </select>
-                    </div>
-                </div>
-
-                <div class="form-group">
-                    <label for="edit_usuario_responsavel_id">Usuário Responsável *</label>
-                    <select id="edit_usuario_responsavel_id" required>
-                        <option value="">Carregando...</option>
-                    </select>
-                </div>
-
-                <div class="modal-footer">
-                    <button type="button" class="btn-cancelar" onclick="fecharModalEdicao()">Cancelar</button>
-                    <button type="submit" class="btn-salvar">Salvar Alterações</button>
-                </div>
-            </form>
-        </div>
-    </div>
-    
 </body>
 </html>
