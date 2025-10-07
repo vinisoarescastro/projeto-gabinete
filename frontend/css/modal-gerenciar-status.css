@@ -3,6 +3,10 @@
     max-width: 700px;
 }
 
+.modal-status .modal-body {
+    padding: 20px;
+}
+
 .status-lista {
     margin: 20px 0;
 }
