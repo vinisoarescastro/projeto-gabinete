@@ -235,8 +235,25 @@
                     
                     <div class="form-group">
                         <label for="telefone_cidadao">Telefone do Cidadão *</label>
-                        <input type="tel" id="telefone_cidadao" name="telefone_cidadao" placeholder="(00) 00000-0000" required>
-                        <small id="status_busca" style="display: block; margin-top: 5px;"></small>
+                        <div style="display: flex; gap: 8px;">
+                            <input 
+                                type="tel" 
+                                id="telefone_cidadao" 
+                                name="telefone_cidadao" 
+                                placeholder="(00) 00000-0000" 
+                                required
+                                style="flex: 1;"
+                            >
+                            <button 
+                                type="button" 
+                                id="btnBuscarCidadao"
+                                class="btn-buscar-cidadao"
+                                title="Buscar cidadão"
+                            >
+                                🔍 Buscar
+                            </button>
+                        </div>
+                        <small id="status_busca"></small>
                     </div>
 
                     <input type="hidden" id="cidadao_id" name="cidadao_id">

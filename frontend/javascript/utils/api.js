@@ -132,32 +132,90 @@ export async function excluirDemanda(id) {
     });
 }
 
-// ============================================
-// CIDADÃOS
-// ============================================
+/**
+ * ==========================================
+ * CIDADÃOS
+ * ==========================================
+ */
 
 /**
- * Busca cidadão por telefone
+ * Lista todos os cidadãos
+ * @returns {Promise}
+ */
+export async function listarCidadaos() {
+    const token = getToken();
+    
+    try {
+        const response = await fetch(`${API_URL}/api/cidadaos`, {
+            headers: {
+                'Authorization': `Bearer ${token}`
+            }
+        });
+        
+        if (!response.ok) {
+            throw new Error(`Erro HTTP: ${response.status}`);
+        }
+        
+        return await response.json();
+    } catch (error) {
+        console.error('Erro ao listar cidadãos:', error);
+        throw error;
+    }
+}
+
+/**
+ * Busca cidadão por telefone  ⬅️ ADICIONE ESTA FUNÇÃO
  * @param {string} telefone
- * @returns {Promise<Object>}
+ * @returns {Promise}
  */
 export async function buscarCidadaoPorTelefone(telefone) {
-    return fetchAPI(`${API_URL}/api/cidadaos/telefone/${telefone}`, {
-        headers: getHeaders()
-    });
+    const token = getToken();
+    
+    try {
+        const response = await fetch(`${API_URL}/api/cidadaos/telefone/${telefone}`, {
+            headers: {
+                'Authorization': `Bearer ${token}`
+            }
+        });
+        
+        if (!response.ok) {
+            throw new Error(`Erro HTTP: ${response.status}`);
+        }
+        
+        return await response.json();
+    } catch (error) {
+        console.error('Erro ao buscar cidadão por telefone:', error);
+        throw error;
+    }
 }
 
 /**
  * Cria novo cidadão
  * @param {Object} dadosCidadao
- * @returns {Promise<Object>}
+ * @returns {Promise}
  */
 export async function criarCidadao(dadosCidadao) {
-    return fetchAPI(`${API_URL}/api/cidadaos`, {
-        method: 'POST',
-        headers: getHeaders(),
-        body: JSON.stringify(dadosCidadao)
-    });
+    const token = getToken();
+    
+    try {
+        const response = await fetch(`${API_URL}/api/cidadaos`, {
+            method: 'POST',
+            headers: {
+                'Authorization': `Bearer ${token}`,
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(dadosCidadao)
+        });
+        
+        if (!response.ok) {
+            throw new Error(`Erro HTTP: ${response.status}`);
+        }
+        
+        return await response.json();
+    } catch (error) {
+        console.error('Erro ao criar cidadão:', error);
+        throw error;
+    }
 }
 
 // ============================================

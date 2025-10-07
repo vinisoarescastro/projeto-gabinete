@@ -1,96 +1,113 @@
 /**
  * Componente de Modal de Detalhes da Demanda
- * Exibe informações completas e comentários
+ * Exibe informações completas e sistema de comentários
  */
 
 import { buscarDemanda, listarComentarios, criarComentario, excluirComentario } from '../utils/api.js';
 import { formatarDataHora, formatarTextoComQuebras } from '../utils/formatters.js';
-import { podeExcluirComentario } from '../utils/auth.js';
 import { mostrarErro, mostrarSucesso } from '../utils/notifications.js';
+import { getUsuarioLogado, podeExcluirComentario } from '../utils/auth.js';
 
 let demandaAtualId = null;
 
 /**
- * Abre modal de detalhes para uma demanda
+ * Abre modal de detalhes
  * @param {number} id - ID da demanda
  */
 export async function abrirModalDetalhes(id) {
     demandaAtualId = id;
+    const usuario = getUsuarioLogado();
     
     try {
         const data = await buscarDemanda(id);
         
         if (data.sucesso) {
-            preencherModalDetalhes(data.demanda);
-            await carregarComentarios(id);
+            const demanda = data.demanda;
+            preencherDadosGerais(demanda);
+            preencherDadosCidadao(demanda);
+            preencherDadosResponsaveis(demanda);
+            configurarBotaoEditar(demanda, usuario);
             mostrarModal();
+            
+            // Carregar comentários
+            await carregarComentarios(id);
         } else {
             mostrarErro('Erro ao carregar detalhes da demanda');
         }
     } catch (error) {
         console.error('Erro:', error);
-        mostrarErro('Erro ao conectar com o servidor');
+        mostrarErro('Erro ao carregar detalhes');
     }
 }
 
 /**
- * Preenche o modal com dados da demanda
- * @param {Object} demanda
+ * Preenche dados gerais da demanda
  */
-function preencherModalDetalhes(demanda) {
-    // Informações gerais
-    atualizarElemento('detTitulo', demanda.titulo);
-    atualizarElementoHTML('detPrioridade', 
-        `<span class="badge prioridade-${demanda.prioridade}">${demanda.prioridade}</span>`
-    );
-    atualizarElementoHTML('detStatus',
-        `<span class="badge status-${demanda.status_id}">${demanda.status?.nome || 'N/A'}</span>`
-    );
-    atualizarElementoHTML('detDescricao', formatarTextoComQuebras(demanda.descricao));
-    
-    // Cidadão
-    atualizarElemento('detCidadaoNome', demanda.cidadaos?.nome_completo || 'N/A');
-    atualizarElemento('detCidadaoTelefone', demanda.cidadaos?.telefone || 'N/A');
-    atualizarElemento('detCidadaoCidade', 
-        `${demanda.cidadaos?.bairro || 'N/A'}, ${demanda.cidadaos?.cidade || 'N/A'}/${demanda.cidadaos?.estado || 'N/A'}`
-    );
-    atualizarElemento('detCidadaoEmail', demanda.cidadaos?.email || 'Não informado');
-    
-    // Responsáveis
-    atualizarElemento('detResponsavel', demanda.usuario_responsavel?.nome_completo || 'N/A');
-    atualizarElemento('detOrigem', demanda.usuario_origem?.nome_completo || 'N/A');
-    atualizarElemento('detDataCriacao', formatarDataHora(demanda.criado_em));
-    atualizarElemento('detDataAtualizacao', formatarDataHora(demanda.atualizado_em));
+function preencherDadosGerais(demanda) {
+    document.getElementById('detTitulo').textContent = demanda.titulo;
+    document.getElementById('detPrioridade').innerHTML = `<span class="badge prioridade-${demanda.prioridade}">${demanda.prioridade}</span>`;
+    document.getElementById('detStatus').innerHTML = `<span class="badge status-${demanda.status_id}">${demanda.status?.nome || 'N/A'}</span>`;
+    document.getElementById('detDescricao').innerHTML = formatarTextoComQuebras(demanda.descricao);
 }
 
 /**
- * Atualiza texto de um elemento
+ * Preenche dados do cidadão
  */
-function atualizarElemento(id, texto) {
-    const elemento = document.getElementById(id);
-    if (elemento) {
-        elemento.textContent = texto;
-    }
+function preencherDadosCidadao(demanda) {
+    document.getElementById('detCidadaoNome').textContent = demanda.cidadaos?.nome_completo || 'N/A';
+    document.getElementById('detCidadaoTelefone').textContent = demanda.cidadaos?.telefone || 'N/A';
+    document.getElementById('detCidadaoCidade').textContent = `${demanda.cidadaos?.bairro || 'N/A'}, ${demanda.cidadaos?.cidade || 'N/A'}/${demanda.cidadaos?.estado || 'N/A'}`;
+    document.getElementById('detCidadaoEmail').textContent = demanda.cidadaos?.email || 'Não informado';
 }
 
 /**
- * Atualiza HTML de um elemento
+ * Preenche dados dos responsáveis
  */
-function atualizarElementoHTML(id, html) {
-    const elemento = document.getElementById(id);
-    if (elemento) {
-        elemento.innerHTML = html;
+function preencherDadosResponsaveis(demanda) {
+    document.getElementById('detResponsavel').textContent = demanda.usuario_responsavel?.nome_completo || 'N/A';
+    document.getElementById('detOrigem').textContent = demanda.usuario_origem?.nome_completo || 'N/A';
+    document.getElementById('detDataCriacao').textContent = formatarDataHora(demanda.criado_em);
+    document.getElementById('detDataAtualizacao').textContent = formatarDataHora(demanda.atualizado_em);
+}
+
+/**
+ * Configura botão de editar
+ */
+function configurarBotaoEditar(demanda, usuario) {
+    const btnEditar = document.getElementById('btnEditarDetalhes');
+    
+    if (!btnEditar) return;
+    
+    const podeEditar = 
+        usuario.nivel_permissao === 'administrador' ||
+        usuario.nivel_permissao === 'chefe_gabinete' ||
+        usuario.nivel_permissao === 'supervisor' ||
+        demanda.usuario_responsavel_id === usuario.id;
+    
+    if (podeEditar) {
+        btnEditar.style.display = 'inline-block';
+        btnEditar.onclick = () => {
+            fecharModalDetalhes();
+            if (window.abrirModalEdicao) {
+                window.abrirModalEdicao(demanda.id);
+            }
+        };
+    } else {
+        btnEditar.style.display = 'none';
     }
 }
 
 /**
  * Carrega comentários da demanda
- * @param {number} demandaId
  */
 async function carregarComentarios(demandaId) {
     const listaComentarios = document.getElementById('listaComentarios');
+    const usuario = getUsuarioLogado();
     
-    if (!listaComentarios) return;
+    if (!listaComentarios) {
+        console.warn('Elemento listaComentarios não encontrado');
+        return;
+    }
     
     try {
         listaComentarios.innerHTML = '<p class="carregando">Carregando comentários...</p>';
@@ -101,58 +118,43 @@ async function carregarComentarios(demandaId) {
             if (data.comentarios.length === 0) {
                 listaComentarios.innerHTML = '<p class="sem-comentarios">Nenhum comentário ainda</p>';
             } else {
-                listaComentarios.innerHTML = data.comentarios.map(comentario =>
-                    criarHtmlComentario(comentario)
-                ).join('');
+                listaComentarios.innerHTML = data.comentarios.map(c => {
+                    const podeExcluir = podeExcluirComentario(usuario, c);
+                    
+                    return `
+                        <div class="comentario-item">
+                            <div class="comentario-header">
+                                <span class="comentario-autor">${c.usuarios?.nome_completo || 'Usuário'}</span>
+                                <div>
+                                    <span class="comentario-data">${formatarDataHora(c.criado_em)}</span>
+                                    ${podeExcluir ? `<button class="btn-excluir-comentario" onclick="window.excluirComentarioGlobal(${c.id})" title="Excluir comentário">🗑️</button>` : ''}
+                                </div>
+                            </div>
+                            <div class="comentario-texto">${c.comentario}</div>
+                        </div>
+                    `;
+                }).join('');
             }
+        } else {
+            listaComentarios.innerHTML = '<p class="erro">Erro ao carregar comentários</p>';
         }
     } catch (error) {
-        console.error('Erro:', error);
+        console.error('Erro ao carregar comentários:', error);
         listaComentarios.innerHTML = '<p class="erro">Erro ao carregar comentários</p>';
     }
-}
-
-/**
- * Cria HTML de um comentário
- * @param {Object} comentario
- * @returns {string} HTML do comentário
- */
-function criarHtmlComentario(comentario) {
-    const podeExcluir = podeExcluirComentario(comentario);
-    
-    const btnExcluir = podeExcluir ? `
-        <button 
-            class="btn-excluir-comentario" 
-            onclick="window.excluirComentarioGlobal(${comentario.id})" 
-            title="Excluir comentário"
-        >
-            🗑️
-        </button>
-    ` : '';
-    
-    return `
-        <div class="comentario-item">
-            <div class="comentario-header">
-                <span class="comentario-autor">${comentario.usuarios?.nome_completo || 'Usuário'}</span>
-                <div>
-                    <span class="comentario-data">${formatarDataHora(comentario.criado_em)}</span>
-                    ${btnExcluir}
-                </div>
-            </div>
-            <div class="comentario-texto">${comentario.comentario}</div>
-        </div>
-    `;
 }
 
 /**
  * Adiciona novo comentário
  */
 export async function adicionarComentario() {
+    if (!demandaAtualId) {
+        mostrarErro('Erro: demanda não identificada');
+        return;
+    }
+    
     const textarea = document.getElementById('novoComentario');
-    
-    if (!textarea) return;
-    
-    const comentario = textarea.value.trim();
+    const comentario = textarea?.value?.trim();
     
     if (!comentario) {
         mostrarErro('Digite um comentário');
@@ -165,7 +167,9 @@ export async function adicionarComentario() {
         if (data.sucesso) {
             textarea.value = '';
             await carregarComentarios(demandaAtualId);
-            mostrarSucesso('Comentário adicionado!');
+            mostrarSucesso('Comentário adicionado com sucesso!');
+        } else {
+            mostrarErro('Erro ao adicionar comentário');
         }
     } catch (error) {
         console.error('Erro:', error);
@@ -174,8 +178,7 @@ export async function adicionarComentario() {
 }
 
 /**
- * Exclui um comentário
- * @param {number} id
+ * Exclui comentário
  */
 export async function excluirComentarioModal(id) {
     if (!confirm('Tem certeza que deseja excluir este comentário?')) {
@@ -187,7 +190,9 @@ export async function excluirComentarioModal(id) {
         
         if (data.sucesso) {
             await carregarComentarios(demandaAtualId);
-            mostrarSucesso('Comentário excluído!');
+            mostrarSucesso('Comentário excluído com sucesso!');
+        } else {
+            mostrarErro('Erro: ' + data.mensagem);
         }
     } catch (error) {
         console.error('Erro:', error);
@@ -212,12 +217,6 @@ export function fecharModalDetalhes() {
     const modal = document.getElementById('modalDetalhes');
     if (modal) {
         modal.style.display = 'none';
-    }
-    
-    // Limpar textarea
-    const textarea = document.getElementById('novoComentario');
-    if (textarea) {
-        textarea.value = '';
     }
     
     demandaAtualId = null;

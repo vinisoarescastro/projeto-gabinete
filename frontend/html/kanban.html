@@ -3,41 +3,37 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gabinete Digital - Listar Demandas</title>
+    <title>Gabinete Digital - Kanban</title>
 
-    <!-- STYLOS -->
-    <link rel="stylesheet" href="../css/global.css">
-    <link rel="stylesheet" href="../css/header.css">
-    <link rel="stylesheet" href="../css/nav.css">
-    <link rel="stylesheet" href="../css/container-construcao.css">
-    <link rel="stylesheet" href="../css/kanban.css">
-    <link rel="stylesheet" href="../css/modal-cadastro-de-demandas.css">
-    <link rel="stylesheet" href="../css/modal-editar-demandas.css">
-    <link rel="stylesheet" href="../css/modal-detalhes.css">
-    <link rel="stylesheet" href="../css/modal-gerenciar-status.css">
+    <!-- ESTILOS -->
+    <link rel="stylesheet" href="/frontend/css/global.css">
+    <link rel="stylesheet" href="/frontend/css/header.css">
+    <link rel="stylesheet" href="/frontend/css/nav.css">
+    <link rel="stylesheet" href="/frontend/css/container-construcao.css">
+    <link rel="stylesheet" href="/frontend/css/kanban.css">
+    <link rel="stylesheet" href="/frontend/css/modal-cadastro-de-demandas.css">
+    <link rel="stylesheet" href="/frontend/css/modal-editar-demandas.css">
+    <link rel="stylesheet" href="/frontend/css/modal-detalhes.css">
+    <link rel="stylesheet" href="/frontend/css/modal-gerenciar-status.css">
 
     <!-- FONTES -->
     <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900&display=swap" rel="stylesheet">
 
-    <!-- ARQUIVOS JS -->
-     <script src="../javascript/kanban.js" defer></script>
-    <script src="../javascript/modal-cadastrar-demanda.js" defer></script>
-    <script src="../javascript/gerenciar-status.js" defer></script>
+    <!-- JAVASCRIPT COMO MÓDULO -->
+    <script type="module" src="/frontend/javascript/pages/kanban.js"></script>
 </head>
 <body>
+    <!-- HEADER -->
     <header id="header" class="header">
         <div class="interface">
             <section class="logo">
-                <img src="../img/gabinete-digital/logo-gabinete-digital.png" alt="logo-edward">
+                <img src="/frontend/img/gabinete-digital/logo-gabinete-digital.png" alt="Logo Gabinete Digital">
             </section>
 
             <section class="container-usuario">
                 <div class="card-usuario">
-
                     <div class="img-usuario">
-                        <div class="avatar-iniciais" id="avatarUsuario">
-                            <!-- As iniciais serão inseridas via JavaScript -->
-                        </div>
+                        <div class="avatar-iniciais" id="avatarUsuario"></div>
                     </div>
 
                     <div class="txt-usuario">
@@ -46,6 +42,7 @@
                         <p>Função do Usuario</p>
                     </div>
                 </div>
+                
                 <div class="btn-sair">
                     <p>Sair</p>
                 </div>
@@ -53,6 +50,7 @@
         </div>
     </header>
 
+    <!-- NAVEGAÇÃO -->
     <section class="nav">
         <div class="interface">
             <ul class="lista-nav">
@@ -63,20 +61,18 @@
         </div>
     </section>
 
+    <!-- AVISO DE CONSTRUÇÃO -->
     <section class="page-contrucao">
         <div class="interface">
-
             <div class="container-construcao">
                 <h4>Atenção: Sistema Web em Construção.</h4>
                 <p>Esta aplicação está em fase de desenvolvimento e, por essa razão, algumas seções, funcionalidades e conteúdos podem não estar disponíveis neste momento. Estou conduzindo as melhorias necessárias para que, em breve, todas as informações estejam acessíveis de maneira adequada.</p>
                 <p>Grato,<br>Vinicius Soares.</p>
             </div>
-
         </div>
     </section>
 
-
-
+    <!-- CONTAINER KANBAN -->
     <section class="container-kanban">
         <div class="interface">
             
@@ -84,8 +80,8 @@
             <div class="kanban-header">
                 <h1>Quadro Kanban</h1>
                 <div class="kanban-acoes">
-                    <button class="btn nova-demanda" id="btnNovaDemanda">+ Nova Demanda</button>
-                    <button class="btn gerenciar-status" onclick="abrirModalStatus()">Gerenciar Colunas</button>
+                    <button class="btn nova-demanda">+ Nova Demanda</button>
+                    <button class="btn gerenciar-status">Gerenciar Colunas</button>
                     <select id="filtroVisualizacao" class="filtro-select">
                         <option value="todas">Todas as Demandas</option>
                         <option value="minhas">Minhas Demandas</option>
@@ -95,37 +91,13 @@
 
             <!-- Board do Kanban -->
             <div class="kanban-board" id="kanbanBoard">
-                <!-- As colunas serão renderizadas dinamicamente pelo JavaScript -->
+                <!-- As colunas serão renderizadas dinamicamente -->
             </div>
 
         </div>
     </section>
 
-
-
-
-    <!-- Modal de Confirmação de Exclusão -->
-    <div id="modalExcluir" class="modal">
-        <div class="modal-content modal-pequeno">
-            <div class="modal-header">
-                <h2>Confirmar Exclusão</h2>
-                <span class="close-excluir">&times;</span>
-            </div>
-            <div class="modal-body">
-                <p>Tem certeza que deseja excluir esta demanda?</p>
-                <p><strong id="tituloDemandaExcluir"></strong></p>
-                <p class="aviso-excluir">Esta ação não pode ser desfeita.</p>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn-cancelar" id="btnCancelarExclusao">Cancelar</button>
-                <button type="button" class="btn-excluir" id="btnConfirmarExclusao">Excluir</button>
-            </div>
-        </div>
-    </div>
-
-    
-    
-    <!-- Modal de Cadastro de Demanda -->
+    <!-- MODAL DE CADASTRO DE DEMANDA -->
     <div id="modalDemanda" class="modal">
         <div class="modal-content">
             <div class="modal-header">
@@ -170,8 +142,25 @@
                     
                     <div class="form-group">
                         <label for="telefone_cidadao">Telefone do Cidadão *</label>
-                        <input type="tel" id="telefone_cidadao" name="telefone_cidadao" placeholder="(00) 00000-0000" required>
-                        <small id="status_busca" style="display: block; margin-top: 5px;"></small>
+                        <div style="display: flex; gap: 8px;">
+                            <input 
+                                type="tel" 
+                                id="telefone_cidadao" 
+                                name="telefone_cidadao" 
+                                placeholder="(00) 00000-0000" 
+                                required
+                                style="flex: 1;"
+                            >
+                            <button 
+                                type="button" 
+                                id="btnBuscarCidadao"
+                                class="btn-buscar-cidadao"
+                                title="Buscar cidadão"
+                            >
+                                🔍 Buscar
+                            </button>
+                        </div>
+                        <small id="status_busca"></small>
                     </div>
 
                     <input type="hidden" id="cidadao_id" name="cidadao_id">
@@ -225,9 +214,8 @@
             </form>
         </div>
     </div>
-  
-    
-    <!-- Modal de Edição de Demanda -->
+
+    <!-- MODAL DE EDIÇÃO DE DEMANDA -->
     <div id="modalEditar" class="modal">
         <div class="modal-content">
             <div class="modal-header">
@@ -282,8 +270,7 @@
         </div>
     </div>
 
-
-    <!-- Modal de Detalhes da Demanda -->
+    <!-- MODAL DE DETALHES DA DEMANDA -->
     <div id="modalDetalhes" class="modal">
         <div class="modal-content modal-detalhes">
             <div class="modal-header">
@@ -365,17 +352,36 @@
                         </div>
                     </div>
                 </div>
+
+                <!-- SEÇÃO DE COMENTÁRIOS (ADICIONAR) -->
+                <div class="secao-detalhes">
+                    <h3>Comentários</h3>
+                    <div id="listaComentarios">
+                        <p class="carregando">Carregando comentários...</p>
+                    </div>
+                    
+                    <!-- Adicionar novo comentário -->
+                    <div class="adicionar-comentario">
+                        <textarea 
+                            id="novoComentario" 
+                            placeholder="Escreva um comentário..." 
+                            rows="3"
+                        ></textarea>
+                        <button class="btn-adicionar-comentario" onclick="window.adicionarComentario()">
+                            Adicionar Comentário
+                        </button>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
 
-
-    <!-- Modal de Gerenciar Status -->
+    <!-- MODAL DE GERENCIAR STATUS -->
     <div id="modalStatus" class="modal">
         <div class="modal-content modal-status">
             <div class="modal-header">
                 <h2>Gerenciar Colunas (Status)</h2>
-                <span class="close" onclick="fecharModalStatus()">&times;</span>
+                <span class="close" onclick="window.fecharModalStatus()">&times;</span>
             </div>
             
             <div class="modal-body">
@@ -387,12 +393,12 @@
                     <p style="text-align: center; color: #6c757d;">Carregando...</p>
                 </div>
                 
-                <button class="btn-adicionar-status" onclick="mostrarFormAdicionar()">
+                <button class="btn-adicionar-status" onclick="window.mostrarFormAdicionar()">
                     ➕ Adicionar Nova Coluna
                 </button>
                 
                 <!-- Formulário de Adicionar/Editar -->
-                <form id="formStatus" class="form-status" onsubmit="salvarStatus(event)">
+                <form id="formStatus" class="form-status">
                     <h3 id="tituloFormStatus">Adicionar Novo Status</h3>
                     
                     <div class="form-group">
@@ -406,7 +412,7 @@
                     </div>
                     
                     <div class="form-status-acoes">
-                        <button type="button" class="btn-cancelar-status" onclick="cancelarFormStatus()">
+                        <button type="button" class="btn-cancelar-status" onclick="window.cancelarFormStatus()">
                             Cancelar
                         </button>
                         <button type="submit" class="btn-salvar-status">
@@ -417,6 +423,6 @@
             </div>
         </div>
     </div>
-    
+
 </body>
 </html>
