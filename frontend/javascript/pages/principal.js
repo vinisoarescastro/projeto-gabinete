@@ -71,7 +71,7 @@ function configurarBotoesAcoes() {
         });
     }
     
-    // Botão Nova Demanda  ⬅️ ATUALIZADO
+    // Botão Nova Demanda
     const btnNovaDemanda = document.querySelector('.btn.nova-demanda');
     if (btnNovaDemanda) {
         btnNovaDemanda.addEventListener('click', () => {
