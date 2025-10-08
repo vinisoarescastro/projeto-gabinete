@@ -11,7 +11,7 @@ const isProduction = window.location.hostname !== 'localhost' &&
 export const API_CONFIG = {
     // Quando estiver online, vai usar esta URL
     // ⬇️ VOCÊ VAI MUDAR ISSO DEPOIS!
-    PRODUCTION: 'https://SEU-BACKEND-AQUI.onrender.com',
+    PRODUCTION: 'https://projeto-gabinete-api.onrender.com',
     
     // Quando estiver no seu computador
     DEVELOPMENT: 'http://localhost:3000'
