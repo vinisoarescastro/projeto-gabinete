@@ -92,7 +92,7 @@ function configurarBotoesAcoes() {
     const btnUsuarios = document.querySelector('.btn.gerenciar-usuarios');
     if (btnUsuarios) {
         btnUsuarios.addEventListener('click', () => {
-            alert('Funcionalidade em desenvolvimento');
+            window.location.href = '/frontend/html/gerenciar-usuarios.html';
         });
     }
 }
