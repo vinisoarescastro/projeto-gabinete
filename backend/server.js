@@ -12,7 +12,7 @@ import cidadaosRoutes from './routes/cidadaosRoutes.js';
 dotenv.config();
 
 const app = express();
-const PORT = 3000;
+const PORT = process.env.PORT || 3000;
 
 // Configurações do servidor
 app.use(cors());
@@ -34,7 +34,7 @@ app.use('/api/status', statusRoutes);
 app.use('/api/usuarios', usuariosRoutes);
 app.use('/api/cidadaos', cidadaosRoutes);
 
-app.listen(PORT, () => {
-    console.log(`Servidor rodando na porta: ${PORT}`);
-    console.log(`Acesse: http://localhost:${PORT}/`); 
+app.listen(PORT, '0.0.0.0', () => {
+    console.log(`✅ Servidor rodando na porta: ${PORT}`);
+    console.log(`🌐 Ambiente: ${process.env.NODE_ENV || 'development'}`);
 });

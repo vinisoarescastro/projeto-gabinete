@@ -1,10 +1,12 @@
 /**
  * Constantes globais da aplicação
- * Centraliza valores que são usados em vários lugares
  */
 
-// URL base da API
-export const API_URL = 'http://localhost:3000';
+// Importar URL da API do arquivo de configuração
+import { API_URL as ENV_API_URL } from '../config.js';
+
+// URL base da API (agora vem automaticamente do config.js)
+export const API_URL = ENV_API_URL;
 
 // Prioridades de demandas
 export const PRIORIDADES = {
