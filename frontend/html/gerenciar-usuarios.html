@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gabinete Digital - Gerenciar Usuários</title>
+
+    <!-- ESTILOS -->
+    <link rel="stylesheet" href="/frontend/css/global.css">
+    <link rel="stylesheet" href="/frontend/css/header.css">
+    <link rel="stylesheet" href="/frontend/css/nav.css">
+    <link rel="stylesheet" href="/frontend/css/gerenciar-usuarios.css">
+
+    <!-- FONTES -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <!-- JAVASCRIPT -->
+    <script type="module" src="/frontend/javascript/pages/gerenciar-usuarios.js"></script>
+</head>
+<body>
+    <!-- HEADER -->
+    <header id="header" class="header">
+        <div class="interface">
+            <section class="logo">
+                <img src="/frontend/img/gabinete-digital/logo-gabinete-digital.png" alt="Logo Gabinete Digital">
+            </section>
+
+            <section class="container-usuario">
+                <div class="card-usuario">
+                    <div class="img-usuario">
+                        <div class="avatar-iniciais" id="avatarUsuario"></div>
+                    </div>
+                    <div class="txt-usuario">
+                        <p>Seja bem-vindo,</p>
+                        <h3>Nome Completo</h3>
+                        <p>Função do Usuario</p>
+                    </div>
+                </div>
+                <div class="btn-sair">
+                    <p>Sair</p>
+                </div>
+            </section>
+        </div>
+    </header>
+
+    <!-- NAVEGAÇÃO -->
+    <section class="nav">
+        <div class="interface">
+            <ul class="lista-nav">
+                <li><a href="/frontend/html/principal.html">Inicio</a></li>
+                <li><a href="/frontend/html/kanban.html">Kanban</a></li>
+                <li><a href="/frontend/html/listar-demandas.html">Painel de Demandas</a></li>
+            </ul>
+        </div>
+    </section>
+
+    <!-- CONTEÚDO PRINCIPAL -->
+    <section class="container-usuarios">
+        <div class="interface">
+            
+            <div class="page-header">
+                <h1>👥 Gerenciar Usuários</h1>
+            </div>
+
+            <!-- Tabela de Usuários -->
+            <div class="tabela-container">
+                <table class="tabela-usuarios">
+                    <thead>
+                        <tr>
+                            <th>Nome</th>
+                            <th>Email</th>
+                            <th>Nível de Permissão</th>
+                            <th>Status</th>
+                            <th>Último Acesso</th>
+                            <th>Tempo Inativo</th>
+                        </tr>
+                    </thead>
+                    <tbody id="corpoTabelaUsuarios">
+                        <tr>
+                            <td colspan="6" class="carregando">Carregando usuários...</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+        </div>
+    </section>
+</body>
+</html>

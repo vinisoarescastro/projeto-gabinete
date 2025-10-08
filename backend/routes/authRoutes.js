@@ -114,6 +114,12 @@ router.post('/login', async (req, res) => {
             });
         }
 
+        // Atualizar último acesso do usuário
+        await supabase
+            .from('usuarios')
+            .update({ ultimo_acesso: new Date().toISOString() })
+            .eq('id', usuario.id);
+
         // Gerar token JWT
         const token = jwt.sign(
             { 
@@ -122,7 +128,7 @@ router.post('/login', async (req, res) => {
                 nivel_permissao: usuario.nivel_permissao 
             },
             process.env.JWT_SECRET,
-            { expiresIn: '8h' } // Em quantas horas o token vai expirar.
+            { expiresIn: '8h' }
         );
 
         res.json({
@@ -133,7 +139,8 @@ router.post('/login', async (req, res) => {
                 id: usuario.id,
                 nome_completo: usuario.nome_completo,
                 email: usuario.email,
-                nivel_permissao: usuario.nivel_permissao
+                nivel_permissao: usuario.nivel_permissao,
+                ultimo_acesso: new Date().toISOString() // ⬅️ NOVO
             }
         });
     } catch (error) {

@@ -1,0 +1,148 @@
+/* Gerenciar Usuários */
+.container-usuarios {
+    padding: 30px 0;
+    min-height: calc(100vh - 200px);
+}
+
+.page-header {
+    margin-bottom: 30px;
+}
+
+.page-header h1 {
+    font-size: 28px;
+    font-weight: 600;
+    color: #333;
+}
+
+/* Tabela */
+.tabela-container {
+    background-color: white;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.tabela-usuarios {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.tabela-usuarios thead {
+    background-color: #343a40;
+    color: white;
+}
+
+.tabela-usuarios th {
+    padding: 15px 12px;
+    text-align: left;
+    font-weight: 600;
+    font-size: 14px;
+}
+
+.tabela-usuarios tbody tr {
+    border-bottom: 1px solid #dee2e6;
+    transition: background-color 0.2s;
+}
+
+.tabela-usuarios tbody tr:hover {
+    background-color: #f8f9fa;
+}
+
+.tabela-usuarios td {
+    padding: 15px 12px;
+    font-size: 14px;
+    color: #495057;
+}
+
+.carregando {
+    text-align: center;
+    color: #6c757d;
+    font-style: italic;
+    padding: 40px !important;
+}
+
+/* Badges de permissão */
+.badge-permissao {
+    display: inline-block;
+    padding: 5px 12px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 600;
+    text-transform: capitalize;
+}
+
+.badge-permissao.administrador {
+    background-color: #dc3545;
+    color: white;
+}
+
+.badge-permissao.chefe_gabinete {
+    background-color: #6f42c1;
+    color: white;
+}
+
+.badge-permissao.supervisor {
+    background-color: #0dcaf0;
+    color: #000;
+}
+
+.badge-permissao.assessor_interno {
+    background-color: #0d6efd;
+    color: white;
+}
+
+.badge-permissao.assessor_externo {
+    background-color: #6c757d;
+    color: white;
+}
+
+/* Badge de status de acesso */
+.badge-status-acesso {
+    display: inline-block;
+    padding: 5px 12px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 600;
+}
+
+.badge-status-acesso.ativo {
+    background-color: #d1e7dd;
+    color: #0a3622;
+}
+
+.badge-status-acesso.recente {
+    background-color: #cfe2ff;
+    color: #084298;
+}
+
+.badge-status-acesso.inativo {
+    background-color: #fff3cd;
+    color: #856404;
+}
+
+.badge-status-acesso.muito-inativo {
+    background-color: #f8d7da;
+    color: #721c24;
+}
+
+.badge-status-acesso.nunca {
+    background-color: #e9ecef;
+    color: #495057;
+}
+
+/* Tempo inativo */
+.tempo-inativo {
+    font-weight: 500;
+}
+
+.tempo-inativo.ok {
+    color: #198754;
+}
+
+.tempo-inativo.alerta {
+    color: #ffc107;
+}
+
+.tempo-inativo.critico {
+    color: #dc3545;
+}
