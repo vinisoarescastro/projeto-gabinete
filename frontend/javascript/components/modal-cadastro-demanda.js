@@ -43,12 +43,16 @@ export async function abrirModalCadastro(callback) {
  */
 export function fecharModalCadastro() {
     console.log('🚪 Fechando modal de cadastro');
+    
     const modal = document.getElementById('modalDemanda');
     if (modal) {
         modal.style.display = 'none';
     }
     
-    limparFormulario();
+    // Aguardar animação do modal fechar antes de limpar
+    setTimeout(() => {
+        limparFormulario();
+    }, 300);
 }
 
 /**
@@ -525,6 +529,11 @@ async function enviarDemanda(e) {
         if (result.sucesso) {
             console.log('✅ Demanda cadastrada com sucesso!');
             mostrarSucesso('Demanda cadastrada com sucesso!');
+            
+            // Limpar formulário ANTES de fechar
+            limparFormulario();
+            
+            // Fechar modal
             fecharModalCadastro();
             
             // Executar callback se fornecido
@@ -544,25 +553,50 @@ async function enviarDemanda(e) {
 }
 
 /**
- * Limpa o formulário
+ * Limpa o formulário completamente
  */
 function limparFormulario() {
     console.log('🧹 Limpando formulário...');
     
+    // Resetar formulário
     const form = document.getElementById('formDemanda');
     if (form) {
         form.reset();
     }
     
+    // Limpar campos do cidadão
     limparCamposCidadao();
     
+    // Limpar mensagem de busca
     const statusBusca = document.getElementById('status_busca');
     if (statusBusca) {
         statusBusca.textContent = '';
         statusBusca.className = '';
+        statusBusca.style.display = 'none';
     }
     
+    // Remover estilos dos campos preenchidos
+    removerEstilosCamposPreenchidos();
+    
+    // Remover classe do fieldset
+    const fieldset = document.querySelector('fieldset');
+    if (fieldset) {
+        fieldset.classList.remove('campos-preenchidos');
+        fieldset.style.opacity = '';
+        fieldset.style.transition = '';
+    }
+    
+    // Restaurar botão salvar
+    const btnSalvar = document.querySelector('#formDemanda .btn-salvar');
+    if (btnSalvar) {
+        btnSalvar.disabled = false;
+        btnSalvar.textContent = 'Cadastrar';
+    }
+    
+    // Resetar flag de busca
     buscaEmAndamento = false;
+    
+    console.log('✅ Formulário limpo completamente');
 }
 
 /**
