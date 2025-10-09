@@ -19,6 +19,15 @@ function gerarToken() {
 }
 
 /**
+ * Obtém a URL base do frontend
+ * @returns {string} URL do frontend
+ */
+function obterURLFrontend() {
+    // URL do frontend hospedado na Vercel
+    return process.env.FRONTEND_URL || 'https://projeto-gabinete.vercel.app';
+}
+
+/**
  * POST /api/compartilhamento/gerar/:demandaId
  * Gera um link de compartilhamento para uma demanda
  * Requer autenticação
@@ -47,7 +56,7 @@ router.post('/gerar/:demandaId', verificarToken, async (req, res) => {
 
         console.log('✅ [DEBUG] Demanda encontrada:', demanda);
 
-        // 2. Verificar permissão
+        // 2. Verificar permissão (só responsável, chefe ou admin)
         const podeCompartilhar = 
             usuarioLogado.nivel_permissao === 'administrador' ||
             usuarioLogado.nivel_permissao === 'chefe_gabinete' ||
@@ -90,8 +99,10 @@ router.post('/gerar/:demandaId', verificarToken, async (req, res) => {
             compartilhado_em: demandaAtualizada.compartilhado_em
         });
 
-        // 5. Retornar link
-        const linkGerado = `${req.protocol}://${req.get('host')}/frontend/html/demanda-publica.html?token=${token}`;
+        // 5. Gerar link com URL do FRONTEND (Vercel), não do backend
+        const urlFrontend = obterURLFrontend();
+        const linkGerado = `${urlFrontend}/frontend/html/demanda-publica.html?token=${token}`;
+        
         console.log('🔗 [DEBUG] Link gerado:', linkGerado);
 
         res.json({
@@ -194,6 +205,8 @@ router.get('/publico/:token', async (req, res) => {
     try {
         const { token } = req.params;
 
+        console.log('🔍 [DEBUG] Buscando demanda com token:', token);
+
         // 1. Buscar demanda pelo token
         const { data: demanda, error: erroConsulta } = await supabase
             .from('demandas')
@@ -205,6 +218,7 @@ router.get('/publico/:token', async (req, res) => {
                 status_id,
                 cidadao_id,
                 compartilhamento_ativo,
+                token_compartilhamento,
                 status (id, nome, cor),
                 cidadaos (nome_completo)
             `)
@@ -212,12 +226,23 @@ router.get('/publico/:token', async (req, res) => {
             .eq('compartilhamento_ativo', true)
             .single();
 
-        if (erroConsulta || !demanda) {
+        if (erroConsulta) {
+            console.log('❌ [DEBUG] Erro ao buscar demanda:', erroConsulta);
+        }
+
+        if (!demanda) {
+            console.log('❌ [DEBUG] Demanda não encontrada ou inativa');
             return res.status(404).json({
                 sucesso: false,
                 mensagem: 'Link inválido ou expirado'
             });
         }
+
+        console.log('✅ [DEBUG] Demanda encontrada:', {
+            id: demanda.id,
+            titulo: demanda.titulo,
+            compartilhamento_ativo: demanda.compartilhamento_ativo
+        });
 
         // 2. Buscar histórico de status
         const { data: historico, error: erroHistorico } = await supabase
