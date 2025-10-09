@@ -163,3 +163,108 @@ input[type="checkbox"] {
 .login-container {
     animation: slideIn 0.6s ease-out;
 }
+
+/* ===== ALERTAS DE LOGIN ===== */
+
+.alerta-login {
+    background: white;
+    border-radius: 12px;
+    padding: 16px 20px;
+    margin-bottom: 20px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    border-left: 4px solid #dc3545;
+    opacity: 0;
+    transform: translateY(-10px);
+    transition: all 0.3s ease;
+}
+
+.alerta-login.show {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.alerta-icone {
+    font-size: 20px;
+    line-height: 1;
+}
+
+.alerta-header strong {
+    color: #2c3e50;
+    font-size: 15px;
+    font-weight: 600;
+}
+
+/* Tipos de alerta */
+.alerta-login.sucesso {
+    border-left-color: #28a745;
+    background: linear-gradient(to right, #d4edda 0%, white 20%);
+}
+
+.alerta-login.sucesso .alerta-header strong {
+    color: #155724;
+}
+
+.alerta-login.usuario_nao_encontrado {
+    border-left-color: #ffc107;
+    background: linear-gradient(to right, #fff3cd 0%, white 20%);
+}
+
+.alerta-login.usuario_nao_encontrado .alerta-header strong {
+    color: #856404;
+}
+
+.alerta-login.conta_desativada {
+    border-left-color: #dc3545;
+    background: linear-gradient(to right, #f8d7da 0%, white 20%);
+}
+
+.alerta-login.conta_desativada .alerta-header strong {
+    color: #721c24;
+}
+
+.alerta-login.senha_incorreta {
+    border-left-color: #e74c3c;
+    background: linear-gradient(to right, #fadbd8 0%, white 20%);
+}
+
+.alerta-login.senha_incorreta .alerta-header strong {
+    color: #7f2d28;
+}
+
+.alerta-login.erro_servidor {
+    border-left-color: #6c757d;
+    background: linear-gradient(to right, #e2e3e5 0%, white 20%);
+}
+
+.alerta-login.erro_servidor .alerta-header strong {
+    color: #383d41;
+}
+
+/* Animação de saída */
+@keyframes slideOut {
+    to {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+}
+
+/* Responsivo */
+@media (max-width: 480px) {
+    .alerta-login {
+        padding: 14px 16px;
+        margin-bottom: 16px;
+    }
+    
+    .alerta-header strong {
+        font-size: 14px;
+    }
+    
+    .alerta-descricao {
+        font-size: 12px;
+        padding-left: 28px;
+    }
+    
+    .alerta-icone {
+        font-size: 18px;
+    }
+}

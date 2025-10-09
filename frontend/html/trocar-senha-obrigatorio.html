@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Trocar Senha</title>
+
+    <!-- ESTILOS -->
+    <link rel="stylesheet" href="/frontend/css/global.css">
+    <link rel="stylesheet" href="/frontend/css/modal-trocar-senha.css">
+
+    <!-- FONTES -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
+
+    <!-- JAVASCRIPT -->
+    <script type="module" src="/frontend/javascript/pages/trocar-senha-obrigatorio.js"></script>
+</head>
+<body class="trocar-senha-page">
+
+    <div class="container-trocar-senha">
+        
+        <!-- Logo do Gabinete Digital -->
+        <div class="logo-trocar-senha">
+            <img src="/frontend/img/gabinete-digital/logo-gabinete-digital.png" alt="Gabinete Digital">
+        </div>
+        
+        <div class="card-trocar-senha">
+            
+            <!-- Header -->
+            <div class="card-header-senha">
+                <h1>Troca de Senha Obrigatória</h1>
+                <p>Crie uma senha forte para sua conta</p>
+            </div>
+            
+            <!-- Body -->
+            <div class="card-body-senha">
+                
+                <!-- Alerta -->
+                <div class="alerta-senha">
+                    <strong>⚠️ Atenção</strong>
+                    Por segurança, crie uma nova senha personalizada.
+                </div>
+
+                <!-- Requisitos -->
+                <div class="requisitos-senha">
+                    <h4>Sua senha deve ter:</h4>
+                    <ul>
+                        <li>Mínimo de <strong>8 caracteres</strong></li>
+                        <li>Pelo menos <strong>1 maiúscula</strong></li>
+                        <li>Pelo menos <strong>1 número</strong></li>
+                        <li>Pelo menos <strong>1 símbolo</strong> (!@#$%...)</li>
+                    </ul>
+                </div>
+
+                <!-- Formulário -->
+                <form id="formTrocarSenhaObrigatoria">
+                    
+                    <!-- Senha Atual -->
+                    <div class="form-group-senha">
+                        <label for="senhaAtualObrigatoria">Senha Temporária</label>
+                        <div class="input-senha-container">
+                            <input 
+                                type="password" 
+                                id="senhaAtualObrigatoria" 
+                                placeholder="Digite: Senha123!"
+                                autocomplete="current-password"
+                                required
+                            >
+                            <button 
+                                type="button" 
+                                class="toggle-senha" 
+                                data-target="senhaAtualObrigatoria"
+                                aria-label="Mostrar senha"
+                            >👁️</button>
+                        </div>
+                    </div>
+
+                    <!-- Nova Senha -->
+                    <div class="form-group-senha">
+                        <label for="senhaNovaObrigatoria">Nova Senha</label>
+                        <div class="input-senha-container">
+                            <input 
+                                type="password" 
+                                id="senhaNovaObrigatoria" 
+                                placeholder="Crie uma senha forte"
+                                autocomplete="new-password"
+                                required
+                            >
+                            <button 
+                                type="button" 
+                                class="toggle-senha" 
+                                data-target="senhaNovaObrigatoria"
+                                aria-label="Mostrar senha"
+                            >👁️</button>
+                        </div>
+                        <div id="validacaoSenha" class="validacao-senha"></div>
+                    </div>
+
+                    <!-- Confirmar Senha -->
+                    <div class="form-group-senha">
+                        <label for="senhaConfirmObrigatoria">Confirmar Senha</label>
+                        <div class="input-senha-container">
+                            <input 
+                                type="password" 
+                                id="senhaConfirmObrigatoria" 
+                                placeholder="Digite novamente"
+                                autocomplete="new-password"
+                                required
+                            >
+                            <button 
+                                type="button" 
+                                class="toggle-senha" 
+                                data-target="senhaConfirmObrigatoria"
+                                aria-label="Mostrar senha"
+                            >👁️</button>
+                        </div>
+                    </div>
+
+                    <!-- Botão Submit -->
+                    <button 
+                        type="submit" 
+                        class="btn-trocar-senha" 
+                        id="btnTrocarSenhaObrigatoria" 
+                        disabled
+                    >
+                        Alterar Senha e Continuar
+                    </button>
+                    
+                </form>
+            </div>
+
+            <!-- Footer -->
+            <div class="card-footer-senha">
+                Sua senha é criptografada e armazenada com segurança
+            </div>
+
+        </div>
+    </div>
+
+</body>
+</html>

@@ -54,6 +54,20 @@ export async function login(email, senha) {
     });
 }
 
+/**
+ * Altera senha do próprio usuário
+ * @param {string} senhaAtual
+ * @param {string} senhaNova
+ * @returns {Promise<Object>}
+ */
+export async function alterarSenha(senhaAtual, senhaNova) {
+    return fetchAPI(`${API_URL}/api/auth/alterar-senha`, {
+        method: 'POST',
+        headers: getHeaders(),
+        body: JSON.stringify({ senha_atual: senhaAtual, senha_nova: senhaNova })
+    });
+}
+
 // ============================================
 // DEMANDAS
 // ============================================
@@ -132,61 +146,29 @@ export async function excluirDemanda(id) {
     });
 }
 
-/**
- * ==========================================
- * CIDADÃOS
- * ==========================================
- */
+// ============================================
+// CIDADÃOS
+// ============================================
 
 /**
  * Lista todos os cidadãos
  * @returns {Promise}
  */
 export async function listarCidadaos() {
-    const token = getToken();
-    
-    try {
-        const response = await fetch(`${API_URL}/api/cidadaos`, {
-            headers: {
-                'Authorization': `Bearer ${token}`
-            }
-        });
-        
-        if (!response.ok) {
-            throw new Error(`Erro HTTP: ${response.status}`);
-        }
-        
-        return await response.json();
-    } catch (error) {
-        console.error('Erro ao listar cidadãos:', error);
-        throw error;
-    }
+    return fetchAPI(`${API_URL}/api/cidadaos`, {
+        headers: getHeaders()
+    });
 }
 
 /**
- * Busca cidadão por telefone  ⬅️ ADICIONE ESTA FUNÇÃO
+ * Busca cidadão por telefone
  * @param {string} telefone
  * @returns {Promise}
  */
 export async function buscarCidadaoPorTelefone(telefone) {
-    const token = getToken();
-    
-    try {
-        const response = await fetch(`${API_URL}/api/cidadaos/telefone/${telefone}`, {
-            headers: {
-                'Authorization': `Bearer ${token}`
-            }
-        });
-        
-        if (!response.ok) {
-            throw new Error(`Erro HTTP: ${response.status}`);
-        }
-        
-        return await response.json();
-    } catch (error) {
-        console.error('Erro ao buscar cidadão por telefone:', error);
-        throw error;
-    }
+    return fetchAPI(`${API_URL}/api/cidadaos/telefone/${telefone}`, {
+        headers: getHeaders()
+    });
 }
 
 /**
@@ -195,27 +177,11 @@ export async function buscarCidadaoPorTelefone(telefone) {
  * @returns {Promise}
  */
 export async function criarCidadao(dadosCidadao) {
-    const token = getToken();
-    
-    try {
-        const response = await fetch(`${API_URL}/api/cidadaos`, {
-            method: 'POST',
-            headers: {
-                'Authorization': `Bearer ${token}`,
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(dadosCidadao)
-        });
-        
-        if (!response.ok) {
-            throw new Error(`Erro HTTP: ${response.status}`);
-        }
-        
-        return await response.json();
-    } catch (error) {
-        console.error('Erro ao criar cidadão:', error);
-        throw error;
-    }
+    return fetchAPI(`${API_URL}/api/cidadaos`, {
+        method: 'POST',
+        headers: getHeaders(),
+        body: JSON.stringify(dadosCidadao)
+    });
 }
 
 // ============================================
@@ -281,6 +247,59 @@ export async function excluirStatus(id) {
  */
 export async function listarUsuarios() {
     return fetchAPI(`${API_URL}/api/usuarios`, {
+        headers: getHeaders()
+    });
+}
+
+/**
+ * Cria novo usuário (apenas admin/chefe)
+ * @param {Object} dadosUsuario
+ * @returns {Promise<Object>}
+ */
+export async function criarUsuario(dadosUsuario) {
+    return fetchAPI(`${API_URL}/api/auth/register`, {
+        method: 'POST',
+        headers: getHeaders(),
+        body: JSON.stringify(dadosUsuario)
+    });
+}
+
+/**
+ * Atualiza usuário
+ * @param {number} id
+ * @param {Object} dadosUsuario
+ * @returns {Promise<Object>}
+ */
+export async function atualizarUsuario(id, dadosUsuario) {
+    return fetchAPI(`${API_URL}/api/usuarios/${id}`, {
+        method: 'PUT',
+        headers: getHeaders(),
+        body: JSON.stringify(dadosUsuario)
+    });
+}
+
+/**
+ * Ativa ou desativa usuário
+ * @param {number} id
+ * @param {boolean} ativo
+ * @returns {Promise<Object>}
+ */
+export async function alterarStatusUsuario(id, ativo) {
+    return fetchAPI(`${API_URL}/api/usuarios/${id}/status`, {
+        method: 'PATCH',
+        headers: getHeaders(),
+        body: JSON.stringify({ ativo })
+    });
+}
+
+/**
+ * Reseta senha do usuário para padrão
+ * @param {number} id
+ * @returns {Promise<Object>}
+ */
+export async function resetarSenhaUsuario(id) {
+    return fetchAPI(`${API_URL}/api/usuarios/${id}/resetar-senha`, {
+        method: 'POST',
         headers: getHeaders()
     });
 }

@@ -118,3 +118,50 @@ export function aplicarMascaraTelefone(valor) {
 export function limparTelefone(telefone) {
     return telefone.replace(/\D/g, '');
 }
+
+/**
+ * Formata tempo relativo de forma intuitiva
+ * @param {string} dataISO
+ * @returns {string}
+ */
+export function formatarTempoRelativo(dataISO) {
+    if (!dataISO) return 'Nunca acessou';
+    
+    const agora = new Date();
+    const data = new Date(dataISO);
+    
+    // Calcular diferença em milissegundos
+    const diffMs = agora - data;
+    const diffMinutos = Math.floor(diffMs / (1000 * 60));
+    const diffHoras = Math.floor(diffMs / (1000 * 60 * 60));
+    const diffDias = Math.floor(diffMs / (1000 * 60 * 60 * 24));
+    
+    // Se foi hoje (menos de 24h)
+    if (diffDias === 0) {
+        if (diffMinutos < 1) {
+            return 'agora mesmo';
+        } else if (diffMinutos < 60) {
+            return `há ${diffMinutos}min`;
+        } else if (diffHoras === 1) {
+            const minutosRestantes = diffMinutos % 60;
+            if (minutosRestantes === 0) {
+                return 'há 1h';
+            }
+            return `há 1h ${minutosRestantes}min`;
+        } else {
+            const minutosRestantes = diffMinutos % 60;
+            if (minutosRestantes === 0) {
+                return `há ${diffHoras}h`;
+            }
+            return `há ${diffHoras}h ${minutosRestantes}min`;
+        }
+    }
+    
+    // Se foi em outro dia, mostrar data e hora
+    const dia = String(data.getDate()).padStart(2, '0');
+    const mes = String(data.getMonth() + 1).padStart(2, '0');
+    const hora = String(data.getHours()).padStart(2, '0');
+    const minuto = String(data.getMinutes()).padStart(2, '0');
+    
+    return `${dia}/${mes} às ${hora}:${minuto}`;
+}

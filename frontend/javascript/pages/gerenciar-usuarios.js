@@ -6,7 +6,16 @@ import { verificarAutenticacao, getUsuarioLogado } from '../utils/auth.js';
 import { inicializarHeader } from '../components/header.js';
 import { API_URL } from '../utils/constants.js';
 import { getToken } from '../utils/auth.js';
-import { formatarDataHora } from '../utils/formatters.js';
+import { formatarDataHora, formatarTempoRelativo } from '../utils/formatters.js';
+import { 
+    criarUsuario, 
+    atualizarUsuario, 
+    alterarStatusUsuario, 
+    resetarSenhaUsuario 
+} from '../utils/api.js';
+import { mostrarErro, mostrarSucesso, botaoLoading } from '../utils/notifications.js';
+
+let usuarioEmEdicao = null;
 
 /**
  * Busca estatísticas de usuários
@@ -52,6 +61,7 @@ async function carregarUsuarios() {
  */
 function renderizarUsuarios(usuarios) {
     const corpoTabela = document.getElementById('corpoTabelaUsuarios');
+    const usuarioLogado = getUsuarioLogado();
     
     if (usuarios.length === 0) {
         corpoTabela.innerHTML = `
@@ -69,9 +79,42 @@ function renderizarUsuarios(usuarios) {
             <td><strong>${usuario.nome_completo}</strong></td>
             <td>${usuario.email}</td>
             <td>${criarBadgePermissao(usuario.nivel_permissao)}</td>
-            <td>${criarBadgeStatusAcesso(usuario)}</td>
-            <td>${usuario.ultimo_acesso ? formatarDataHora(usuario.ultimo_acesso) : 'Nunca acessou'}</td>
-            <td>${criarTempoInativo(usuario.dias_sem_acessar)}</td>
+            <td>
+                ${usuario.ativo ? 
+                    '<span class="badge-ativo">✅ Ativo</span>' : 
+                    '<span class="badge-inativo">❌ Inativo</span>'
+                }
+            </td>
+            <td>${formatarTempoRelativo(usuario.ultimo_acesso)}</td>
+            <td>
+                <div class="btn-acoes-icones">
+                    <button class="btn-icone btn-editar" 
+                            onclick="window.editarUsuario(${usuario.id})" 
+                            title="Editar usuário">
+                        ✏️
+                    </button>
+                    <button class="btn-icone btn-resetar" 
+                            onclick="window.resetarSenha(${usuario.id}, '${usuario.nome_completo.replace(/'/g, "\\'")}\')" 
+                            title="Resetar senha">
+                        🔑
+                    </button>
+                    ${usuario.id !== usuarioLogado.id ? `
+                        ${usuario.ativo ? `
+                            <button class="btn-icone btn-desativar" 
+                                    onclick="window.toggleStatusUsuario(${usuario.id}, false, '${usuario.nome_completo.replace(/'/g, "\\'")}')" 
+                                    title="Desativar usuário">
+                                🚫
+                            </button>
+                        ` : `
+                            <button class="btn-icone btn-ativar" 
+                                    onclick="window.toggleStatusUsuario(${usuario.id}, true, '${usuario.nome_completo.replace(/'/g, "\\'")}')" 
+                                    title="Ativar usuário">
+                                ✅
+                            </button>
+                        `}
+                    ` : '<small style="color: #6c757d;">Você</small>'}
+                </div>
+            </td>
         </tr>
     `).join('');
 }
@@ -92,59 +135,163 @@ function criarBadgePermissao(permissao) {
 }
 
 /**
- * Cria badge de status de acesso
+ * Abre modal para novo usuário
  */
-function criarBadgeStatusAcesso(usuario) {
-    const dias = usuario.dias_sem_acessar;
+function abrirModalNovoUsuario() {
+    usuarioEmEdicao = null;
     
-    let classe = 'nunca';
-    let texto = usuario.status_acesso;
+    document.getElementById('tituloModalUsuario').textContent = 'Novo Usuário';
+    document.getElementById('formUsuario').reset();
+    document.getElementById('usuarioId').value = '';
+    document.getElementById('senhaUsuario').value = 'Senha123!';
+    document.getElementById('grupoSenha').style.display = 'block';
     
-    if (dias === null) {
-        classe = 'nunca';
-    } else if (dias === 0) {
-        classe = 'ativo';
-    } else if (dias <= 7) {
-        classe = 'recente';
-    } else if (dias <= 30) {
-        classe = 'inativo';
-    } else {
-        classe = 'muito-inativo';
-    }
-    
-    return `<span class="badge-status-acesso ${classe}">${texto}</span>`;
+    const modal = document.getElementById('modalUsuario');
+    modal.style.display = 'block';
 }
 
 /**
- * Cria indicador de tempo inativo
+ * Edita usuário existente
  */
-function criarTempoInativo(dias) {
-    if (dias === null) {
-        return '<span class="tempo-inativo">-</span>';
+async function editarUsuario(id) {
+    usuarioEmEdicao = id;
+    
+    try {
+        const token = getToken();
+        const response = await fetch(`${API_URL}/api/usuarios/${id}`, {
+            headers: {
+                'Authorization': `Bearer ${token}`
+            }
+        });
+        
+        const data = await response.json();
+        
+        if (data.sucesso) {
+            const usuario = data.usuario;
+            
+            document.getElementById('tituloModalUsuario').textContent = 'Editar Usuário';
+            document.getElementById('usuarioId').value = usuario.id;
+            document.getElementById('nomeCompleto').value = usuario.nome_completo;
+            document.getElementById('emailUsuario').value = usuario.email;
+            document.getElementById('nivelPermissao').value = usuario.nivel_permissao;
+            document.getElementById('grupoSenha').style.display = 'none'; // Ocultar campo senha na edição
+            
+            const modal = document.getElementById('modalUsuario');
+            modal.style.display = 'block';
+        }
+    } catch (error) {
+        console.error('Erro:', error);
+        mostrarErro('Erro ao carregar dados do usuário');
+    }
+}
+
+/**
+ * Fecha modal de usuário
+ */
+function fecharModalUsuario() {
+    const modal = document.getElementById('modalUsuario');
+    modal.style.display = 'none';
+    usuarioEmEdicao = null;
+}
+
+/**
+ * Salva usuário (criar ou editar)
+ */
+async function salvarUsuario(e) {
+    e.preventDefault();
+    
+    const nomeCompleto = document.getElementById('nomeCompleto').value;
+    const email = document.getElementById('emailUsuario').value;
+    const nivelPermissao = document.getElementById('nivelPermissao').value;
+    const senha = document.getElementById('senhaUsuario').value;
+    
+    const btnSalvar = document.querySelector('#formUsuario .btn-salvar');
+    const textoOriginal = btnSalvar.textContent;
+    btnSalvar.disabled = true;
+    btnSalvar.textContent = 'Salvando...';
+    
+    try {
+        let data;
+        
+        if (usuarioEmEdicao) {
+            // Editar
+            data = await atualizarUsuario(usuarioEmEdicao, {
+                nome_completo: nomeCompleto,
+                email,
+                nivel_permissao: nivelPermissao
+            });
+        } else {
+            // Criar novo
+            data = await criarUsuario({
+                nome_completo: nomeCompleto,
+                email,
+                senha,
+                nivel_permissao: nivelPermissao
+            });
+        }
+        
+        if (data.sucesso) {
+            mostrarSucesso(data.mensagem);
+            fecharModalUsuario();
+            await carregarUsuarios();
+        } else {
+            throw new Error(data.mensagem);
+        }
+    } catch (error) {
+        console.error('Erro:', error);
+        mostrarErro(error.message || 'Erro ao salvar usuário');
+    } finally {
+        // ⬅️ CORREÇÃO: Sempre restaurar o botão
+        btnSalvar.disabled = false;
+        btnSalvar.textContent = textoOriginal;
+    }
+}
+
+/**
+ * Resetar senha do usuário
+ */
+async function resetarSenha(id, nome) {
+    if (!confirm(`Resetar senha de "${nome}"?\n\nA senha será alterada para: Senha123!\n\nO usuário precisará trocar no próximo login.`)) {
+        return;
     }
     
-    let classe = 'ok';
-    let texto = '';
+    try {
+        const data = await resetarSenhaUsuario(id);
+        
+        if (data.sucesso) {
+            mostrarSucesso(data.mensagem);
+        } else {
+            throw new Error(data.mensagem);
+        }
+    } catch (error) {
+        console.error('Erro:', error);
+        mostrarErro(error.message || 'Erro ao resetar senha');
+    }
+}
+
+/**
+ * Ativar/Desativar usuário
+ */
+async function toggleStatusUsuario(id, novoStatus, nome) {
+    const acao = novoStatus ? 'ativar' : 'desativar';
     
-    if (dias === 0) {
-        texto = 'Hoje';
-        classe = 'ok';
-    } else if (dias === 1) {
-        texto = '1 dia';
-        classe = 'ok';
-    } else if (dias <= 7) {
-        texto = `${dias} dias`;
-        classe = 'ok';
-    } else if (dias <= 30) {
-        texto = `${dias} dias`;
-        classe = 'alerta';
-    } else {
-        const meses = Math.floor(dias / 30);
-        texto = `${meses} mês(es)`;
-        classe = 'critico';
+    if (!confirm(`Tem certeza que deseja ${acao} o usuário "${nome}"?`)) {
+        return;
     }
     
-    return `<span class="tempo-inativo ${classe}">${texto}</span>`;
+    try {
+        const data = await alterarStatusUsuario(id, novoStatus);
+        
+        if (data.sucesso) {
+            mostrarSucesso(data.mensagem);
+            await carregarUsuarios();
+        } else {
+            throw new Error(data.mensagem);
+        }
+    } catch (error) {
+        console.error('Erro:', error);
+        mostrarErro(error.message || 'Erro ao alterar status');
+    }
 }
 
 /**
@@ -166,6 +313,31 @@ function inicializar() {
     
     // Carregar usuários
     carregarUsuarios();
+    
+    // Event listeners
+    const btnNovoUsuario = document.getElementById('btnNovoUsuario');
+    if (btnNovoUsuario) {
+        btnNovoUsuario.addEventListener('click', abrirModalNovoUsuario);
+    }
+    
+    const formUsuario = document.getElementById('formUsuario');
+    if (formUsuario) {
+        formUsuario.addEventListener('submit', salvarUsuario);
+    }
+    
+    // Expor funções globalmente
+    window.editarUsuario = editarUsuario;
+    window.fecharModalUsuario = fecharModalUsuario;
+    window.resetarSenha = resetarSenha;
+    window.toggleStatusUsuario = toggleStatusUsuario;
+    
+    // Fechar modal ao clicar fora
+    window.addEventListener('click', (event) => {
+        const modal = document.getElementById('modalUsuario');
+        if (event.target === modal) {
+            fecharModalUsuario();
+        }
+    });
 }
 
 // Executar quando o DOM estiver pronto

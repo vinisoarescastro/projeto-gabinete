@@ -1,0 +1,581 @@
+/* ===== PÁGINA DE TROCA DE SENHA OBRIGATÓRIA ===== */
+
+/* Reset e configuração base */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body.trocar-senha-page {
+    font-family: 'Poppins', sans-serif;
+    background: linear-gradient(135deg, #ffffff 0%, #d6d7d8 100%);
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    position: relative;
+}
+
+/* Padrão sutil no fundo */
+body.trocar-senha-page::before {
+    content: '';
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background-image: 
+        radial-gradient(circle at 20% 50%, rgba(120, 119, 198, 0.05) 0%, transparent 50%),
+        radial-gradient(circle at 80% 80%, rgba(52, 168, 83, 0.05) 0%, transparent 50%);
+    pointer-events: none;
+}
+
+/* Logo acima do card */
+.logo-trocar-senha {
+    justify-items: center;
+    margin-bottom: 24px;
+    animation: fadeInDown 0.5s ease-out;
+}
+
+.logo-trocar-senha img {
+    max-width: 180px;
+    height: auto;
+    filter: drop-shadow(0 2px 8px rgba(0, 0, 0, 0.1));
+    transition: transform 0.3s ease;
+}
+
+.logo-trocar-senha img:hover {
+    transform: scale(1.05);
+}
+
+@keyframes fadeInDown {
+    from {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Container principal */
+.container-trocar-senha {
+    width: 100%;
+    max-width: 440px;
+    position: relative;
+    z-index: 1;
+    animation: fadeIn 0.4s ease-out;
+    padding-top: 20px;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Card principal */
+.card-trocar-senha {
+    background: white;
+    border-radius: 16px;
+    box-shadow: 0 4px 24px rgba(0, 0, 0, 0.08);
+    overflow: hidden;
+}
+
+/* Header do card */
+.card-header-senha {
+    background: linear-gradient(135deg, #4b6cff 0%, #a31111 100%);
+    color: white;
+    padding: 20px;
+    text-align: center;
+}
+
+.card-header-senha h1 {
+    font-size: 16px;
+    font-weight: 600;
+}
+
+.card-header-senha p {
+    font-size: 13px;
+    opacity: 0.9;
+    margin: 0;
+    font-weight: 400;
+}
+
+/* Body do card */
+.card-body-senha {
+    padding: 20px ;
+}
+
+/* Alerta */
+.alerta-senha {
+    background: #fff9e6;
+    border-left: 3px solid #ffc107;
+    padding: 12px 14px;
+    border-radius: 8px;
+    margin-bottom: 18px;
+    font-size: 12px;
+    line-height: 1.5;
+    color: #856404;
+}
+
+.alerta-senha strong {
+    display: block;
+    margin-bottom: 2px;
+    font-size: 13px;
+}
+
+/* Requisitos */
+.requisitos-senha {
+    background: #f8f9fa;
+    border-radius: 8px;
+    padding: 12px 14px;
+    margin-bottom: 18px;
+}
+
+.requisitos-senha h4 {
+    font-size: 12px;
+    font-weight: 600;
+    color: #495057;
+    margin: 0 0 8px 0;
+}
+
+.requisitos-senha ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.requisitos-senha li {
+    font-size: 11px;
+    color: #6c757d;
+    padding-left: 18px;
+    position: relative;
+}
+
+.requisitos-senha li::before {
+    content: '✓';
+    position: absolute;
+    left: 2px;
+    color: #667eea;
+    font-weight: bold;
+}
+
+/* Form groups */
+.form-group-senha {
+    margin-bottom: 14px;
+}
+
+.form-group-senha label {
+    display: block;
+    font-size: 12px;
+    font-weight: 600;
+    color: #495057;
+    margin-bottom: 6px;
+}
+
+/* Input container */
+.input-senha-container {
+    position: relative;
+}
+
+.form-group-senha input {
+    width: 100%;
+    padding: 11px 40px 11px 12px;
+    border: 2px solid #e0e0e0;
+    border-radius: 8px;
+    font-size: 14px;
+    font-family: 'Poppins', sans-serif;
+    transition: all 0.2s ease;
+    background: white;
+}
+
+.form-group-senha input:focus {
+    outline: none;
+    border-color: #667eea;
+    box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+}
+
+.form-group-senha input.valida {
+    border-color: #28a745;
+    background: #f8fff9;
+}
+
+.form-group-senha input.invalida {
+    border-color: #dc3545;
+    background: #fff8f8;
+}
+
+/* Toggle senha */
+.toggle-senha {
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 18px;
+    padding: 6px;
+    border-radius: 6px;
+    transition: all 0.2s;
+    line-height: 1;
+}
+
+.toggle-senha:hover {
+    background: rgba(102, 126, 234, 0.1);
+}
+
+/* Validação */
+.validacao-senha {
+    font-size: 11px;
+    margin-top: 4px;
+    font-weight: 500;
+    padding: 3px 6px;
+    border-radius: 4px;
+    display: inline-block;
+}
+
+.validacao-senha.valida {
+    color: #28a745;
+    background: #f0fff4;
+}
+
+.validacao-senha.invalida {
+    color: #dc3545;
+    background: #fff5f5;
+}
+
+/* Botão */
+.btn-trocar-senha {
+    width: 100%;
+    background: linear-gradient(135deg, #38b638 0%, #1c7910 100%);
+    color: white;
+    border: none;
+    padding: 13px;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    font-family: 'Poppins', sans-serif;
+    margin-top: 6px;
+    box-shadow: 0 2px 8px rgba(102, 126, 234, 0.3);
+}
+
+.btn-trocar-senha:hover:not(:disabled) {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+}
+
+.btn-trocar-senha:active:not(:disabled) {
+    transform: translateY(0);
+}
+
+.btn-trocar-senha:disabled {
+    background: linear-gradient(135deg, #9e9e9e 0%, #757575 100%);
+    cursor: not-allowed;
+    box-shadow: none;
+    opacity: 0.6;
+}
+
+/* Footer do card */
+.card-footer-senha {
+    padding-bottom: 15px;
+    background: #f8f9fa;
+    text-align: center;
+    font-size: 11px;
+    color: #6c757d;
+}
+
+/* Animação de loading no botão */
+.btn-trocar-senha.loading::after {
+    content: '';
+    display: inline-block;
+    width: 12px;
+    height: 12px;
+    margin-left: 8px;
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    border-top-color: white;
+    border-radius: 50%;
+    animation: spin 0.6s linear infinite;
+}
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+
+/* ===== RESPONSIVIDADE ===== */
+
+/* Tablets */
+@media (max-width: 768px) {
+    .container-trocar-senha {
+        max-width: 400px;
+    }
+}
+
+/* Mobile */
+@media (max-width: 480px) {
+    .logo-trocar-senha {
+        margin-bottom: 20px;
+    }
+    
+    .logo-trocar-senha img {
+        max-width: 150px;
+    }
+    
+    body.trocar-senha-page {
+        padding: 16px;
+        align-items: flex-start;
+        padding-top: 30px;
+    }
+    
+    .container-trocar-senha {
+        max-width: 100%;
+    }
+    
+    .card-trocar-senha {
+        border-radius: 12px;
+    }
+    
+    .card-header-senha {
+        padding: 20px 20px;
+    }
+    
+    .card-header-senha::before {
+        font-size: 32px;
+        margin-bottom: 8px;
+    }
+    
+    .card-header-senha h1 {
+        font-size: 18px;
+    }
+    
+    .card-header-senha p {
+        font-size: 12px;
+    }
+    
+    .card-body-senha {
+        padding: 20px 16px;
+    }
+    
+    .alerta-senha {
+        padding: 10px 12px;
+        font-size: 11px;
+        margin-bottom: 14px;
+    }
+    
+    .requisitos-senha {
+        padding: 10px 12px;
+        margin-bottom: 14px;
+    }
+    
+    .requisitos-senha h4 {
+        font-size: 11px;
+        margin-bottom: 6px;
+    }
+    
+    .requisitos-senha li {
+        font-size: 10px;
+    }
+    
+    .form-group-senha {
+        margin-bottom: 12px;
+    }
+    
+    .form-group-senha input {
+        padding: 10px 38px 10px 10px;
+        font-size: 13px;
+    }
+    
+    .btn-trocar-senha {
+        padding: 12px;
+        font-size: 13px;
+    }
+    
+    .card-footer-senha {
+        padding: 12px 16px;
+        font-size: 10px;
+    }
+}
+
+/* Mobile muito pequeno */
+@media (max-width: 360px) {
+    .logo-trocar-senha {
+        margin-bottom: 16px;
+    }
+    
+    .logo-trocar-senha img {
+        max-width: 130px;
+    }
+    
+    body.trocar-senha-page {
+        padding: 12px;
+        padding-top: 20px;
+    }
+    
+    .card-header-senha h1 {
+        font-size: 16px;
+    }
+    
+    .card-body-senha {
+        padding: 16px 14px;
+    }
+}
+
+/* Landscape mobile - ajustar altura */
+@media (max-height: 650px) and (orientation: landscape) {
+    .logo-trocar-senha {
+        margin-bottom: 12px;
+    }
+    
+    .logo-trocar-senha img {
+        max-width: 120px;
+    }
+    
+    body.trocar-senha-page {
+        align-items: flex-start;
+        padding: 20px 20px 60px 20px;
+        padding-top: 16px;
+    }
+    
+    .card-header-senha {
+        padding: 16px 20px;
+    }
+    
+    .card-header-senha::before {
+        display: none; /* Ocultar emoji para economizar espaço */
+    }
+    
+    .card-body-senha {
+        padding: 16px 20px;
+    }
+    
+    .alerta-senha,
+    .requisitos-senha {
+        margin-bottom: 12px;
+    }
+    
+    .form-group-senha {
+        margin-bottom: 10px;
+    }
+}
+
+/* Altura muito pequena */
+@media (max-height: 500px) {
+    .logo-trocar-senha {
+        margin-bottom: 8px;
+    }
+    
+    .logo-trocar-senha img {
+        max-width: 100px;
+    }
+    
+    body.trocar-senha-page {
+        padding: 10px;
+    }
+    
+    .card-header-senha {
+        padding: 12px 16px;
+    }
+    
+    .card-header-senha h1 {
+        font-size: 16px;
+    }
+    
+    .card-body-senha {
+        padding: 12px 16px;
+    }
+    
+    .alerta-senha {
+        display: none; /* Ocultar alerta em telas muito baixas */
+    }
+    
+    .requisitos-senha {
+        margin-bottom: 8px;
+        padding: 8px 10px;
+    }
+    
+    .form-group-senha {
+        margin-bottom: 8px;
+    }
+    
+    .card-footer-senha {
+        padding: 8px 16px;
+    }
+}
+
+/* Acessibilidade */
+.form-group-senha input:focus-visible {
+    outline: 3px solid #667eea;
+    outline-offset: 2px;
+}
+
+.btn-trocar-senha:focus-visible {
+    outline: 3px solid #667eea;
+    outline-offset: 2px;
+}
+
+/* Reduzir movimento para quem prefere */
+@media (prefers-reduced-motion: reduce) {
+    * {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+    }
+}
+
+/* Dark mode support (opcional) */
+@media (prefers-color-scheme: dark) {
+    body.trocar-senha-page {
+        background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
+    }
+    
+    .card-trocar-senha {
+        background: rgba(30, 30, 30, 0.98);
+        box-shadow: 0 4px 24px rgba(0, 0, 0, 0.4);
+    }
+    
+    .form-group-senha input {
+        background: #2a2a2a;
+        color: #fff;
+        border-color: #444;
+    }
+    
+    .form-group-senha input:focus {
+        border-color: #667eea;
+        background: #2a2a2a;
+    }
+    
+    .form-group-senha label {
+        color: #e0e0e0;
+    }
+    
+    .requisitos-senha {
+        background: #2a2a2a;
+    }
+    
+    .requisitos-senha h4 {
+        color: #e0e0e0;
+    }
+    
+    .requisitos-senha li {
+        color: #b0b0b0;
+    }
+    
+    .alerta-senha {
+        background: #3d3417;
+        color: #ffc107;
+    }
+    
+    .card-footer-senha {
+        background: #2a2a2a;
+        color: #b0b0b0;
+    }
+}

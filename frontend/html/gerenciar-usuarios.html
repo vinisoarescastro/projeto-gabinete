@@ -60,6 +60,9 @@
             
             <div class="page-header">
                 <h1>👥 Gerenciar Usuários</h1>
+                <button class="btn btn-novo-usuario" id="btnNovoUsuario">
+                    ➕ Novo Usuário
+                </button>
             </div>
 
             <!-- Tabela de Usuários -->
@@ -72,7 +75,7 @@
                             <th>Nível de Permissão</th>
                             <th>Status</th>
                             <th>Último Acesso</th>
-                            <th>Tempo Inativo</th>
+                            <th>Ações</th>
                         </tr>
                     </thead>
                     <tbody id="corpoTabelaUsuarios">
@@ -85,5 +88,54 @@
 
         </div>
     </section>
+
+    <!-- MODAL CRIAR/EDITAR USUÁRIO -->
+    <div id="modalUsuario" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="tituloModalUsuario">Novo Usuário</h2>
+                <span class="close" onclick="window.fecharModalUsuario()">&times;</span>
+            </div>
+            
+            <form id="formUsuario">
+                <div class="modal-body">
+                    <input type="hidden" id="usuarioId">
+                    
+                    <div class="form-group">
+                        <label for="nomeCompleto">Nome Completo *</label>
+                        <input type="text" id="nomeCompleto" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="emailUsuario">Email *</label>
+                        <input type="email" id="emailUsuario" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="nivelPermissao">Nível de Permissão *</label>
+                        <select id="nivelPermissao" required>
+                            <option value="">Selecione...</option>
+                            <option value="administrador">Administrador</option>
+                            <option value="chefe_gabinete">Chefe de Gabinete</option>
+                            <option value="supervisor">Supervisor</option>
+                            <option value="assessor_interno">Assessor Interno</option>
+                            <option value="assessor_externo">Assessor Externo</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group" id="grupoSenha">
+                        <label for="senhaUsuario">Senha Inicial *</label>
+                        <input type="password" id="senhaUsuario" value="Senha123!" readonly>
+                        <small style="color: #6c757d;">O usuário deverá alterar esta senha no primeiro acesso</small>
+                    </div>
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn-cancelar" onclick="window.fecharModalUsuario()">Cancelar</button>
+                    <button type="submit" class="btn-salvar">Salvar</button>
+                </div>
+            </form>
+        </div>
+    </div>
 </body>
 </html>
