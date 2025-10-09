@@ -28,6 +28,8 @@ router.post('/gerar/:demandaId', verificarToken, async (req, res) => {
         const { demandaId } = req.params;
         const usuarioLogado = req.usuario;
 
+        console.log('🔍 [DEBUG] Iniciando geração de link para demanda:', demandaId);
+
         // 1. Verificar se a demanda existe
         const { data: demanda, error: erroConsulta } = await supabase
             .from('demandas')
@@ -36,19 +38,23 @@ router.post('/gerar/:demandaId', verificarToken, async (req, res) => {
             .single();
 
         if (erroConsulta || !demanda) {
+            console.log('❌ [DEBUG] Demanda não encontrada:', erroConsulta);
             return res.status(404).json({
                 sucesso: false,
                 mensagem: 'Demanda não encontrada'
             });
         }
 
-        // 2. Verificar permissão (só responsável, chefe ou admin)
+        console.log('✅ [DEBUG] Demanda encontrada:', demanda);
+
+        // 2. Verificar permissão
         const podeCompartilhar = 
             usuarioLogado.nivel_permissao === 'administrador' ||
             usuarioLogado.nivel_permissao === 'chefe_gabinete' ||
             demanda.usuario_responsavel_id === usuarioLogado.id;
 
         if (!podeCompartilhar) {
+            console.log('❌ [DEBUG] Usuário sem permissão');
             return res.status(403).json({
                 sucesso: false,
                 mensagem: 'Você não tem permissão para compartilhar esta demanda'
@@ -57,6 +63,7 @@ router.post('/gerar/:demandaId', verificarToken, async (req, res) => {
 
         // 3. Gerar token único
         const token = gerarToken();
+        console.log('🔑 [DEBUG] Token gerado:', token);
 
         // 4. Atualizar demanda com o token
         const { data: demandaAtualizada, error: erroAtualizacao } = await supabase
@@ -71,14 +78,27 @@ router.post('/gerar/:demandaId', verificarToken, async (req, res) => {
             .select()
             .single();
 
-        if (erroAtualizacao) throw erroAtualizacao;
+        if (erroAtualizacao) {
+            console.log('❌ [DEBUG] Erro ao atualizar:', erroAtualizacao);
+            throw erroAtualizacao;
+        }
+
+        console.log('✅ [DEBUG] Demanda atualizada com sucesso!');
+        console.log('📦 [DEBUG] Dados salvos:', {
+            token_compartilhamento: demandaAtualizada.token_compartilhamento,
+            compartilhamento_ativo: demandaAtualizada.compartilhamento_ativo,
+            compartilhado_em: demandaAtualizada.compartilhado_em
+        });
 
         // 5. Retornar link
+        const linkGerado = `${req.protocol}://${req.get('host')}/frontend/html/demanda-publica.html?token=${token}`;
+        console.log('🔗 [DEBUG] Link gerado:', linkGerado);
+
         res.json({
             sucesso: true,
             mensagem: 'Link de compartilhamento gerado com sucesso!',
             token: token,
-            link: `${req.protocol}://${req.get('host')}/demanda-publica.html?token=${token}`,
+            link: linkGerado,
             demanda: {
                 id: demandaAtualizada.id,
                 titulo: demandaAtualizada.titulo
@@ -86,7 +106,7 @@ router.post('/gerar/:demandaId', verificarToken, async (req, res) => {
         });
 
     } catch (error) {
-        console.error('Erro ao gerar compartilhamento:', error);
+        console.error('💥 [DEBUG] Erro ao gerar compartilhamento:', error);
         res.status(500).json({
             sucesso: false,
             mensagem: 'Erro ao gerar link de compartilhamento',
