@@ -1,0 +1,154 @@
+/**
+ * Estilos do Modal de Compartilhamento
+ * Salvar em: frontend/css/modal-compartilhar.css
+ */
+
+.modal-compartilhar {
+    max-width: 600px;
+}
+
+#statusCompartilhamento {
+    min-height: 150px;
+    padding: 20px;
+    background-color: #f8f9fa;
+    border-radius: 8px;
+    text-align: center;
+}
+
+/* Link Ativo */
+.link-ativo {
+    text-align: left;
+}
+
+.status-ativo {
+    color: #28a745;
+    font-weight: 600;
+    margin-bottom: 15px;
+    font-size: 14px;
+}
+
+.link-container {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 15px;
+}
+
+#inputLink {
+    flex: 1;
+    padding: 12px;
+    border: 2px solid #007bff;
+    border-radius: 6px;
+    font-size: 14px;
+    font-family: 'Courier New', monospace;
+    background-color: #e7f3ff;
+    color: #0056b3;
+}
+
+.btn-copiar {
+    background-color: #007bff;
+    color: white;
+    border: none;
+    padding: 12px 20px;
+    border-radius: 6px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s;
+    white-space: nowrap;
+}
+
+.btn-copiar:hover {
+    background-color: #0056b3;
+    transform: translateY(-2px);
+}
+
+.info-compartilhamento {
+    background-color: #fff3cd;
+    padding: 12px;
+    border-radius: 6px;
+    border-left: 4px solid #ffc107;
+}
+
+.info-compartilhamento small {
+    color: #856404;
+    font-size: 13px;
+}
+
+/* Sem Link */
+.sem-link {
+    padding: 30px;
+}
+
+.sem-link p {
+    color: #6c757d;
+    margin-bottom: 10px;
+}
+
+.sem-link small {
+    color: #999;
+}
+
+/* Erro */
+.erro-status p {
+    color: #dc3545;
+    font-weight: 500;
+}
+
+/* Botões do Footer */
+.btn-gerar {
+    background-color: #28a745;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 4px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.btn-gerar:hover {
+    background-color: #218838;
+}
+
+.btn-gerar:disabled {
+    background-color: #6c757d;
+    cursor: not-allowed;
+}
+
+.btn-desativar {
+    background-color: #dc3545;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 4px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.btn-desativar:hover {
+    background-color: #c82333;
+}
+
+.btn-desativar:disabled {
+    background-color: #6c757d;
+    cursor: not-allowed;
+}
+
+/* Responsivo */
+@media (max-width: 600px) {
+    .modal-compartilhar {
+        max-width: 95%;
+        margin: 20px auto;
+    }
+    
+    .link-container {
+        flex-direction: column;
+    }
+    
+    #inputLink {
+        font-size: 12px;
+    }
+}

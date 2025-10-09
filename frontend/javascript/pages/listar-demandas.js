@@ -11,6 +11,7 @@ import { abrirModalDetalhes, inicializarModalDetalhes, adicionarComentario, excl
 import { abrirModalExclusao, inicializarModalExclusao } from '../components/modal-exclusao.js';
 import { abrirModalEdicao, inicializarModalEdicao, fecharModalEdicao } from '../components/modal-edicao.js';
 import { abrirModalCadastro, inicializarModalCadastro } from '../components/modal-cadastro-demanda.js';
+import { inicializarModalCompartilhar } from '../components/modal-compartilhar-demanda.js';
 
 // Array global com todas as demandas
 let todasDemandas = [];
@@ -111,6 +112,8 @@ function inicializar() {
     
     // Configurar botão nova demanda (DEPOIS de inicializar o modal)
     configurarBotaoNovaDemanda();
+
+    inicializarModalCompartilhar();
 }
 
 // Executar quando o DOM estiver pronto

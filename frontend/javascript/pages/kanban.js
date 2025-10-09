@@ -1,5 +1,6 @@
 /**
  * Página Kanban
+ *
  */
 
 import { verificarAutenticacao } from '../utils/auth.js';
@@ -11,18 +12,23 @@ import {
     renderizarColunas, 
     renderizarCards, 
     inicializarContadores,
-    carregarMaisCards,
-    resetarContadores
+    carregarMaisCards
 } from '../components/kanban-board.js';
 import { 
     aplicarFiltroVisualizacao, 
     obterFiltroAtivo, 
     inicializarFiltroKanban 
 } from '../components/kanban-filtros.js';
-import { abrirModalDetalhes, inicializarModalDetalhes } from '../components/modal-detalhes.js';
+import { 
+    abrirModalDetalhes, 
+    inicializarModalDetalhes, 
+    adicionarComentario,       
+    excluirComentarioModal      
+} from '../components/modal-detalhes.js';
 import { abrirModalEdicao, inicializarModalEdicao, fecharModalEdicao } from '../components/modal-edicao.js';
 import { abrirModalCadastro, inicializarModalCadastro } from '../components/modal-cadastro-demanda.js';
-import { abrirModalStatus, inicializarModalStatus } from '../components/gerenciar-status.js';  // ⬅️ NOVO
+import { abrirModalStatus, inicializarModalStatus } from '../components/gerenciar-status.js';
+import { inicializarModalCompartilhar } from '../components/modal-compartilhar-demanda.js';
 
 // Estado global
 let todasDemandas = [];
@@ -109,6 +115,8 @@ function exponerFuncoesGlobais() {
         abrirModalEdicao(id, carregarDados);
     };
     window.fecharModalEdicao = fecharModalEdicao;
+    window.adicionarComentario = adicionarComentario;
+    window.excluirComentarioGlobal = excluirComentarioModal;
 }
 
 /**
@@ -128,14 +136,14 @@ function configurarBotaoNovaDemanda() {
 }
 
 /**
- * Configura botão de gerenciar status  ⬅️ ATUALIZADO
+ * Configura botão de gerenciar status
  */
 function configurarBotaoGerenciarStatus() {
     const btnGerenciar = document.querySelector('.btn.gerenciar-status');
     
     if (btnGerenciar) {
         btnGerenciar.addEventListener('click', () => {
-            abrirModalStatus(carregarDados);  // ⬅️ Passa callback para recarregar após mudanças
+            abrirModalStatus(carregarDados);
         });
     }
 }
@@ -161,11 +169,15 @@ function inicializar() {
     // Inicializar filtros
     inicializarFiltroKanban(aplicarFiltroERenderizar);
     
-    // Inicializar modais
-    inicializarModalDetalhes();
-    inicializarModalEdicao();
-    inicializarModalCadastro();
-    inicializarModalStatus();  // ⬅️ NOVO
+    // ⭐ INICIALIZAR TODOS OS MODAIS (IMPORTANTE!)
+    inicializarModalDetalhes();           // Modal de ver detalhes
+    inicializarModalEdicao();             // Modal de editar
+    inicializarModalCadastro();           // Modal de cadastrar
+    inicializarModalStatus();             // Modal de gerenciar status
+    inicializarModalCompartilhar();       // Modal de Compartilhamento
+    
+    // ⭐ Se você tiver modal de exclusão, adicione também:
+    // inicializarModalExclusao();
     
     // Configurar botões
     configurarBotaoNovaDemanda();
