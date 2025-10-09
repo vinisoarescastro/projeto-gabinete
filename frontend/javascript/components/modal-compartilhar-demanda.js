@@ -1,6 +1,6 @@
 /**
  * Componente Modal de Compartilhamento de Demanda
- * Salvar em: frontend/javascript/components/modal-compartilhar-demanda.js
+ * VERSÃO CORRIGIDA - Gera o link com o domínio correto do frontend
  */
 
 import { 
@@ -12,6 +12,23 @@ import { mostrarErro, mostrarSucesso } from '../utils/notifications.js';
 
 let demandaAtual = null;
 let linkAtual = null;
+
+/**
+ * Obtém a URL base do frontend (Vercel)
+ * @returns {string} URL do frontend
+ */
+function obterURLFrontend() {
+    // Sempre usar a URL da Vercel, independente de onde está rodando
+    if (window.location.hostname.includes('vercel.app')) {
+        return window.location.origin;
+    }
+    // Para desenvolvimento local
+    if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
+        return window.location.origin;
+    }
+    // URL de produção (Vercel)
+    return 'https://projeto-gabinete.vercel.app';
+}
 
 /**
  * Abre o modal de compartilhamento
@@ -61,8 +78,11 @@ async function verificarStatusAtual() {
         const resposta = await verificarStatusCompartilhamento(demandaAtual.id);
         
         if (resposta.compartilhado) {
-            // Já está compartilhada
-            linkAtual = `${window.location.origin}/frontend/html/demanda-publica.html?token=${resposta.token}`;
+            // Já está compartilhada - CORRIGIR O LINK AQUI
+            const urlFrontend = obterURLFrontend();
+            linkAtual = `${urlFrontend}/frontend/html/demanda-publica.html?token=${resposta.token}`;
+            
+            console.log('🔗 Link corrigido gerado:', linkAtual);
             
             containerStatus.innerHTML = `
                 <div class="link-ativo">
