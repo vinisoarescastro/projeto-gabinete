@@ -1,15 +1,12 @@
 /**
  * Componente de Tabela de Demandas
  * Renderiza e gerencia a tabela de listagem
- * 
- * SALVAR EM: frontend/javascript/components/tabela-demandas.js
  */
 
 import { formatarData } from '../utils/formatters.js';
 import { getNomeSobrenome } from '../utils/formatters.js';
 import { podeEditarDemanda } from '../utils/auth.js';
 import { getUsuarioLogado } from '../utils/auth.js';
-import { abrirModalCompartilhar } from './modal-compartilhar-demanda.js'; // ⭐ NOVO
 
 /**
  * Renderiza a tabela de demandas
@@ -44,13 +41,13 @@ export function renderizarTabela(demandas, handlers = {}) {
 
 /**
  * Cria HTML de uma linha da tabela
- * @param {Object} demanda - Dados da demanda
+ * @param {Object} demanda
  * @param {Object} handlers - Callbacks para ações
  * @returns {string} HTML da linha
  */
 function criarLinhaTabela(demanda, handlers) {
     const usuario = getUsuarioLogado();
-    const podeEditar = podeEditarDemanda(demanda, usuario);
+    const podeEditar = podeEditarDemanda(demanda);
     
     // Escapar aspas no título para evitar problemas no HTML
     const tituloEscapado = demanda.titulo.replace(/'/g, "\\'");
@@ -64,10 +61,8 @@ function criarLinhaTabela(demanda, handlers) {
             <td>${criarBadgeStatus(demanda.status_id, demanda.status?.nome)}</td>
             <td>${formatarData(demanda.criado_em)}</td>
             <td>${formatarData(demanda.atualizado_em)}</td>
-            <td class="acoes-td">
-                <div class="acoes-container">
-                    ${criarBotoesAcao(demanda, tituloEscapado, podeEditar)}
-                </div>
+            <td class="acoes">
+                ${criarBotoesAcao(demanda.id, tituloEscapado, podeEditar)}
             </td>
         </tr>
     `;
@@ -75,7 +70,7 @@ function criarLinhaTabela(demanda, handlers) {
 
 /**
  * Cria badge de prioridade
- * @param {string} prioridade - baixa, media, alta
+ * @param {string} prioridade
  * @returns {string} HTML do badge
  */
 function criarBadgePrioridade(prioridade) {
@@ -84,8 +79,8 @@ function criarBadgePrioridade(prioridade) {
 
 /**
  * Cria badge de status
- * @param {number} statusId - ID do status
- * @param {string} statusNome - Nome do status
+ * @param {number} statusId
+ * @param {string} statusNome
  * @returns {string} HTML do badge
  */
 function criarBadgeStatus(statusId, statusNome) {
@@ -93,55 +88,44 @@ function criarBadgeStatus(statusId, statusNome) {
 }
 
 /**
- * Cria botões de ação da tabela
- * @param {Object} demanda - Objeto completo da demanda
- * @param {string} tituloEscapado - Título com aspas escapadas
- * @param {boolean} podeEditar - Se o usuário pode editar
+ * Cria botões de ação
+ * @param {number} id
+ * @param {string} titulo
+ * @param {boolean} podeEditar
  * @returns {string} HTML dos botões
  */
-function criarBotoesAcao(demanda, tituloEscapado, podeEditar) {
-    // Botão Visualizar (sempre visível)
+function criarBotoesAcao(id, titulo, podeEditar) {
     const btnVisualizar = `
         <button 
             class="btn-visualizar" 
-            onclick="window.visualizarDemanda(${demanda.id})" 
-            title="Ver detalhes">
+            onclick="window.visualizarDemanda(${id})" 
+            title="Ver detalhes"
+        >
             👁️
         </button>
     `;
     
-    // Botão Editar (apenas se tiver permissão)
     const btnEditar = podeEditar ? `
         <button 
             class="btn-editar" 
-            onclick="window.editarDemanda(${demanda.id})" 
-            title="Editar">
+            onclick="window.abrirModalEdicao(${id})" 
+            title="Editar"
+        >
             ✏️
         </button>
     ` : '';
     
-    // ⭐ NOVO: Botão Compartilhar (apenas se tiver permissão)
-    const btnCompartilhar = podeEditar ? `
+    const btnExcluir = `
         <button 
-            class="btn-compartilhar" 
-            onclick="window.compartilharDemanda(${demanda.id}, '${tituloEscapado}')"
-            title="Compartilhar com cidadão">
-            🔗
-        </button>
-    ` : '';
-    
-    // Botão Excluir (apenas se tiver permissão)
-    const btnExcluir = podeEditar ? `
-        <button 
-            class="btn-excluir" 
-            onclick="window.excluirDemandaModal(${demanda.id}, '${tituloEscapado}')"
-            title="Excluir">
+            class="btn-excluir-demanda" 
+            onclick="window.confirmarExclusao(${id}, '${titulo}')" 
+            title="Excluir"
+        >
             🗑️
         </button>
-    ` : '';
+    `;
     
-    // Retorna todos os botões concatenados
-    return btnVisualizar + btnEditar + btnCompartilhar + btnExcluir;
+    return btnVisualizar + btnEditar + btnExcluir;
 }
 
 /**
@@ -162,7 +146,7 @@ export function mostrarCarregando() {
 
 /**
  * Mostra mensagem de erro
- * @param {string} mensagem - Mensagem de erro a ser exibida
+ * @param {string} mensagem
  */
 export function mostrarErroTabela(mensagem = 'Erro ao carregar demandas') {
     const corpoTabela = document.getElementById('corpoTabela');
@@ -170,41 +154,9 @@ export function mostrarErroTabela(mensagem = 'Erro ao carregar demandas') {
         corpoTabela.innerHTML = `
             <tr>
                 <td colspan="8" class="erro">
-                    ❌ ${mensagem}
+                    ${mensagem}
                 </td>
             </tr>
         `;
     }
 }
-
-// ============================================
-// ⭐ NOVO: Expor funções globalmente para uso no HTML
-// ============================================
-
-/**
- * Função global para compartilhar demanda
- * Chamada pelo onclick do botão na tabela
- * @param {number} demandaId - ID da demanda
- * @param {string} titulo - Título da demanda
- */
-window.compartilharDemanda = (demandaId, titulo) => {
-    console.log('Compartilhando demanda:', demandaId, titulo);
-    
-    const demanda = { 
-        id: demandaId, 
-        titulo: titulo 
-    };
-    
-    abrirModalCompartilhar(demanda);
-};
-
-/**
- * Nota sobre as outras funções globais:
- * 
- * As funções window.visualizarDemanda, window.editarDemanda e 
- * window.excluirDemandaModal devem estar definidas em outro lugar
- * do seu código (provavelmente em listar-demandas.js)
- * 
- * Se elas não existirem, você verá erros no console quando
- * clicar nesses botões.
- */
