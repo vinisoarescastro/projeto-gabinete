@@ -25,7 +25,8 @@ export function mostrarErro(mensagem) {
  * @param {string} mensagem - Mensagem a ser exibida
  */
 export function mostrarAviso(mensagem) {
-    mostrarNotificacao(mensagem, 'aviso');
+    alert(`⚠️ ${mensagem}`);
+    // TODO: Substituir por toast notification no futuro
 }
 
 /**

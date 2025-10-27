@@ -464,6 +464,45 @@
     margin-top: 1.5rem;
 }
 
+.mensagem-telefone {
+    margin-top: 0.5rem;
+    padding: 0.75rem 1rem;
+    border-radius: 6px;
+    font-size: 0.9rem;
+    font-weight: 500;
+    transition: opacity 0.3s ease;
+    animation: slideDown 0.3s ease;
+}
+
+@keyframes slideDown {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.mensagem-sucesso {
+    background-color: #d4edda;
+    color: #155724;
+    border-left: 4px solid #28a745;
+}
+
+.mensagem-info {
+    background-color: #d1ecf1;
+    color: #0c5460;
+    border-left: 4px solid #17a2b8;
+}
+
+.mensagem-erro {
+    background-color: #f8d7da;
+    color: #721c24;
+    border-left: 4px solid #dc3545;
+}
+
 /* ============================================
    RESPONSIVIDADE - TABLET
    ============================================ */
@@ -703,6 +742,11 @@
     .filtro-input {
         width: 100%;
         min-width: auto;
+    }
+
+     .mensagem-telefone {
+        font-size: 0.85rem;
+        padding: 0.6rem 0.8rem;
     }
 }
 

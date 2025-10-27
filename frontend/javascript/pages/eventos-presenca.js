@@ -38,15 +38,31 @@ document.addEventListener('DOMContentLoaded', () => {
     carregarEventos();
     verificarPermissoesVisualizacao();
     
-    // Aplicar máscara de telefone
+    // ✅ NOVO: Aplicar máscara de telefone E busca automática IMEDIATA
     const inputTelefone = document.getElementById('inputTelefone');
+    
     inputTelefone.addEventListener('input', (e) => {
+        // Aplicar máscara
         e.target.value = aplicarMascaraTelefone(e.target.value);
+        
+        // Buscar IMEDIATAMENTE quando telefone estiver completo
+        const telefone = e.target.value.replace(/\D/g, '');
+        
+        // Se telefone completo (11 dígitos com DDD), busca IMEDIATAMENTE
+        if (telefone.length === 11) {
+            buscarDadosPorTelefoneAutomatico(telefone);
+        } 
+        // Se telefone fixo completo (10 dígitos), também busca
+        else if (telefone.length === 10) {
+            buscarDadosPorTelefoneAutomatico(telefone);
+        }
+        // Limpar campos se telefone for apagado
+        else if (telefone.length === 0) {
+            document.getElementById('inputNome').value = '';
+            document.getElementById('inputEmail').value = '';
+        }
     });
 });
-
-// Função removida - usando inicializarHeader() do componente
-
 
 /**
  * Configura todos os event listeners
@@ -74,7 +90,7 @@ function configurarEventListeners() {
         formPresenca.addEventListener('submit', salvarPresenca);
     }
 
-    // Botão buscar telefone
+    // ✅ MANTIDO: Botão buscar telefone (ainda funciona se clicar)
     const btnBuscarTelefone = document.getElementById('btnBuscarTelefone');
     if (btnBuscarTelefone) {
         btnBuscarTelefone.addEventListener('click', buscarDadosPorTelefone);
@@ -98,7 +114,7 @@ function configurarEventListeners() {
         filtroNomeTelefone.addEventListener('input', filtrarPresencas);
     }
 
-    // Botões de exportação
+    // ✅ NOVO: Botões de exportação com mensagem de desenvolvimento
     document.getElementById('btnExportarExcel')?.addEventListener('click', exportarExcel);
     document.getElementById('btnExportarPDF')?.addEventListener('click', exportarPDF);
 }
@@ -113,19 +129,12 @@ function verificarPermissoesVisualizacao() {
     const secaoLista = document.getElementById('secaoLista');
     const btnNovoEvento = document.getElementById('btnNovoEvento');
 
-    if (temPermissao) {
-        if (secaoLista) secaoLista.style.display = 'block';
-        carregarPresencas();
-    } else {
+    if (!temPermissao) {
         if (secaoLista) secaoLista.style.display = 'none';
-    }
-
-    // Apenas Admin, Chefe de Gabinete, Supervisor e Assessor Interno podem criar eventos
-    const podeCriarEvento = ['administrador', 'chefe_gabinete', 'supervisor', 'assessor_interno'].includes(
-        usuarioLogado.nivel_permissao
-    );
-    if (!podeCriarEvento && btnNovoEvento) {
-        btnNovoEvento.style.display = 'none';
+        if (btnNovoEvento) btnNovoEvento.style.display = 'none';
+    } else {
+        if (secaoLista) secaoLista.style.display = 'block';
+        if (btnNovoEvento) btnNovoEvento.style.display = 'inline-block';
     }
 }
 
@@ -139,14 +148,16 @@ function verificarPermissoesVisualizacao() {
 async function carregarEventos() {
     try {
         const data = await listarEventos();
-        
+
         if (data.sucesso) {
             eventosDisponiveis = data.eventos;
             preencherSelectEventos();
-            atualizarEstatisticas();
+            preencherFiltroEventos();
             
-            // Selecionar último evento automaticamente
+            // ✅ NOVO: Selecionar último evento automaticamente e carregar presenças
             await selecionarUltimoEvento();
+            
+            atualizarEstatisticas();
         }
     } catch (error) {
         console.error('Erro ao carregar eventos:', error);
@@ -155,62 +166,88 @@ async function carregarEventos() {
 }
 
 /**
- * Preenche os selects de evento
- */
-function preencherSelectEventos() {
-    const selectEvento = document.getElementById('selectEvento');
-    const filtroEvento = document.getElementById('filtroEvento');
-
-    if (selectEvento) {
-        selectEvento.innerHTML = '<option value="">Selecione um evento</option>';
-        eventosDisponiveis.forEach(evento => {
-            const option = document.createElement('option');
-            option.value = evento.id;
-            option.textContent = `${evento.nome} - ${new Date(evento.data_evento).toLocaleDateString('pt-BR')}`;
-            selectEvento.appendChild(option);
-        });
-    }
-
-    if (filtroEvento) {
-        filtroEvento.innerHTML = '<option value="">Todos os eventos</option>';
-        eventosDisponiveis.forEach(evento => {
-            const option = document.createElement('option');
-            option.value = evento.id;
-            option.textContent = `${evento.nome} - ${new Date(evento.data_evento).toLocaleDateString('pt-BR')}`;
-            filtroEvento.appendChild(option);
-        });
-    }
-}
-
-/**
- * Seleciona automaticamente o último evento cadastrado
+ * ✅ NOVO: Seleciona o último evento cadastrado automaticamente
  */
 async function selecionarUltimoEvento() {
-    try {
-        const data = await buscarUltimoEvento();
-        
-        if (data.sucesso && data.evento) {
-            const selectEvento = document.getElementById('selectEvento');
-            if (selectEvento) {
-                selectEvento.value = data.evento.id;
-            }
-        }
-    } catch (error) {
-        console.error('Erro ao buscar último evento:', error);
+    const selectEvento = document.getElementById('selectEvento');
+    
+    if (!selectEvento || eventosDisponiveis.length === 0) {
+        // Se não há eventos, carregar todas as presenças
+        await carregarPresencas(null);
+        return;
     }
+    
+    // Pegar eventos ativos ordenados por data (mais recente primeiro)
+    const eventosAtivos = eventosDisponiveis
+        .filter(e => e.ativo)
+        .sort((a, b) => new Date(b.data_evento) - new Date(a.data_evento));
+    
+    if (eventosAtivos.length > 0) {
+        // Selecionar o último evento cadastrado (mais recente)
+        const ultimoEvento = eventosAtivos[0];
+        selectEvento.value = ultimoEvento.id;
+        
+        console.log(`✅ Último evento selecionado: ${ultimoEvento.nome}`);
+    }
+    
+    // ✅ Carregar lista de presenças de TODOS os eventos
+    await carregarPresencas(null);
 }
 
 /**
- * Abre modal para criar/editar evento
+ * Preenche select de eventos no formulário
+ */
+function preencherSelectEventos() {
+    const select = document.getElementById('selectEvento');
+    const filtro = document.getElementById('filtroEvento');
+
+    if (!select) return;
+
+    select.innerHTML = '<option value="">Selecione um evento</option>';
+
+    // ✅ NOVO: Ordenar eventos por data (mais recentes primeiro)
+    const eventosOrdenados = eventosDisponiveis
+        .filter(e => e.ativo)
+        .sort((a, b) => new Date(b.data_evento) - new Date(a.data_evento));
+
+    eventosOrdenados.forEach(evento => {
+        const option = document.createElement('option');
+        option.value = evento.id;
+        option.textContent = `${evento.nome} - ${formatarDataHora(evento.data_evento)}`;
+        select.appendChild(option);
+    });
+}
+
+/**
+ * Preenche filtro de eventos
+ */
+function preencherFiltroEventos() {
+    const filtro = document.getElementById('filtroEvento');
+
+    if (!filtro) return;
+
+    filtro.innerHTML = '<option value="">Todos os eventos</option>';
+
+    // ✅ NOVO: Ordenar eventos por data (mais recentes primeiro)
+    const eventosOrdenados = eventosDisponiveis
+        .sort((a, b) => new Date(b.data_evento) - new Date(a.data_evento));
+
+    eventosOrdenados.forEach(evento => {
+        const option = document.createElement('option');
+        option.value = evento.id;
+        option.textContent = `${evento.nome} - ${formatarDataHora(evento.data_evento)}`;
+        filtro.appendChild(option);
+    });
+}
+
+/**
+ * Abre modal de evento
  */
 function abrirModalEvento() {
     const modal = document.getElementById('modalEvento');
-    const titulo = document.getElementById('modalEventoTitulo');
-    
-    if (titulo) titulo.textContent = 'Novo Evento';
-    limparFormularioEvento();
-    
-    if (modal) modal.classList.add('show');
+    if (modal) {
+        modal.style.display = 'block';
+    }
 }
 
 /**
@@ -218,27 +255,18 @@ function abrirModalEvento() {
  */
 function fecharModalEvento() {
     const modal = document.getElementById('modalEvento');
-    if (modal) modal.classList.remove('show');
-    limparFormularioEvento();
+    if (modal) {
+        modal.style.display = 'none';
+        document.getElementById('formEvento')?.reset();
+    }
 }
 
 /**
- * Limpa formulário de evento
- */
-function limparFormularioEvento() {
-    document.getElementById('eventoId').value = '';
-    document.getElementById('eventoNome').value = '';
-    document.getElementById('eventoData').value = '';
-    document.getElementById('eventoLocal').value = '';
-    document.getElementById('eventoDescricao').value = '';
-}
-
-/**
- * Salva evento (criar ou editar)
+ * Salva evento
  */
 async function salvarEvento(e) {
     e.preventDefault();
-    
+
     const form = e.target;
     const btnSubmit = form.querySelector('button[type="submit"]');
     const restaurarBotao = botaoLoading(btnSubmit, 'Salvando...');
@@ -273,14 +301,71 @@ async function salvarEvento(e) {
 // ============================================
 
 /**
- * Busca dados por telefone
+ * ✅ NOVO: Busca dados por telefone AUTOMATICAMENTE (sem mostrar loading)
+ * @param {string} telefone - Telefone já limpo (apenas números)
+ */
+async function buscarDadosPorTelefoneAutomatico(telefone) {
+    try {
+        const data = await buscarPorTelefone(telefone);
+
+        if (data.sucesso && data.encontrado) {
+            // Preencher campos automaticamente
+            document.getElementById('inputNome').value = data.dados.nome_completo;
+            document.getElementById('inputEmail').value = data.dados.email || '';
+            
+            // Feedback visual positivo
+            mostrarMensagemCampo('✅ Dados encontrados!', 'sucesso');
+        } else {
+            // Limpar campos e mostrar mensagem informativa
+            document.getElementById('inputNome').value = '';
+            document.getElementById('inputEmail').value = '';
+            
+            // Mensagem amigável sem erro
+            mostrarMensagemCampo('ℹ️ Cidadão não cadastrado. Preencha os dados manualmente.', 'info');
+        }
+    } catch (error) {
+        console.error('Erro ao buscar telefone automaticamente:', error);
+        // Não mostrar erro ao usuário para não atrapalhar digitação
+    }
+}
+
+/**
+ * ✅ NOVO: Mostra mensagem abaixo do campo de telefone
+ * @param {string} mensagem - Texto da mensagem
+ * @param {string} tipo - 'sucesso', 'info' ou 'erro'
+ */
+function mostrarMensagemCampo(mensagem, tipo = 'info') {
+    // Remove mensagem anterior se existir
+    const mensagemAnterior = document.querySelector('.mensagem-telefone');
+    if (mensagemAnterior) {
+        mensagemAnterior.remove();
+    }
+    
+    // Cria nova mensagem
+    const divMensagem = document.createElement('div');
+    divMensagem.className = `mensagem-telefone mensagem-${tipo}`;
+    divMensagem.textContent = mensagem;
+    
+    // Insere depois do campo de telefone
+    const inputGroup = document.querySelector('.input-with-button');
+    inputGroup.parentNode.insertBefore(divMensagem, inputGroup.nextSibling);
+    
+    // Remove após 4 segundos
+    setTimeout(() => {
+        divMensagem.style.opacity = '0';
+        setTimeout(() => divMensagem.remove(), 300);
+    }, 4000);
+}
+
+/**
+ * Busca dados por telefone (quando clicar no botão)
  */
 async function buscarDadosPorTelefone() {
     const inputTelefone = document.getElementById('inputTelefone');
     const telefone = inputTelefone.value.replace(/\D/g, '');
 
     if (telefone.length < 10) {
-        mostrarAviso('Digite um telefone válido');
+        mostrarMensagemCampo('⚠️ Digite um telefone válido (10 ou 11 dígitos)', 'erro');
         return;
     }
 
@@ -295,13 +380,19 @@ async function buscarDadosPorTelefone() {
             document.getElementById('inputNome').value = data.dados.nome_completo;
             document.getElementById('inputEmail').value = data.dados.email || '';
             
-            mostrarSucesso(`Dados encontrados! ${data.origem === 'cidadao' ? '(Cadastrado como cidadão)' : '(Presente em eventos anteriores)'}`);
+            const origem = data.origem === 'cidadao' ? 'Cadastrado como cidadão' : 'Presente em eventos anteriores';
+            mostrarMensagemCampo(`✅ Dados encontrados! (${origem})`, 'sucesso');
         } else {
-            mostrarAviso('Telefone não encontrado. Preencha os dados manualmente.');
+            // Limpar campos
+            document.getElementById('inputNome').value = '';
+            document.getElementById('inputEmail').value = '';
+            
+            // Mensagem amigável
+            mostrarMensagemCampo('ℹ️ Cidadão não cadastrado. Preencha os dados manualmente.', 'info');
         }
     } catch (error) {
         console.error('Erro ao buscar telefone:', error);
-        mostrarErro('Erro ao buscar telefone');
+        mostrarMensagemCampo('❌ Erro ao buscar telefone. Tente novamente.', 'erro');
     } finally {
         restaurarBotao();
     }
@@ -502,17 +593,17 @@ window.excluirPresencaFunc = async function(id) {
 // ============================================
 
 /**
- * Exporta para Excel
+ * ✅ NOVO: Exporta para Excel (em desenvolvimento)
  */
 function exportarExcel() {
-    mostrarAviso('Funcionalidade de exportação em desenvolvimento');
+    mostrarAviso('⚠️ Funcionalidade de exportação para Excel em desenvolvimento');
     // TODO: Implementar exportação Excel usando biblioteca como SheetJS
 }
 
 /**
- * Exporta para PDF
+ * ✅ NOVO: Exporta para PDF (em desenvolvimento)
  */
 function exportarPDF() {
-    mostrarAviso('Funcionalidade de exportação em desenvolvimento');
+    mostrarAviso('⚠️ Funcionalidade de exportação para PDF em desenvolvimento');
     // TODO: Implementar exportação PDF usando biblioteca como jsPDF
 }
