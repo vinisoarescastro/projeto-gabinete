@@ -21,6 +21,14 @@ export function mostrarErro(mensagem) {
 }
 
 /**
+ * Exibe notificação de aviso
+ * @param {string} mensagem - Mensagem a ser exibida
+ */
+export function mostrarAviso(mensagem) {
+    mostrarNotificacao(mensagem, 'aviso');
+}
+
+/**
  * Exibe mensagem de informação
  * @param {string} mensagem
  */

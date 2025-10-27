@@ -32,13 +32,14 @@ async function fetchAPI(url, options = {}) {
         const data = await response.json();
         
         if (!response.ok) {
+            // Lançar erro com a mensagem do backend
             throw new Error(data.mensagem || 'Erro na requisição');
         }
         
         return data;
     } catch (error) {
         console.error('Erro na API:', error);
-        throw error;
+        throw error; // Propaga o erro para ser capturado
     }
 }
 
@@ -340,6 +341,186 @@ export async function criarComentario(demandaId, comentario) {
  */
 export async function excluirComentario(id) {
     return fetchAPI(`${API_URL}/api/comentarios/${id}`, {
+        method: 'DELETE',
+        headers: getHeaders()
+    });
+}
+
+/**
+ * Funções de API - Eventos e Lista de Presença
+ * Adicionar ao arquivo api.js existente
+ */
+
+// ============================================
+// EVENTOS
+// ============================================
+
+/**
+ * Lista todos os eventos ativos
+ * @returns {Promise<Object>}
+ */
+export async function listarEventos() {
+    return fetchAPI(`${API_URL}/api/eventos`, {
+        headers: getHeaders()
+    });
+}
+
+/**
+ * Busca um evento específico por ID
+ * @param {number} id - ID do evento
+ * @returns {Promise<Object>}
+ */
+export async function buscarEvento(id) {
+    return fetchAPI(`${API_URL}/api/eventos/${id}`, {
+        headers: getHeaders()
+    });
+}
+
+/**
+ * Retorna o último evento cadastrado
+ * @returns {Promise<Object>}
+ */
+export async function buscarUltimoEvento() {
+    return fetchAPI(`${API_URL}/api/eventos/ultimo/ativo`, {
+        headers: getHeaders()
+    });
+}
+
+/**
+ * Cria um novo evento
+ * @param {Object} dadosEvento - Dados do evento
+ * @param {string} dadosEvento.nome - Nome do evento (obrigatório)
+ * @param {string} dadosEvento.data_evento - Data do evento (obrigatório)
+ * @param {string} dadosEvento.descricao - Descrição do evento
+ * @param {string} dadosEvento.local - Local do evento
+ * @returns {Promise<Object>}
+ */
+export async function criarEvento(dadosEvento) {
+    return fetchAPI(`${API_URL}/api/eventos`, {
+        method: 'POST',
+        headers: getHeaders(),
+        body: JSON.stringify(dadosEvento)
+    });
+}
+
+/**
+ * Atualiza um evento existente
+ * @param {number} id - ID do evento
+ * @param {Object} dadosEvento - Dados atualizados
+ * @returns {Promise<Object>}
+ */
+export async function atualizarEvento(id, dadosEvento) {
+    return fetchAPI(`${API_URL}/api/eventos/${id}`, {
+        method: 'PUT',
+        headers: getHeaders(),
+        body: JSON.stringify(dadosEvento)
+    });
+}
+
+/**
+ * Desativa um evento
+ * @param {number} id - ID do evento
+ * @returns {Promise<Object>}
+ */
+export async function excluirEvento(id) {
+    return fetchAPI(`${API_URL}/api/eventos/${id}`, {
+        method: 'DELETE',
+        headers: getHeaders()
+    });
+}
+
+// ============================================
+// LISTA DE PRESENÇA
+// ============================================
+
+/**
+ * Lista todas as presenças (com filtro opcional por evento)
+ * @param {number|null} eventoId - ID do evento para filtrar (opcional)
+ * @returns {Promise<Object>}
+ */
+export async function listarPresencas(eventoId = null) {
+    const url = eventoId 
+        ? `${API_URL}/api/lista-presenca?evento_id=${eventoId}`
+        : `${API_URL}/api/lista-presenca`;
+    
+    return fetchAPI(url, {
+        headers: getHeaders()
+    });
+}
+
+/**
+ * Lista presenças de um evento específico
+ * @param {number} eventoId - ID do evento
+ * @returns {Promise<Object>}
+ */
+export async function listarPresencasPorEvento(eventoId) {
+    return fetchAPI(`${API_URL}/api/lista-presenca/evento/${eventoId}`, {
+        headers: getHeaders()
+    });
+}
+
+/**
+ * Busca dados de uma pessoa pelo telefone
+ * Verifica nas tabelas de cidadãos e lista de presença
+ * @param {string} telefone - Telefone para buscar
+ * @returns {Promise<Object>}
+ */
+export async function buscarPorTelefone(telefone) {
+    return fetchAPI(`${API_URL}/api/lista-presenca/buscar-telefone/${telefone}`, {
+        headers: getHeaders()
+    });
+}
+
+/**
+ * Busca estatísticas de um evento
+ * @param {number} eventoId - ID do evento
+ * @returns {Promise<Object>}
+ */
+export async function buscarEstatisticasEvento(eventoId) {
+    return fetchAPI(`${API_URL}/api/lista-presenca/estatisticas/${eventoId}`, {
+        headers: getHeaders()
+    });
+}
+
+/**
+ * Registra uma nova presença em um evento
+ * @param {Object} dadosPresenca - Dados da presença
+ * @param {number} dadosPresenca.evento_id - ID do evento (obrigatório)
+ * @param {string} dadosPresenca.nome_completo - Nome completo (obrigatório)
+ * @param {string} dadosPresenca.telefone - Telefone (obrigatório)
+ * @param {string} dadosPresenca.email - Email (opcional)
+ * @param {string} dadosPresenca.observacoes - Observações (opcional)
+ * @returns {Promise<Object>}
+ */
+export async function registrarPresenca(dadosPresenca) {
+    return fetchAPI(`${API_URL}/api/lista-presenca`, {
+        method: 'POST',
+        headers: getHeaders(),
+        body: JSON.stringify(dadosPresenca)
+    });
+}
+
+/**
+ * Atualiza um registro de presença
+ * @param {number} id - ID do registro
+ * @param {Object} dadosPresenca - Dados atualizados
+ * @returns {Promise<Object>}
+ */
+export async function atualizarPresenca(id, dadosPresenca) {
+    return fetchAPI(`${API_URL}/api/lista-presenca/${id}`, {
+        method: 'PUT',
+        headers: getHeaders(),
+        body: JSON.stringify(dadosPresenca)
+    });
+}
+
+/**
+ * Exclui um registro de presença
+ * @param {number} id - ID do registro
+ * @returns {Promise<Object>}
+ */
+export async function excluirPresenca(id) {
+    return fetchAPI(`${API_URL}/api/lista-presenca/${id}`, {
         method: 'DELETE',
         headers: getHeaders()
     });

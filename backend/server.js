@@ -8,6 +8,8 @@ import comentariosRoutes from './routes/comentariosRoutes.js';
 import statusRoutes from './routes/statusRoutes.js';
 import usuariosRoutes from './routes/usuariosRoutes.js';
 import cidadaosRoutes from './routes/cidadaosRoutes.js';
+import eventosRoutes from './routes/eventosRoutes.js';
+import listaPresencaRoutes from './routes/listaPresencaRoutes.js';
 
 dotenv.config();
 
@@ -33,6 +35,8 @@ app.use('/api/comentarios', comentariosRoutes);
 app.use('/api/status', statusRoutes);
 app.use('/api/usuarios', usuariosRoutes);
 app.use('/api/cidadaos', cidadaosRoutes);
+app.use('/api/eventos', eventosRoutes);
+app.use('/api/lista-presenca', listaPresencaRoutes);
 
 app.listen(PORT, '0.0.0.0', () => {
     console.log(`✅ Servidor rodando na porta: ${PORT}`);

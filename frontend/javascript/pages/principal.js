@@ -95,6 +95,14 @@ function configurarBotoesAcoes() {
             window.location.href = '/frontend/html/gerenciar-usuarios.html';
         });
     }
+
+    // Botão Eventos e Presença
+    const btnEventos = document.querySelector('.btn.eventos-presenca');
+    if (btnEventos) {
+        btnEventos.addEventListener('click', () => {
+            window.location.href = '/frontend/html/eventos-presenca.html';
+        });
+    }
 }
 
 /**

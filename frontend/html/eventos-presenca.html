@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gabinete Digital - Eventos e Lista de Presença</title>
+
+    <!-- ESTILOS -->
+    <link rel="stylesheet" href="/frontend/css/global.css">
+    <link rel="stylesheet" href="/frontend/css/header.css">
+    <link rel="stylesheet" href="/frontend/css/nav.css">
+    <link rel="stylesheet" href="/frontend/css/eventos-presenca.css">
+
+    <!-- FONTES -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900&display=swap" rel="stylesheet">
+
+    <!-- JAVASCRIPT COMO MÓDULO -->
+    <script type="module" src="/frontend/javascript/pages/eventos-presenca.js"></script>
+</head>
+<body>
+    <!-- HEADER -->
+    <header id="header" class="header">
+        <div class="interface">
+            <section class="logo">
+                <img src="/frontend/img/gabinete-digital/logo-gabinete-digital.png" alt="Logo Gabinete Digital">
+            </section>
+
+            <section class="container-usuario">
+                <div class="card-usuario">
+                    <div class="img-usuario">
+                        <div class="avatar-iniciais" id="avatarUsuario"></div>
+                    </div>
+
+                    <div class="txt-usuario">
+                        <p>Seja bem-vindo,</p>
+                        <h3 id="nomeUsuario">Nome Completo</h3>
+                        <p id="nivelUsuario">Função do Usuario</p>
+                    </div>
+                </div>
+                
+                <div class="btn-sair" id="btnSair">
+                    <p>Sair</p>
+                </div>
+            </section>
+        </div>
+    </header>
+
+    <!-- NAVEGAÇÃO -->
+    <section class="nav">
+        <div class="interface">
+            <ul class="lista-nav">
+                <li><a href="/frontend/html/principal.html">Inicio</a></li>
+                <li><a href="/frontend/html/listar-demandas.html">Painel de Demandas</a></li>
+                <li><a href="#">Painel de Cidadãos</a></li>
+            </ul>
+        </div>
+    </section>
+
+    <!-- CONTEÚDO PRINCIPAL -->
+    <section class="container-eventos-presenca">
+        <div class="interface">
+            
+            <!-- Cabeçalho da Página -->
+            <div class="page-header">
+                <div>
+                    <h1>📋 Eventos e Lista de Presença</h1>
+                    <p>Gerencie eventos políticos e registre participantes</p>
+                </div>
+                <button class="btn btn-primary" id="btnNovoEvento">
+                    ➕ Novo Evento
+                </button>
+            </div>
+
+            <!-- Cards de Estatísticas -->
+            <div class="stats-container">
+                <div class="stat-card">
+                    <div class="stat-icon">📅</div>
+                    <div class="stat-info">
+                        <h3 id="totalEventos">0</h3>
+                        <p>Eventos Cadastrados</p>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">✅</div>
+                    <div class="stat-info">
+                        <h3 id="totalPresencas">0</h3>
+                        <p>Total de Presenças</p>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">👥</div>
+                    <div class="stat-info">
+                        <h3 id="presencasEvento">0</h3>
+                        <p>Presenças do Evento Selecionado</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- SEÇÃO: REGISTRAR PRESENÇA -->
+            <div class="secao-registrar">
+                <h2>📝 Registrar Presença</h2>
+                
+                <form id="formPresenca" class="form-presenca">
+                    
+                    <!-- Seleção de Evento -->
+                    <div class="form-group">
+                        <label for="selectEvento">Evento: <span class="obrigatorio">*</span></label>
+                        <select id="selectEvento" required>
+                            <option value="">Selecione um evento</option>
+                        </select>
+                    </div>
+
+                    <!-- Telefone com busca automática -->
+                    <div class="form-group">
+                        <label for="inputTelefone">Telefone: <span class="obrigatorio">*</span></label>
+                        <div class="input-with-button">
+                            <input 
+                                type="tel" 
+                                id="inputTelefone" 
+                                placeholder="(00) 00000-0000" 
+                                required
+                                maxlength="15"
+                            >
+                            <button type="button" class="btn-buscar" id="btnBuscarTelefone">
+                                🔍 Buscar
+                            </button>
+                        </div>
+                        <small class="form-hint">Digite o telefone e clique em buscar para preencher automaticamente</small>
+                    </div>
+
+                    <!-- Nome Completo -->
+                    <div class="form-group">
+                        <label for="inputNome">Nome Completo: <span class="obrigatorio">*</span></label>
+                        <input 
+                            type="text" 
+                            id="inputNome" 
+                            placeholder="Nome completo do participante" 
+                            required
+                        >
+                    </div>
+
+                    <!-- Email (opcional) -->
+                    <div class="form-group">
+                        <label for="inputEmail">Email: <span class="opcional">(opcional)</span></label>
+                        <input 
+                            type="email" 
+                            id="inputEmail" 
+                            placeholder="email@exemplo.com"
+                        >
+                    </div>
+
+                    <!-- Observações (opcional) -->
+                    <div class="form-group">
+                        <label for="inputObservacoes">Observações: <span class="opcional">(opcional)</span></label>
+                        <textarea 
+                            id="inputObservacoes" 
+                            rows="3"
+                            placeholder="Observações adicionais sobre a presença..."
+                        ></textarea>
+                    </div>
+
+                    <!-- Botões -->
+                    <div class="form-actions">
+                        <button type="submit" class="btn btn-success">
+                            ✅ Registrar Presença
+                        </button>
+                        <button type="button" class="btn btn-secondary" id="btnLimparForm">
+                            🔄 Limpar Formulário
+                        </button>
+                    </div>
+                </form>
+            </div>
+
+            <!-- SEÇÃO: LISTA DE PRESENÇAS (apenas para usuários com permissão) -->
+            <div class="secao-lista" id="secaoLista" style="display: none;">
+                <div class="lista-header">
+                    <h2>📊 Lista de Presenças</h2>
+                    <div class="lista-actions">
+                        <select id="filtroEvento" class="filtro-select">
+                            <option value="">Todos os eventos</option>
+                        </select>
+                        <button class="btn btn-success" id="btnExportarExcel">
+                            📊 Exportar Excel
+                        </button>
+                        <button class="btn btn-danger" id="btnExportarPDF">
+                            📄 Exportar PDF
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Tabela de Presenças -->
+                <div class="tabela-container">
+                    <table class="tabela-presencas">
+                        <thead>
+                            <tr>
+                                <th>Evento</th>
+                                <th>Nome Completo</th>
+                                <th>Telefone</th>
+                                <th>Email</th>
+                                <th>Data/Hora</th>
+                                <th>Registrado por</th>
+                                <th>Ações</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tabelaPresencas">
+                            <!-- Preenchido via JavaScript -->
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- Mensagem quando não há dados -->
+                <div class="sem-dados" id="semDados" style="display: none;">
+                    <p>📋 Nenhuma presença registrada ainda</p>
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- MODAL: CADASTRAR/EDITAR EVENTO -->
+    <div class="modal" id="modalEvento">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="modalEventoTitulo">Novo Evento</h2>
+                <button class="btn-fechar" id="btnFecharModalEvento">&times;</button>
+            </div>
+
+            <form id="formEvento" class="modal-body">
+                <input type="hidden" id="eventoId">
+
+                <div class="form-group">
+                    <label for="eventoNome">Nome do Evento: <span class="obrigatorio">*</span></label>
+                    <input type="text" id="eventoNome" required placeholder="Ex: Inauguração da Praça Central">
+                </div>
+
+                <div class="form-group">
+                    <label for="eventoData">Data e Hora: <span class="obrigatorio">*</span></label>
+                    <input type="datetime-local" id="eventoData" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="eventoLocal">Local:</label>
+                    <input type="text" id="eventoLocal" placeholder="Ex: Praça Central, Centro">
+                </div>
+
+                <div class="form-group">
+                    <label for="eventoDescricao">Descrição:</label>
+                    <textarea id="eventoDescricao" rows="4" placeholder="Descrição detalhada do evento..."></textarea>
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" id="btnCancelarEvento">Cancelar</button>
+                    <button type="submit" class="btn btn-primary">Salvar Evento</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+</body>
+</html>

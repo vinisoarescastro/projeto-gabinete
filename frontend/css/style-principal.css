@@ -354,6 +354,10 @@
     content: '👥';
 }
 
+.btn-acoes .btn.eventos-presenca::before {
+    content: '📅';
+}
+
 .btn-acoes .btn:hover {
     transform: translateY(-4px);
     box-shadow: 0 8px 16px rgba(0, 89, 255, 0.15);
