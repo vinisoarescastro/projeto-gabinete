@@ -1,0 +1,132 @@
+@startuml Diagrama_Banco_Dados
+
+' Configurações de estilo
+skinparam linetype ortho
+skinparam classAttributeIconSize 0
+
+' Tabela: cidadaos
+class cidadaos {
+  **PK** id : INTEGER
+  --
+  nome_completo : VARCHAR
+  telefone : VARCHAR <<UNIQUE>>
+  data_nascimento : DATE
+  bairro : VARCHAR
+  cidade : VARCHAR
+  estado : VARCHAR
+  email : VARCHAR
+  criado_em : TIMESTAMP
+}
+
+' Tabela: usuarios
+class usuarios {
+  **PK** id : INTEGER
+  --
+  nome_completo : VARCHAR
+  email : VARCHAR <<UNIQUE>>
+  senha_hash : VARCHAR
+  nivel_permissao : VARCHAR <<CHECK>>
+  ativo : BOOLEAN
+  criado_em : TIMESTAMP
+  ultimo_acesso : TIMESTAMP
+  senha_temporaria : BOOLEAN
+  --
+  <<CHECK>> nivel_permissao IN:
+  'administrador'
+  'chefe_gabinete'
+  'assessor_interno'
+  'assessor_externo'
+  'supervisor'
+}
+
+' Tabela: status
+class status {
+  **PK** id : INTEGER
+  --
+  nome : VARCHAR
+  ordem : INTEGER
+  ativo : BOOLEAN
+  criado_em : TIMESTAMP
+}
+
+' Tabela: demandas
+class demandas {
+  **PK** id : INTEGER
+  --
+  **FK** cidadao_id : INTEGER
+  **FK** usuario_responsavel_id : INTEGER
+  **FK** usuario_origem_id : INTEGER
+  **FK** status_id : INTEGER
+  --
+  titulo : VARCHAR
+  descricao : TEXT
+  prioridade : VARCHAR <<CHECK>>
+  criado_em : TIMESTAMP
+  atualizado_em : TIMESTAMP
+  --
+  <<CHECK>> prioridade IN:
+  'baixa', 'media', 'alta', 'urgente'
+}
+
+' Tabela: arquivos
+class arquivos {
+  **PK** id : INTEGER
+  --
+  **FK** demanda_id : INTEGER
+  --
+  nome_arquivo : VARCHAR
+  tipo_arquivo : VARCHAR
+  caminho_arquivo : VARCHAR
+  tamanho_arquivo : INTEGER
+  criado_em : TIMESTAMP
+}
+
+' Tabela: comentarios
+class comentarios {
+  **PK** id : INTEGER
+  --
+  **FK** demanda_id : INTEGER
+  **FK** usuario_id : INTEGER
+  --
+  comentario : TEXT
+  criado_em : TIMESTAMP
+  publico : BOOLEAN
+}
+
+' Relacionamentos com cardinalidade
+
+' Cidadão pode ter várias demandas
+cidadaos "1" -- "0..*" demandas : "  cidadao_id  "
+
+' Status pode estar em várias demandas
+status "1" -- "0..*" demandas : "  status_id  "
+
+' Usuário responsável por várias demandas
+usuarios "1" -- "0..*" demandas : "  usuario_responsavel_id  "
+
+' Usuário origem de várias demandas
+usuarios "1" -- "0..*" demandas : "  usuario_origem_id  "
+
+' Demanda pode ter vários arquivos
+demandas "1" -- "0..*" arquivos : "  demanda_id  "
+
+' Demanda pode ter vários comentários
+demandas "1" -- "0..*" comentarios : "  demanda_id  "
+
+' Usuário pode fazer vários comentários
+usuarios "1" -- "0..*" comentarios : "  usuario_id  "
+
+note right of demandas
+  Tabela central do sistema
+  Conecta cidadãos, usuários,
+  status, arquivos e comentários
+end note
+
+note right of usuarios
+  Possui 2 relacionamentos
+  com demandas:
+  - Como responsável
+  - Como origem
+end note
+
+@enduml
