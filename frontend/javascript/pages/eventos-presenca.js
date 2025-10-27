@@ -92,6 +92,12 @@ function configurarEventListeners() {
         filtroEvento.addEventListener('change', filtrarPresencas);
     }
 
+    // Filtro de nome/telefone
+    const filtroNomeTelefone = document.getElementById('filtroNomeTelefone');
+    if (filtroNomeTelefone) {
+        filtroNomeTelefone.addEventListener('input', filtrarPresencas);
+    }
+
     // Botões de exportação
     document.getElementById('btnExportarExcel')?.addEventListener('click', exportarExcel);
     document.getElementById('btnExportarPDF')?.addEventListener('click', exportarPDF);
@@ -394,15 +400,13 @@ function renderizarTabelaPresencas(presencas) {
     presencas.forEach(presenca => {
         const tr = document.createElement('tr');
         tr.innerHTML = `
-            <td>${presenca.eventos?.nome || 'N/A'}</td>
             <td>${presenca.nome_completo}</td>
             <td>${formatarTelefoneExibicao(presenca.telefone)}</td>
             <td>${presenca.email || '-'}</td>
-            <td>${formatarDataHora(presenca.criado_em)}</td>
             <td>${presenca.usuarios?.nome_completo || 'Sistema'}</td>
             <td class="acoes-td">
-                <button class="btn btn-danger btn-small" onclick="window.excluirPresencaFunc(${presenca.id})">
-                    🗑️ Excluir
+                <button class="btn-acao-pequeno btn-excluir" onclick="window.excluirPresencaFunc(${presenca.id})" title="Excluir registro">
+                    🗑️
                 </button>
             </td>
         `;
@@ -423,13 +427,30 @@ function formatarTelefoneExibicao(telefone) {
 }
 
 /**
- * Filtra presenças por evento
+ * Filtra presenças por evento e nome/telefone
  */
 function filtrarPresencas() {
     const filtroEvento = document.getElementById('filtroEvento');
-    const eventoId = filtroEvento?.value ? parseInt(filtroEvento.value) : null;
+    const filtroNomeTelefone = document.getElementById('filtroNomeTelefone');
     
-    carregarPresencas(eventoId);
+    const eventoId = filtroEvento?.value ? parseInt(filtroEvento.value) : null;
+    const textoBusca = filtroNomeTelefone?.value.toLowerCase().trim() || '';
+
+    // Primeiro carrega as presenças do evento (ou todas)
+    carregarPresencas(eventoId).then(() => {
+        // Se houver texto de busca, filtra localmente
+        if (textoBusca) {
+            const presencasFiltradas = presencasCarregadas.filter(presenca => {
+                const nome = presenca.nome_completo.toLowerCase();
+                const telefone = presenca.telefone.replace(/\D/g, '');
+                const buscaLimpa = textoBusca.replace(/\D/g, '');
+                
+                return nome.includes(textoBusca) || telefone.includes(buscaLimpa);
+            });
+            
+            renderizarTabelaPresencas(presencasFiltradas);
+        }
+    });
 }
 
 /**

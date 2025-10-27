@@ -179,11 +179,17 @@
                         <select id="filtroEvento" class="filtro-select">
                             <option value="">Todos os eventos</option>
                         </select>
+                        <input 
+                            type="text" 
+                            id="filtroNomeTelefone" 
+                            class="filtro-input" 
+                            placeholder="🔍 Buscar por nome ou telefone..."
+                        >
                         <button class="btn btn-success" id="btnExportarExcel">
-                            📊 Exportar Excel
+                            📊 Excel
                         </button>
                         <button class="btn btn-danger" id="btnExportarPDF">
-                            📄 Exportar PDF
+                            📄 PDF
                         </button>
                     </div>
                 </div>
@@ -193,11 +199,9 @@
                     <table class="tabela-presencas">
                         <thead>
                             <tr>
-                                <th>Evento</th>
                                 <th>Nome Completo</th>
                                 <th>Telefone</th>
                                 <th>Email</th>
-                                <th>Data/Hora</th>
                                 <th>Registrado por</th>
                                 <th>Ações</th>
                             </tr>

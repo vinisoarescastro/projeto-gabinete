@@ -51,7 +51,7 @@
 }
 
 .stat-card {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    background: linear-gradient(135deg, #496bff 0%, #4a1d77 100%);
     color: white;
     padding: 1.5rem;
     border-radius: 12px;
@@ -302,6 +302,26 @@
     min-width: 200px;
 }
 
+.filtro-input {
+    padding: 0.75rem;
+    border: 2px solid #e0e0e0;
+    border-radius: 8px;
+    font-size: 0.95rem;
+    font-family: 'Poppins', sans-serif;
+    min-width: 250px;
+    transition: all 0.3s ease;
+}
+
+.filtro-input:focus {
+    outline: none;
+    border-color: #3498db;
+    box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.1);
+}
+
+.filtro-input::placeholder {
+    color: #95a5a6;
+}
+
 /* ============================================
    TABELA
    ============================================ */
@@ -411,6 +431,28 @@
     color: #e74c3c;
 }
 
+/* Botão de ação pequeno na tabela */
+.btn-acao-pequeno {
+    padding: 0.4rem 0.8rem;
+    font-size: 0.85rem;
+    border: none;
+    border-radius: 6px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-family: 'Poppins', sans-serif;
+}
+
+.btn-acao-pequeno.btn-excluir {
+    background: #e74c3c;
+    color: white;
+}
+
+.btn-acao-pequeno.btn-excluir:hover {
+    background: #c0392b;
+    transform: translateY(-2px);
+}
+
 .modal-body {
     padding: 2rem;
 }
@@ -465,6 +507,12 @@
     /* Stats em 2 colunas */
     .stats-container {
         grid-template-columns: repeat(2, 1fr);
+    }
+
+    /* Filtros */
+    .filtro-input {
+        min-width: 200px;
+        flex: 1;
     }
 }
 
@@ -650,6 +698,11 @@
 
     label {
         font-size: 0.9rem;
+    }
+
+    .filtro-input {
+        width: 100%;
+        min-width: auto;
     }
 }
 
