@@ -22,7 +22,7 @@ body {
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    background: linear-gradient(180deg, #f8f9fa 0%, #e9ecef 100%);
+    background: var(--background-clean);
     font-family: 'Poppins', sans-serif;
     overflow: hidden;
     position: relative;
@@ -81,6 +81,11 @@ body::before {
         opacity: 1;
         transform: scale(1) translateY(0);
     }
+}
+
+.logo-container {
+    display: flex;
+    justify-content: center;
 }
 
 .logo-container img {

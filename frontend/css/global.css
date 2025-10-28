@@ -14,6 +14,7 @@
 
   --degrade-vermelho: linear-gradient(-90deg, #EC3839, #961313);
 
+  --background-clean: linear-gradient(180deg, #f8f9fa 0%, #e9ecef 100%);
   --cor-background-qbranco: #ffffff;
   --cor-background-qbranco1: #dbdbdb;
   --cor-background-qpreto: #333;
