@@ -19,7 +19,12 @@ import {
     obterFiltroAtivo, 
     inicializarFiltroKanban 
 } from '../components/kanban-filtros.js';
-import { abrirModalDetalhes, inicializarModalDetalhes } from '../components/modal-detalhes.js';
+import { 
+    abrirModalDetalhes, 
+    inicializarModalDetalhes,
+    adicionarComentario,  
+    excluirComentarioModal         
+} from '../components/modal-detalhes.js';
 import { abrirModalEdicao, inicializarModalEdicao, fecharModalEdicao } from '../components/modal-edicao.js';
 import { abrirModalCadastro, inicializarModalCadastro } from '../components/modal-cadastro-demanda.js';
 import { abrirModalStatus, inicializarModalStatus } from '../components/gerenciar-status.js';  // ⬅️ NOVO
@@ -109,6 +114,9 @@ function exponerFuncoesGlobais() {
         abrirModalEdicao(id, carregarDados);
     };
     window.fecharModalEdicao = fecharModalEdicao;
+    
+    window.adicionarComentario = adicionarComentario;
+    window.excluirComentarioGlobal = excluirComentarioModal;
 }
 
 /**
