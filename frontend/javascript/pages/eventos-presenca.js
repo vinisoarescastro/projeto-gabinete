@@ -12,7 +12,9 @@ import {
     listarPresencas,
     buscarPorTelefone,
     registrarPresenca,
-    excluirPresenca 
+    excluirPresenca,
+    buscarEstatisticasGerais,
+    buscarContagemPorEvento  
 } from '../utils/api.js';
 import { mostrarSucesso, mostrarErro, mostrarAviso, botaoLoading } from '../utils/notifications.js';
 import { formatarDataHora, aplicarMascaraTelefone } from '../utils/formatters.js';
@@ -454,19 +456,28 @@ function limparFormularioPresenca() {
 
 /**
  * Carrega lista de presenças
+ * Agora trata erro 403 (sem permissão) de forma silenciosa para assessores externos
  */
 async function carregarPresencas(eventoId = null) {
     try {
+        // Tentar carregar a lista completa (apenas usuários com permissão conseguem)
         const data = await listarPresencas(eventoId);
 
         if (data.sucesso) {
             presencasCarregadas = data.presencas;
             renderizarTabelaPresencas(presencasCarregadas);
-            atualizarEstatisticas();
         }
     } catch (error) {
-        console.error('Erro ao carregar presenças:', error);
-        mostrarErro('Erro ao carregar presenças');
+        // ✅ Se erro 403 (sem permissão), não mostra erro - é esperado para assessores externos
+        if (error.message && error.message.includes('permissão')) {
+            console.log('Usuário sem permissão para ver lista detalhada - modo somente visualização');
+            presencasCarregadas = []; // Lista vazia
+            // Não renderiza tabela nem mostra erro
+        } else {
+            // Outros erros são reportados
+            console.error('Erro ao carregar presenças:', error);
+            mostrarErro('Erro ao carregar presenças');
+        }
     }
 }
 
@@ -546,20 +557,41 @@ function filtrarPresencas() {
 
 /**
  * Atualiza estatísticas
+ * Agora usa as novas rotas de estatísticas acessíveis a todos
  */
-function atualizarEstatisticas() {
+async function atualizarEstatisticas() {
     const totalEventos = document.getElementById('totalEventos');
     const totalPresencas = document.getElementById('totalPresencas');
     const presencasEvento = document.getElementById('presencasEvento');
 
-    if (totalEventos) totalEventos.textContent = eventosDisponiveis.length;
-    if (totalPresencas) totalPresencas.textContent = presencasCarregadas.length;
+    // Atualizar total de eventos (sempre acessível)
+    if (totalEventos) {
+        totalEventos.textContent = eventosDisponiveis.length;
+    }
 
-    // Calcular presenças do evento selecionado
+    // Buscar total geral de presenças via API (acessível a todos)
+    try {
+        const dataGeral = await buscarEstatisticasGerais();
+        if (dataGeral.sucesso && totalPresencas) {
+            totalPresencas.textContent = dataGeral.total_presencas;
+        }
+    } catch (error) {
+        console.error('Erro ao buscar estatísticas gerais:', error);
+        if (totalPresencas) totalPresencas.textContent = '0';
+    }
+
+    // Buscar presenças do evento selecionado via API (acessível a todos)
     const eventoSelecionado = document.getElementById('selectEvento')?.value;
     if (eventoSelecionado && presencasEvento) {
-        const count = presencasCarregadas.filter(p => p.evento_id == eventoSelecionado).length;
-        presencasEvento.textContent = count;
+        try {
+            const dataEvento = await buscarContagemPorEvento(eventoSelecionado);
+            if (dataEvento.sucesso) {
+                presencasEvento.textContent = dataEvento.total_presencas;
+            }
+        } catch (error) {
+            console.error('Erro ao buscar presenças do evento:', error);
+            presencasEvento.textContent = '0';
+        }
     } else if (presencasEvento) {
         presencasEvento.textContent = '0';
     }
@@ -593,7 +625,7 @@ window.excluirPresencaFunc = async function(id) {
 // ============================================
 
 /**
- * ✅ NOVO: Exporta para Excel (em desenvolvimento)
+ * Exporta para Excel (em desenvolvimento)
  */
 function exportarExcel() {
     mostrarAviso('⚠️ Funcionalidade de exportação para Excel em desenvolvimento');
@@ -601,7 +633,7 @@ function exportarExcel() {
 }
 
 /**
- * ✅ NOVO: Exporta para PDF (em desenvolvimento)
+ * Exporta para PDF (em desenvolvimento)
  */
 function exportarPDF() {
     mostrarAviso('⚠️ Funcionalidade de exportação para PDF em desenvolvimento');

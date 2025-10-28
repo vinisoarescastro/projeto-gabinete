@@ -434,6 +434,29 @@ export async function excluirEvento(id) {
 // ============================================
 
 /**
+ * Busca estatísticas gerais de presenças
+ * Acessível a TODOS os usuários (inclusive assessores externos)
+ * @returns {Promise<Object>} - { sucesso, total_presencas }
+ */
+export async function buscarEstatisticasGerais() {
+    return fetchAPI(`${API_URL}/api/lista-presenca/estatisticas-gerais`, {
+        headers: getHeaders()
+    });
+}
+
+/**
+ * Busca contagem de presenças de um evento específico
+ * Acessível a TODOS os usuários (inclusive assessores externos)
+ * @param {number} eventoId - ID do evento
+ * @returns {Promise<Object>} - { sucesso, evento_id, total_presencas }
+ */
+export async function buscarContagemPorEvento(eventoId) {
+    return fetchAPI(`${API_URL}/api/lista-presenca/estatisticas-por-evento/${eventoId}`, {
+        headers: getHeaders()
+    });
+}
+
+/**
  * Lista todas as presenças (com filtro opcional por evento)
  * @param {number|null} eventoId - ID do evento para filtrar (opcional)
  * @returns {Promise<Object>}

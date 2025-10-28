@@ -1,6 +1,8 @@
 /**
  * Rotas da API - Lista de Presença
  * Gerenciamento de presenças nos eventos políticos
+ * 
+ * Rotas de estatísticas acessíveis a assessores externos
  */
 
 import express from 'express';
@@ -22,6 +24,64 @@ function podeVisualizarLista(usuario) {
 // ============================================
 // ROTAS GET
 // ============================================
+
+/**
+ * GET /api/lista-presenca/estatisticas-gerais
+ * Retorna estatísticas gerais (total de presenças)
+ * TODOS os usuários autenticados podem acessar (inclusive assessores externos)
+ */
+router.get('/estatisticas-gerais', verificarToken, async (req, res) => {
+    try {
+        // Buscar total de presenças (sem expor dados individuais)
+        const { count, error } = await supabase
+            .from('lista_presenca')
+            .select('*', { count: 'exact', head: true });
+
+        if (error) throw error;
+
+        res.json({
+            sucesso: true,
+            total_presencas: count || 0
+        });
+    } catch (error) {
+        res.status(500).json({
+            sucesso: false,
+            mensagem: 'Erro ao buscar estatísticas gerais',
+            erro: error.message
+        });
+    }
+});
+
+/**
+ * GET /api/lista-presenca/estatisticas-por-evento/:evento_id
+ * Retorna apenas a CONTAGEM de presenças de um evento específico
+ * TODOS os usuários autenticados podem acessar (inclusive assessores externos)
+ */
+router.get('/estatisticas-por-evento/:evento_id', verificarToken, async (req, res) => {
+    try {
+        const { evento_id } = req.params;
+
+        // Buscar apenas contagem (sem expor dados individuais)
+        const { count, error } = await supabase
+            .from('lista_presenca')
+            .select('*', { count: 'exact', head: true })
+            .eq('evento_id', evento_id);
+
+        if (error) throw error;
+
+        res.json({
+            sucesso: true,
+            evento_id: parseInt(evento_id),
+            total_presencas: count || 0
+        });
+    } catch (error) {
+        res.status(500).json({
+            sucesso: false,
+            mensagem: 'Erro ao buscar estatísticas do evento',
+            erro: error.message
+        });
+    }
+});
 
 /**
  * GET /api/lista-presenca
@@ -185,7 +245,8 @@ router.get('/buscar-telefone/:telefone', verificarToken, async (req, res) => {
 
 /**
  * GET /api/lista-presenca/estatisticas/:evento_id
- * Retorna estatísticas de um evento específico
+ * Retorna estatísticas DETALHADAS de um evento específico
+ * Apenas usuários com permissão podem acessar (admin, chefe, supervisor, assessor interno)
  */
 router.get('/estatisticas/:evento_id', verificarToken, async (req, res) => {
     try {
@@ -196,7 +257,7 @@ router.get('/estatisticas/:evento_id', verificarToken, async (req, res) => {
         if (!podeVisualizarLista(usuarioLogado)) {
             return res.status(403).json({
                 sucesso: false,
-                mensagem: 'Você não tem permissão para visualizar estatísticas'
+                mensagem: 'Você não tem permissão para visualizar estatísticas detalhadas'
             });
         }
 
