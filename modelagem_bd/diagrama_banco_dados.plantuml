@@ -1,132 +1,122 @@
-@startuml Diagrama_Banco_Dados
+@startuml Diagrama de Banco de Dados - Sistema de Demandas
+!theme plain
 
-' Configurações de estilo
+hide circle
+hide methods
+hide stereotypes
 skinparam linetype ortho
-skinparam classAttributeIconSize 0
 
-' Tabela: cidadaos
-class cidadaos {
-  **PK** id : INTEGER
+title Diagrama de Banco de Dados - Sistema de Demandas
+
+entity "usuarios" as usuarios {
+  *id : integer <<PK>>
   --
-  nome_completo : VARCHAR
-  telefone : VARCHAR <<UNIQUE>>
-  data_nascimento : DATE
-  bairro : VARCHAR
-  cidade : VARCHAR
-  estado : VARCHAR
-  email : VARCHAR
-  criado_em : TIMESTAMP
+  nome_completo : varchar
+  email : varchar <<UNIQUE>>
+  senha_hash : varchar
+  nivel_permissao : varchar
+  ativo : boolean
+  criado_em : timestamp
+  ultimo_acesso : timestamp
+  senha_temporaria : boolean
+  cpf : varchar <<UNIQUE>>
+  telefone : varchar <<UNIQUE>>
+  data_nascimento : date
 }
 
-' Tabela: usuarios
-class usuarios {
-  **PK** id : INTEGER
+entity "cidadaos" as cidadaos {
+  *id : integer <<PK>>
   --
-  nome_completo : VARCHAR
-  email : VARCHAR <<UNIQUE>>
-  senha_hash : VARCHAR
-  nivel_permissao : VARCHAR <<CHECK>>
-  ativo : BOOLEAN
-  criado_em : TIMESTAMP
-  ultimo_acesso : TIMESTAMP
-  senha_temporaria : BOOLEAN
-  --
-  <<CHECK>> nivel_permissao IN:
-  'administrador'
-  'chefe_gabinete'
-  'assessor_interno'
-  'assessor_externo'
-  'supervisor'
+  nome_completo : varchar
+  telefone : varchar <<UNIQUE>>
+  data_nascimento : date
+  bairro : varchar
+  cidade : varchar
+  estado : varchar
+  email : varchar
+  criado_em : timestamp
 }
 
-' Tabela: status
-class status {
-  **PK** id : INTEGER
+entity "status" as status {
+  *id : integer <<PK>>
   --
-  nome : VARCHAR
-  ordem : INTEGER
-  ativo : BOOLEAN
-  criado_em : TIMESTAMP
+  nome : varchar
+  ordem : integer
+  ativo : boolean
+  criado_em : timestamp
 }
 
-' Tabela: demandas
-class demandas {
-  **PK** id : INTEGER
+entity "demandas" as demandas {
+  *id : integer <<PK>>
   --
-  **FK** cidadao_id : INTEGER
-  **FK** usuario_responsavel_id : INTEGER
-  **FK** usuario_origem_id : INTEGER
-  **FK** status_id : INTEGER
-  --
-  titulo : VARCHAR
-  descricao : TEXT
-  prioridade : VARCHAR <<CHECK>>
-  criado_em : TIMESTAMP
-  atualizado_em : TIMESTAMP
-  --
-  <<CHECK>> prioridade IN:
-  'baixa', 'media', 'alta', 'urgente'
+  titulo : varchar
+  descricao : text
+  prioridade : varchar
+  cidadao_id : integer <<FK>>
+  usuario_responsavel_id : integer <<FK>>
+  usuario_origem_id : integer <<FK>>
+  status_id : integer <<FK>>
+  criado_em : timestamp
+  atualizado_em : timestamp
 }
 
-' Tabela: arquivos
-class arquivos {
-  **PK** id : INTEGER
+entity "arquivos" as arquivos {
+  *id : integer <<PK>>
   --
-  **FK** demanda_id : INTEGER
-  --
-  nome_arquivo : VARCHAR
-  tipo_arquivo : VARCHAR
-  caminho_arquivo : VARCHAR
-  tamanho_arquivo : INTEGER
-  criado_em : TIMESTAMP
+  demanda_id : integer <<FK>>
+  nome_arquivo : varchar
+  tipo_arquivo : varchar
+  caminho_arquivo : varchar
+  tamanho_arquivo : integer
+  criado_em : timestamp
 }
 
-' Tabela: comentarios
-class comentarios {
-  **PK** id : INTEGER
+entity "comentarios" as comentarios {
+  *id : integer <<PK>>
   --
-  **FK** demanda_id : INTEGER
-  **FK** usuario_id : INTEGER
-  --
-  comentario : TEXT
-  criado_em : TIMESTAMP
-  publico : BOOLEAN
+  demanda_id : integer <<FK>>
+  usuario_id : integer <<FK>>
+  comentario : text
+  criado_em : timestamp
+  publico : boolean
 }
 
-' Relacionamentos com cardinalidade
+entity "eventos" as eventos {
+  *id : integer <<PK>>
+  --
+  nome : varchar
+  descricao : text
+  data_evento : timestamp
+  local : varchar
+  ativo : boolean
+  criado_em : timestamp
+  criado_por : integer <<FK>>
+  atualizado_em : timestamp
+}
 
-' Cidadão pode ter várias demandas
-cidadaos "1" -- "0..*" demandas : "  cidadao_id  "
+entity "lista_presenca" as lista_presenca {
+  *id : integer <<PK>>
+  --
+  evento_id : integer <<FK>>
+  nome_completo : varchar
+  telefone : varchar
+  email : varchar
+  observacoes : text
+  criado_em : timestamp
+  criado_por : integer <<FK>>
+  atualizado_em : timestamp
+}
 
-' Status pode estar em várias demandas
-status "1" -- "0..*" demandas : "  status_id  "
-
-' Usuário responsável por várias demandas
-usuarios "1" -- "0..*" demandas : "  usuario_responsavel_id  "
-
-' Usuário origem de várias demandas
-usuarios "1" -- "0..*" demandas : "  usuario_origem_id  "
-
-' Demanda pode ter vários arquivos
-demandas "1" -- "0..*" arquivos : "  demanda_id  "
-
-' Demanda pode ter vários comentários
-demandas "1" -- "0..*" comentarios : "  demanda_id  "
-
-' Usuário pode fazer vários comentários
-usuarios "1" -- "0..*" comentarios : "  usuario_id  "
-
-note right of demandas
-  Tabela central do sistema
-  Conecta cidadãos, usuários,
-  status, arquivos e comentários
-end note
-
-note right of usuarios
-  Possui 2 relacionamentos
-  com demandas:
-  - Como responsável
-  - Como origem
-end note
+' === RELAÇÕES ===
+cidadaos ||--o{ demandas : "possui"
+usuarios ||--o{ demandas : "origina"
+usuarios ||--o{ demandas : "responsável por"
+status ||--o{ demandas : "define status"
+demandas ||--o{ arquivos : "possui"
+demandas ||--o{ comentarios : "contém"
+usuarios ||--o{ comentarios : "escreve"
+usuarios ||--o{ eventos : "cria"
+eventos ||--o{ lista_presenca : "tem"
+usuarios ||--o{ lista_presenca : "registra"
 
 @enduml
