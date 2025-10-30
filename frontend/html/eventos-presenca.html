@@ -10,6 +10,7 @@
     <link rel="stylesheet" href="/frontend/css/header.css">
     <link rel="stylesheet" href="/frontend/css/nav.css">
     <link rel="stylesheet" href="/frontend/css/eventos-presenca.css">
+    <link rel="stylesheet" href="/frontend/css/nav-active.css">
     
     <!-- FONTES -->
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
@@ -18,43 +19,11 @@
     <script type="module" src="/frontend/javascript/pages/eventos-presenca.js"></script>
 </head>
 <body>
-    <!-- HEADER -->
-    <header id="header" class="header">
-        <div class="interface">
-            <section class="logo">
-                <img src="/frontend/img/gabinete-digital/logo-gabinete-digital.png" alt="Logo Gabinete Digital">
-            </section>
+    <!-- ✅ Container para o Header -->
+    <div id="header-container"></div>
 
-            <section class="container-usuario">
-                <div class="card-usuario">
-                    <div class="img-usuario">
-                        <div class="avatar-iniciais" id="avatarUsuario"></div>
-                    </div>
-
-                    <div class="txt-usuario">
-                        <p>Seja bem-vindo,</p>
-                        <h3>Nome Completo</h3>
-                        <p>Função do Usuario</p>
-                    </div>
-                </div>
-                
-                <div class="btn-sair">
-                    <p>Sair</p>
-                </div>
-            </section>
-        </div>
-    </header>
-
-    <!-- NAVEGAÇÃO -->
-    <section class="nav">
-        <div class="interface">
-            <ul class="lista-nav">
-                <li><a href="/frontend/html/principal.html">Inicio</a></li>
-                <li><a href="/frontend/html/listar-demandas.html">Painel de Demandas</a></li>
-                <li><a href="#">Painel de Cidadãos</a></li>
-            </ul>
-        </div>
-    </section>
+    <!-- ✅ Container para o Menu -->
+    <div id="nav-container"></div>
 
     <!-- CONTEÚDO PRINCIPAL -->
     <section class="container-eventos-presenca">

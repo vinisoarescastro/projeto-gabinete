@@ -4,7 +4,8 @@
  */
 
 import { verificarAutenticacao, logout, getUsuarioLogado } from '../utils/auth.js';
-import { inicializarHeader } from '../components/header.js';
+import { renderizarHeader } from '../components/layout-header.js';
+import { renderizarNav } from '../components/layout-nav.js';
 import { 
     listarEventos, 
     buscarUltimoEvento, 
@@ -32,8 +33,8 @@ document.addEventListener('DOMContentLoaded', () => {
     usuarioLogado = verificarAutenticacao();
     if (!usuarioLogado) return;
 
-    // Configurar interface
-    inicializarHeader();
+    renderizarHeader('header-container'); // ✅ Cria O HTML + preenche dados
+    renderizarNav('nav-container');       // ✅ Cria o HTML do menu
     configurarEventListeners();
     
     // Carregar dados iniciais

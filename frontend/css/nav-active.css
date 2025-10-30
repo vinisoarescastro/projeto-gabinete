@@ -1,0 +1,18 @@
+/**
+ * Estilos adicionais para o menu de navegação
+ * Destaca o item da página atual
+ */
+
+/* Item de menu ativo (página atual) */
+.lista-nav li.ativa a {
+    padding: 3px 10px;
+    border-radius: 10px;
+    background-color: rgba(0, 0, 0, 0.5);
+    font-weight: 600;
+    border-bottom: 3px solid #ffffff;
+}
+
+/* Efeito hover mais suave para item ativo */
+.lista-nav li.ativa a:hover {
+    background-color: rgba(124, 10, 10, 0.5);
+}

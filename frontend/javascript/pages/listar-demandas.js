@@ -3,7 +3,8 @@
  */
 
 import { verificarAutenticacao } from '../utils/auth.js';
-import { inicializarHeader } from '../components/header.js';
+import { renderizarHeader } from '../components/layout-header.js';
+import { renderizarNav } from '../components/layout-nav.js';
 import { listarDemandas } from '../utils/api.js';
 import { mostrarCarregando, mostrarErroTabela, renderizarTabela } from '../components/tabela-demandas.js';
 import { aplicarFiltros, obterFiltrosAtivos, inicializarFiltros } from '../components/filtros.js';
@@ -91,8 +92,8 @@ function inicializar() {
     // Verificar autenticação
     verificarAutenticacao();
     
-    // Inicializar header
-    inicializarHeader();
+    renderizarHeader('header-container'); // ✅ Cria O HTML + preenche dados
+    renderizarNav('nav-container');       // ✅ Cria o HTML do menu
     
     // Expor funções globalmente
     exponerFuncoesGlobais();

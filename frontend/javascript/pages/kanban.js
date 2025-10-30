@@ -3,7 +3,8 @@
  */
 
 import { verificarAutenticacao } from '../utils/auth.js';
-import { inicializarHeader } from '../components/header.js';
+import { renderizarHeader } from '../components/layout-header.js';
+import { renderizarNav } from '../components/layout-nav.js';
 import { listarDemandas, listarStatus } from '../utils/api.js';
 import { mostrarErro } from '../utils/notifications.js';
 import { inicializarDragAndDrop } from '../components/drag-drop.js';
@@ -157,8 +158,8 @@ function inicializar() {
     // Verificar autenticação
     verificarAutenticacao();
     
-    // Inicializar header
-    inicializarHeader();
+    renderizarHeader('header-container'); // ✅ Cria O HTML + preenche dados
+    renderizarNav('nav-container');       // ✅ Cria o HTML do menu
     
     // Expor funções globalmente
     exponerFuncoesGlobais();

@@ -3,7 +3,8 @@
  */
 
 import { verificarAutenticacao, getUsuarioLogado } from '../utils/auth.js';
-import { inicializarHeader } from '../components/header.js';
+import { renderizarHeader } from '../components/layout-header.js';
+import { renderizarNav } from '../components/layout-nav.js';
 import { listarDemandas } from '../utils/api.js';
 import { calcularEstatisticasGerais, calcularEstatisticasUsuario } from '../utils/statistics.js';
 import { mostrarErro } from '../utils/notifications.js';
@@ -113,9 +114,9 @@ function inicializar() {
     
     // Verificar se está autenticado
     verificarAutenticacao();
-    
-    // Inicializar header com dados do usuário
-    inicializarHeader();
+
+    renderizarHeader('header-container'); 
+    renderizarNav('nav-container');       
     
     // Carregar dados do dashboard
     carregarDashboard();

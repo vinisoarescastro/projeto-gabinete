@@ -3,7 +3,8 @@
  */
 
 import { verificarAutenticacao, getUsuarioLogado } from '../utils/auth.js';
-import { inicializarHeader } from '../components/header.js';
+import { renderizarHeader } from '../components/layout-header.js';
+import { renderizarNav } from '../components/layout-nav.js';
 import { API_URL } from '../utils/constants.js';
 import { getToken } from '../utils/auth.js';
 import { formatarDataHora, formatarTempoRelativo } from '../utils/formatters.js';
@@ -308,8 +309,8 @@ function inicializar() {
         return;
     }
     
-    // Inicializar header
-    inicializarHeader();
+    renderizarHeader('header-container'); // ✅ Cria O HTML + preenche dados
+    renderizarNav('nav-container');       // ✅ Cria o HTML do menu
     
     // Carregar usuários
     carregarUsuarios();
