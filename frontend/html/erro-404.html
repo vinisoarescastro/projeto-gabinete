@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>404 - Página não encontrada</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background-color: #F0F2F4;
+            color: #333;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        main {
+            text-align: center;
+            max-width: 600px;
+        }
+
+        .codigo-erro {
+            font-size: clamp(120px, 20vw, 200px);
+            font-weight: 900;
+            line-height: 1;
+            margin-bottom: 24px;
+            background: linear-gradient(
+                90deg,
+                #CC0000 0%,
+                #FF3436 25%,
+                #FF6B6D 50%,
+                #FF3436 75%,
+                #CC0000 100%
+            );
+            background-size: 200% 100%;
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: movimentoGradiente 3s ease-in-out infinite;
+            filter: drop-shadow(0 4px 8px rgba(255, 52, 54, 0.15));
+        }
+
+        @keyframes movimentoGradiente {
+            0%, 100% {
+                background-position: 0% 50%;
+            }
+            50% {
+                background-position: 100% 50%;
+            }
+        }
+
+        .mensagem-principal {
+            font-size: clamp(20px, 4vw, 28px);
+            font-weight: 600;
+            color: #444;
+            margin-bottom: 12px;
+            letter-spacing: -0.5px;
+        }
+
+        .mensagem-secundaria {
+            font-size: clamp(16px, 3vw, 18px);
+            font-weight: 400;
+            color: #666;
+            line-height: 1.6;
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            .codigo-erro {
+                animation: none;
+                background: #FF3436;
+                -webkit-background-clip: text;
+                background-clip: text;
+            }
+        }
+    </style>
+</head>
+<body>
+    <main role="main">
+        <h1 class="codigo-erro" aria-label="Erro 404">404</h1>
+        <p class="mensagem-principal">Não está disponível.</p>
+        <p class="mensagem-secundaria">Entre em contato com o administrador do sistema.</p>
+    </main>
+</body>
+</html>
