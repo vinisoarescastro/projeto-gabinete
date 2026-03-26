@@ -86,7 +86,7 @@ router.post('/login', async (req, res) => {
             .select('*')
             .eq('email', email);
 
-        // ✅ CORREÇÃO: Verificar se o array está vazio (usuário não existe)
+        // CORREÇÃO: Verificar se o array está vazio (usuário não existe)
         if (error || !usuarios || usuarios.length === 0) {
             return res.status(404).json({
                 sucesso: false,
@@ -99,13 +99,13 @@ router.post('/login', async (req, res) => {
         // Pegar o primeiro (e único) usuário encontrado
         const usuario = usuarios[0];
 
-        // ✅ ERRO 2: Usuário inativo (cadastro desativado)
+        // ERRO 2: Usuário inativo (cadastro desativado)
         if (!usuario.ativo) {
             return res.status(403).json({
                 sucesso: false,
-                mensagem: 'Conta desativada',
+                mensagem: 'Autenticação falhou.',
                 descricao: 'Sua conta foi desativada. Entre em contato com o Gabinete Digital para mais informações.',
-                contato: 'Telefone: (62) XXXX-XXXX | Email: contato@gabinete.com',
+                contato: 'Telefone: (62) 99950-4750 | Email: vinicius@nucleodedados.com',
                 tipo: 'conta_desativada'
             });
         }
@@ -113,7 +113,7 @@ router.post('/login', async (req, res) => {
         // Comparar senha
         const senhaValida = await bcrypt.compare(senha, usuario.senha_hash);
 
-        // ✅ ERRO 3: Senha incorreta
+        // ERRO 3: Senha incorreta
         if (!senhaValida) {
             return res.status(401).json({
                 sucesso: false,
@@ -123,7 +123,7 @@ router.post('/login', async (req, res) => {
             });
         }
 
-        // ✅ LOGIN BEM-SUCEDIDO
+        // LOGIN BEM-SUCEDIDO
         // Atualizar último acesso do usuário
         await supabase
             .from('usuarios')
