@@ -42,7 +42,7 @@ body {
   border-radius: 40px;
   box-shadow: 0 2px 20px rgba(0, 0, 0, 0.08);
   width: 100%;
-  max-width: 420px;
+  max-width: 380px;
   
   /* Começa invisível e levemente abaixo */
   opacity: 0;
@@ -66,7 +66,7 @@ body {
     display: flex;
     justify-content: center;
     align-items: center;
-    margin-bottom: 40px;
+    margin-bottom: 30px;
 }
 
 .logo {
@@ -150,19 +150,64 @@ input::placeholder {
    ============================================ */
 .texto-contato {
     text-align: center;
-    margin-top: 24px;
-    font-size: 14px;
+    margin-top: 4px;
+    font-size: 12px;
     color: #666;
 }
 
 .texto-contato a {
     color: #333;
-    font-weight: 500;
+    font-weight: 800;
     text-decoration: none;
 }
 
 .texto-contato a:hover {
     text-decoration: underline;
+}
+
+.logo-rodape {
+    position: relative;
+    background-color: #dbedff;
+    padding: 10px;
+    border-radius: 8px;
+    margin-top: 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden; /* importante */
+}
+
+/* Luz animada */
+.logo-rodape::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 60%;
+    height: 100%;
+    
+    background: linear-gradient(
+        120deg,
+        transparent,
+        rgba(255, 255, 255, 0.6),
+        transparent
+    );
+
+    transform: skewX(-20deg);
+    animation: luzPassando 4s infinite;
+}
+
+@keyframes luzPassando {
+    0% {
+        left: -100%;
+    }
+    100% {
+        left: 150%;
+    }
+}
+
+.logo-nie {
+    width: 260px;
 }
 
 /* ============================================

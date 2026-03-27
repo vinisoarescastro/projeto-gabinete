@@ -20,7 +20,7 @@ function gerarHTMLHeader() {
         <header id="header" class="header">
             <div class="interface">
                 <section class="logo">
-                    <img src="/frontend/img/gabinete-digital/logo-gabinete-digital.png" alt="Logo Gabinete Digital">
+                    <img src="/frontend/img/logo/logo-colorido-300px.png" alt="Logo Gabinete Digital">
                 </section>
 
                 <section class="container-usuario">
