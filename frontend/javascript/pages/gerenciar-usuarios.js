@@ -80,12 +80,12 @@ function renderizarUsuarios(usuarios) {
             <td><strong>${usuario.nome_completo}</strong></td>
             <td>${usuario.email}</td>
             <td>${criarBadgePermissao(usuario.nivel_permissao)}</td>
-            <td>
+            <!--<td>
                 ${usuario.ativo ? 
                     '<span class="badge-ativo">✅ Ativo</span>' : 
                     '<span class="badge-inativo">❌ Inativo</span>'
                 }
-            </td>
+            </td>-->
             <td>${formatarTempoRelativo(usuario.ultimo_acesso)}</td>
             <td>
                 <div class="btn-acoes-icones">
